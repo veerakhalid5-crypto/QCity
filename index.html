@@ -3,27 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>QCity Bitcoin Terminal v14</title>
+<title>QCity Bitcoin Terminal v13</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%;background:#000;color:#00ff41;font-family:'Courier New',monospace;font-size:13px;overflow-x:hidden;-webkit-text-size-adjust:100%}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:#00a82d;border-radius:3px}
 .bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
-#shader{opacity:.25}
+#shader{opacity:.28}
 #neural{opacity:.35}
-#matrix{opacity:.12}
-#particles{opacity:.35}
-#helix{opacity:.1}
-#cube{opacity:.14}
-#radar{top:50%;left:50%;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(0,255,65,.5) 30deg,transparent 30deg);animation:rs 6s linear infinite;opacity:.05}
-@keyframes rs{to{transform:rotate(360deg)}}
-#scan{height:2px;background:linear-gradient(90deg,transparent,#00ff41,transparent);box-shadow:0 0 18px #00ff41;animation:sm 4s linear infinite}
-@keyframes sm{0%{top:-2px}100%{top:100%}}
+#matrix{opacity:.13}
+#scan{height:2px;background:linear-gradient(90deg,transparent,#00ff41,transparent);box-shadow:0 0 18px #00ff41;animation:scanm 4s linear infinite}
+@keyframes scanm{0%{top:-2px}100%{top:100%}}
 #vig{background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.92) 100%)}
-#app{position:relative;z-index:10;max-width:860px;margin:0 auto;padding:12px 12px 40px}
+#app{position:relative;z-index:10;max-width:840px;margin:0 auto;padding:12px 12px 40px}
 #head{text-align:center;padding:4px 0 8px}
-#head h1{font-size:22px;color:#00ff41;letter-spacing:4px;font-weight:900;text-shadow:0 0 12px #00ff41;display:inline-block}
+#head h1{font-size:22px;color:#00ff41;letter-spacing:4px;font-weight:900;text-shadow:0 0 12px #00ff41,0 0 3px #00ff41;display:inline-block}
 #head .sub{font-size:9px;color:#00a82d;letter-spacing:3px;margin-top:4px}
 .banner{background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:11px;min-height:30px;display:flex;align-items:center;gap:6px;overflow:hidden}
 .banner .p{color:#00ff41;font-weight:700;flex-shrink:0}
@@ -58,10 +53,6 @@ h2.sec{color:#00a82d;font-size:11px;letter-spacing:2px;margin:14px 0 8px;text-tr
 h2.sec:first-child{margin-top:0}
 .card{background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:8px;padding:12px;margin-bottom:10px}
 .card h3{font-size:10px;color:#00a82d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.card.min{border-color:#ffcc00}
-.card.min h3{color:#ffcc00}
-.card.rec{border-color:#00ff41}
-.card.rec h3{color:#00ff41}
 .kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed rgba(0,255,65,.15);font-size:11px;line-height:1.5}
 .kv:last-child{border-bottom:none}
 .kv .k{color:#00a82d;flex-shrink:0;margin-right:8px}
@@ -94,10 +85,9 @@ textarea.inp{min-height:80px;resize:vertical}
 #acct{display:none;background:rgba(0,20,8,.85);border:1px solid #00ff41;border-radius:8px;padding:12px;margin-bottom:10px}
 #acct h4{font-size:10px;color:#00a82d;letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
 #acct .ad{font-family:monospace;font-size:11px;color:#00ff41;word-break:break-all;margin-bottom:8px}
-#term,#cout,#crackOut{background:#000;border:1px solid #00a82d;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.5;color:#00ff41;overflow-y:auto}
+#term,#cout{background:#000;border:1px solid #00a82d;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.5;color:#00ff41;overflow-y:auto}
 #term{height:280px;margin-bottom:8px}
 #cout{height:220px;margin-bottom:8px}
-#crackOut{height:220px;margin-bottom:8px;white-space:pre-wrap}
 #term .ln,#cout>div{margin-bottom:1px;word-break:break-all}
 .ok{color:#00ff41}.er{color:#ff2b4e}.wa{color:#ffcc00}.if{color:#00d9ff}.dm{color:#005f18}.pu{color:#b26bff}
 .cinput{display:flex;gap:6px;align-items:center}
@@ -113,29 +103,18 @@ textarea.inp{min-height:80px;resize:vertical}
 .tdot.sel{border-color:#fff;box-shadow:0 0 12px currentColor}
 #modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.9);padding:20px}
 #modal.on{display:flex}
-#modal .box{background:#001005;border:1px solid #00ff41;border-radius:8px;padding:18px;max-width:520px;width:100%}
+#modal .box{background:#001005;border:1px solid #00ff41;border-radius:8px;padding:18px;max-width:520px;width:100%;box-shadow:0 0 25px rgba(0,255,65,.4)}
 #modal h3{color:#00ff41;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
 #modal p{color:#00a82d;font-size:11px;line-height:1.6;margin:6px 0}
 #foot{text-align:center;font-size:9px;color:#005f18;letter-spacing:2px;margin-top:16px;padding:8px 0}
-.chart{background:#000;border:1px solid #00a82d;border-radius:6px;padding:6px;height:100px;margin-bottom:8px;position:relative}
-.chart svg{width:100%;height:100%;display:block}
-.chart .lbl{position:absolute;top:4px;left:8px;font-size:9px;color:#00a82d;letter-spacing:1px}
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
-.tile{background:rgba(0,20,8,.85);border:1px solid #005f18;border-radius:6px;padding:8px;text-align:center}
-.tile .l{font-size:8px;color:#00a82d}
-.tile .v{font-size:13px;color:#00ff41;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
-.heatmap{display:grid;grid-template-columns:repeat(20,1fr);gap:2px;padding:4px;background:#000;border:1px solid #005f18;border-radius:6px;margin-bottom:8px}
-.heatmap .c{aspect-ratio:1;background:#005f18;border-radius:2px;transition:background .4s}
-.ob{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10px;margin-bottom:8px}
-.obside{background:#000;border:1px solid #005f18;border-radius:5px;padding:6px;max-height:220px;overflow-y:auto;font-variant-numeric:tabular-nums}
-.obside .orow{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px dashed rgba(0,255,65,.08)}
-.obside.bid .orow span:first-child{color:#00ff41}
-.obside.ask .orow span:first-child{color:#ff2b4e}
-.obside .orow span:last-child{color:#00a82d}
-#qrc{background:#000;border:1px solid #00a82d;border-radius:6px;display:block;margin:8px auto;image-rendering:pixelated}
-#crackBar{height:14px;background:#001005;border:1px solid #00a82d;border-radius:4px;overflow:hidden;margin-bottom:8px}
+body.t-amber{color:#ffb000}
+body.t-cyan{color:#00d9ff}
+body.t-red{color:#ff2b4e}
+body.t-purple{color:#b26bff}
+#crackOut{background:#000;border:1px solid #00a82d;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.6;color:#00ff41;height:220px;overflow-y:auto;margin-bottom:8px;white-space:pre-wrap}
+#crackBar{height:14px;background:#001005;border:1px solid #00a82d;border-radius:4px;overflow:hidden;margin-bottom:8px;position:relative}
 #crackBar .fill{height:100%;background:linear-gradient(90deg,#00ff41,#00a82d);width:0%;transition:width .15s;box-shadow:0 0 10px #00ff41}
-@media(max-width:600px){#head h1{font-size:16px}#stats{grid-template-columns:repeat(3,1fr)}.tiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){#head h1{font-size:16px;letter-spacing:2px}#stats{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
@@ -143,10 +122,6 @@ textarea.inp{min-height:80px;resize:vertical}
 <canvas id="shader" class="bg"></canvas>
 <canvas id="neural" class="bg"></canvas>
 <canvas id="matrix" class="bg"></canvas>
-<canvas id="particles" class="bg"></canvas>
-<canvas id="helix" class="bg"></canvas>
-<canvas id="cube" class="bg"></canvas>
-<div id="radar" class="bg"></div>
 <div id="scan" class="bg"></div>
 <div id="vig" class="bg"></div>
 
@@ -161,7 +136,7 @@ textarea.inp{min-height:80px;resize:vertical}
 <div id="app">
   <div id="head">
     <h1>QCITY BITCOIN</h1>
-    <div class="sub">[ BITCOIN SECURITY TERMINAL v14 ]</div>
+    <div class="sub">[ BITCOIN SECURITY TERMINAL v13 ]</div>
   </div>
 
   <div class="banner">
@@ -205,8 +180,6 @@ textarea.inp{min-height:80px;resize:vertical}
     <button class="tab" data-t="crack">CRACK</button>
     <button class="tab" data-t="explorer">EXPLORER</button>
     <button class="tab" data-t="scan">SCAN</button>
-    <button class="tab" data-t="system">SYSTEM</button>
-    <button class="tab" data-t="tools">TOOLS</button>
     <button class="tab" data-t="console">CONSOLE</button>
     <button class="tab" data-t="log">LOG</button>
     <button class="tab" data-t="config">CONFIG</button>
@@ -286,7 +259,6 @@ textarea.inp{min-height:80px;resize:vertical}
     <button class="btn" onclick="doSHA512()">SHA-512</button>
     <button class="btn" onclick="doSHA1()">SHA-1</button>
     <button class="btn yellow" onclick="doHMAC()">HMAC-SHA512</button>
-    <button class="btn blue" onclick="hash256ToAddress()">HASH → BTC ADDRESS</button>
     <div class="card" style="margin-top:8px">
       <h3>Output</h3>
       <div class="out" id="hOut">—</div>
@@ -306,7 +278,6 @@ textarea.inp{min-height:80px;resize:vertical}
     <button class="btn blue" onclick="base64Enc()">BASE64 ENC</button>
     <button class="btn blue" onclick="base64Dec()">BASE64 DEC</button>
     <button class="btn blue" onclick="urlEnc()">URL ENC</button>
-    <button class="btn blue" onclick="urlDec()">URL DEC</button>
     <div class="card" style="margin-top:8px">
       <h3>Output</h3>
       <div class="out" id="eOut">—</div>
@@ -374,7 +345,7 @@ textarea.inp{min-height:80px;resize:vertical}
       <h3>Output</h3>
       <div class="out" id="encOut">—</div>
     </div>
-    <div class="warn">Uses native AES-GCM via WebCrypto with PBKDF2 (100k iterations) key derivation. Real encryption.</div>
+    <div class="warn">Uses native AES-GCM via WebCrypto with PBKDF2 key derivation. Real encryption.</div>
 
     <h2 class="sec">XOR Cipher (educational)</h2>
     <input class="inp" id="xorText" placeholder="text..." value="HELLO BITCOIN">
@@ -387,11 +358,11 @@ textarea.inp{min-height:80px;resize:vertical}
     <div class="warn">XOR is a teaching cipher. Never use for real security.</div>
   </div>
 
-  <!-- CRACK -->
+  <!-- CRACK (simulation) -->
   <div class="pane" id="p-crack">
     <h2 class="sec">Password Recovery Simulation</h2>
-    <input class="inp" id="crackHash" placeholder="paste SHA-256 hash to 'crack'..." value="">
-    <button class="btn" onclick="useLastHash()">USE LAST HASH</button>
+    <input class="inp" id="crackHash" placeholder="paste SHA-256 hash to 'crack' (any hash)..." value="">
+    <button class="btn" onclick="document.getElementById('crackHash').value=document.getElementById('hOut').textContent;switchTab('crack')">USE LAST HASH</button>
     <div>
       <button class="btn" onclick="startCrack('dictionary')">DICTIONARY</button>
       <button class="btn" onclick="startCrack('brute')">BRUTE FORCE</button>
@@ -400,17 +371,17 @@ textarea.inp{min-height:80px;resize:vertical}
     </div>
     <div id="crackBar"><div class="fill" id="crackFill"></div></div>
     <div id="crackOut"></div>
-    <div class="warn">⚠ THIS IS A SIMULATION. No real hash is being cracked.</div>
+    <div class="warn">⚠ THIS IS A SIMULATION. No real hash is being cracked. Nobody can use this to steal. It's a visual demo of what a cracking screen looks like.</div>
 
-    <h2 class="sec">Why real cracking is impossible</h2>
+    <h2 class="sec">Why real cracking is impossible here</h2>
     <div class="card">
       <div class="kv"><span class="k">SHA-256 keyspace</span><span class="v">2^256 combinations</span></div>
-      <div class="kv"><span class="k">GPU farm rate</span><span class="v">~10 trillion h/s</span></div>
-      <div class="kv"><span class="k">Time to brute one key</span><span class="v">longer than the universe</span></div>
-      <div class="kv"><span class="k">BIP39 12-word space</span><span class="v">2^128 combinations</span></div>
-      <div class="kv"><span class="k">Reality</span><span class="v">Bitcoin security is intact</span></div>
+      <div class="kv"><span class="k">Attempts per second (GPU farm)</span><span class="v">~10 trillion</span></div>
+      <div class="kv"><span class="k">Time to brute force one key</span><span class="v">longer than the universe has existed</span></div>
+      <div class="kv"><span class="k">BIP39 12-word seed space</span><span class="v">2^128 combinations</span></div>
+      <div class="kv"><span class="k">Reality</span><span class="v">Bitcoin wallet security is intact</span></div>
     </div>
-    <div class="warn">Any site, app, or person claiming they can "crack" a modern Bitcoin wallet is lying. The math does not allow it.</div>
+    <div class="warn">Any website, app, or person claiming they can "crack" a modern Bitcoin wallet is lying. The math does not allow it.</div>
   </div>
 
   <!-- EXPLORER -->
@@ -433,18 +404,6 @@ textarea.inp{min-height:80px;resize:vertical}
       <div class="kv"><span class="k">24h change</span><span class="v" id="xChange">—</span></div>
       <div class="kv"><span class="k">24h volume</span><span class="v" id="xVol">—</span></div>
       <div class="kv"><span class="k">24h high / low</span><span class="v" id="xHL">—</span></div>
-      <div class="kv"><span class="k">Trades 24h</span><span class="v" id="xTrades">—</span></div>
-    </div>
-    <h2 class="sec">Order Book — BTC / USDT</h2>
-    <div class="ob">
-      <div class="obside bid" id="obBids">Loading bids...</div>
-      <div class="obside ask" id="obAsks">Loading asks...</div>
-    </div>
-    <div class="card">
-      <div class="kv"><span class="k">Best Bid</span><span class="v" id="obBid">—</span></div>
-      <div class="kv"><span class="k">Best Ask</span><span class="v" id="obAsk">—</span></div>
-      <div class="kv"><span class="k">Spread</span><span class="v" id="obSpread">—</span></div>
-      <div class="kv"><span class="k">Imbalance</span><span class="v" id="obImb">—</span></div>
     </div>
     <h2 class="sec">Address Lookup</h2>
     <input class="inp" id="xAddr" placeholder="paste BTC address..." value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa">
@@ -471,153 +430,6 @@ textarea.inp{min-height:80px;resize:vertical}
       <div class="kv"><span class="k">50001 (Electrum)</span><span class="v" id="p4">—</span></div>
       <div class="kv"><span class="k">9735 (Lightning)</span><span class="v" id="p5">—</span></div>
       <button class="btn" onclick="probeNodes()" style="margin-top:8px">PROBE</button>
-    </div>
-  </div>
-
-  <!-- SYSTEM -->
-  <div class="pane" id="p-system">
-    <h2 class="sec">Device Report</h2>
-    <div id="verdict" class="card" style="text-align:center;font-weight:700">Analyzing...</div>
-
-    <div class="card min">
-      <h3>◆ Minimum Requirements</h3>
-      <div class="kv"><span class="k">CPU</span><span class="v">4 cores · 2.0 GHz+</span></div>
-      <div class="kv"><span class="k">RAM</span><span class="v">4 GB</span></div>
-      <div class="kv"><span class="k">GPU</span><span class="v">Any WebGL-capable GPU</span></div>
-      <div class="kv"><span class="k">Screen</span><span class="v">720p (1280×720)</span></div>
-      <div class="kv"><span class="k">Browser</span><span class="v">Chrome / Safari / Edge (2021+)</span></div>
-      <div class="kv"><span class="k">Network</span><span class="v">5 Mbps stable</span></div>
-      <div class="kv"><span class="k">Storage</span><span class="v">50 MB free</span></div>
-      <div class="kv"><span class="k">OS</span><span class="v">Android 8+ / iOS 14+ / Win10 / macOS 11+</span></div>
-    </div>
-
-    <div class="card rec">
-      <h3>◆ Recommended Requirements</h3>
-      <div class="kv"><span class="k">CPU</span><span class="v">8+ cores · i5-12th Gen / Apple M1 / Snapdragon 8 Gen 2</span></div>
-      <div class="kv"><span class="k">RAM</span><span class="v">12 GB+</span></div>
-      <div class="kv"><span class="k">GPU</span><span class="v">Dedicated GPU · WebGL 2 + WebGPU support</span></div>
-      <div class="kv"><span class="k">Screen</span><span class="v">1080p+ or Retina</span></div>
-      <div class="kv"><span class="k">Browser</span><span class="v">Latest Chrome / Edge / Safari</span></div>
-      <div class="kv"><span class="k">Network</span><span class="v">15 Mbps+ stable</span></div>
-      <div class="kv"><span class="k">Storage</span><span class="v">200 MB free</span></div>
-      <div class="kv"><span class="k">OS</span><span class="v">Android 13+ / iOS 16+ / Win11 / macOS 13+</span></div>
-    </div>
-
-    <h2 class="sec">Your Device</h2>
-    <div class="card">
-      <div class="kv"><span class="k">Device</span><span class="v" id="d-device">—</span></div>
-      <div class="kv"><span class="k">OS</span><span class="v" id="d-os">—</span></div>
-      <div class="kv"><span class="k">Browser</span><span class="v" id="d-browser">—</span></div>
-      <div class="kv"><span class="k">CPU cores</span><span class="v" id="d-cores">—</span></div>
-      <div class="kv"><span class="k">RAM</span><span class="v" id="d-ram">—</span></div>
-      <div class="kv"><span class="k">GPU</span><span class="v" id="d-gpu">—</span></div>
-      <div class="kv"><span class="k">WebGL</span><span class="v" id="d-webgl">—</span></div>
-      <div class="kv"><span class="k">WebGPU</span><span class="v" id="d-webgpu">—</span></div>
-      <div class="kv"><span class="k">Screen</span><span class="v" id="d-screen">—</span></div>
-      <div class="kv"><span class="k">Pixel ratio</span><span class="v" id="d-dpr">—</span></div>
-      <div class="kv"><span class="k">Network</span><span class="v" id="d-net">—</span></div>
-      <div class="kv"><span class="k">Touch</span><span class="v" id="d-touch">—</span></div>
-      <div class="kv"><span class="k">Language</span><span class="v" id="d-lang">—</span></div>
-      <div class="kv"><span class="k">Timezone</span><span class="v" id="d-tz">—</span></div>
-      <div class="kv"><span class="k">Platform</span><span class="v" id="d-platform">—</span></div>
-      <div class="kv"><span class="k">Cookies</span><span class="v" id="d-cookie">—</span></div>
-      <div class="kv"><span class="k">Do Not Track</span><span class="v" id="d-dnt">—</span></div>
-    </div>
-
-    <h2 class="sec">Live System Monitor</h2>
-    <div class="chart"><div class="lbl">CPU %</div>
-      <svg viewBox="0 0 300 80" preserveAspectRatio="none">
-        <polyline id="cpuLine" fill="none" stroke="#00ff41" stroke-width="1.5" points=""/>
-      </svg>
-    </div>
-    <div class="chart"><div class="lbl">RAM %</div>
-      <svg viewBox="0 0 300 80" preserveAspectRatio="none">
-        <polyline id="ramLine" fill="none" stroke="#00d9ff" stroke-width="1.5" points=""/>
-      </svg>
-    </div>
-    <div class="chart"><div class="lbl">NET KB/s</div>
-      <svg viewBox="0 0 300 80" preserveAspectRatio="none">
-        <polyline id="netLine" fill="none" stroke="#ffcc00" stroke-width="1.5" points=""/>
-      </svg>
-    </div>
-
-    <h2 class="sec">Live Heatmap</h2>
-    <div class="heatmap" id="heatmap"></div>
-
-    <h2 class="sec">Fingerprint Hash</h2>
-    <div class="card">
-      <div class="out" id="fingerprint">computing...</div>
-    </div>
-  </div>
-
-  <!-- TOOLS -->
-  <div class="pane" id="p-tools">
-    <h2 class="sec">Miscellaneous Tools</h2>
-
-    <div class="card">
-      <h3>◆ UUID v4 Generator</h3>
-      <div class="out" id="uuidOut">—</div>
-      <button class="btn" onclick="genUUID()">GENERATE</button>
-      <button class="btn blue" onclick="copyEl('uuidOut')">COPY</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ Timestamp Converter</h3>
-      <input class="inp" id="tsIn" placeholder="unix seconds or ms..." value="1700000000">
-      <div class="out" id="tsOut">—</div>
-      <button class="btn" onclick="convertTs()">CONVERT</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ Random Number</h3>
-      <input class="inp" id="rndMin" placeholder="min" value="1">
-      <input class="inp" id="rndMax" placeholder="max" value="100">
-      <div class="out" id="rndOut">—</div>
-      <button class="btn" onclick="genRnd()">GENERATE</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ Color Converter</h3>
-      <input class="inp" id="colIn" placeholder="#00ff41" value="#00ff41">
-      <div class="out" id="colOut">—</div>
-      <button class="btn" onclick="convertCol()">CONVERT</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ Morse Code</h3>
-      <input class="inp" id="morseIn" placeholder="text..." value="SOS">
-      <div class="out" id="morseOut">—</div>
-      <button class="btn" onclick="doMorse()">ENCODE</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ ASCII Art</h3>
-      <input class="inp" id="asciiIn" placeholder="short text (1-6 chars)..." value="QC">
-      <div class="out" id="asciiOut" style="font-family:monospace;line-height:1.1">—</div>
-      <button class="btn" onclick="doAscii()">RENDER</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ JWT Decoder (visual)</h3>
-      <input class="inp" id="jwtIn" placeholder="paste JWT token..." value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0In0.abc">
-      <div class="out" id="jwtOut">—</div>
-      <button class="btn" onclick="decodeJWT()">DECODE</button>
-    </div>
-
-    <div class="card">
-      <h3>◆ Regex Tester</h3>
-      <input class="inp" id="regexPat" placeholder="pattern..." value="[0-9]+">
-      <input class="inp" id="regexTxt" placeholder="test string..." value="block 123456 abc 789">
-      <div class="out" id="regexOut">—</div>
-      <button class="btn" onclick="testRegex()">TEST</button>
-    </div>
-
-    <h2 class="sec">QR Code (visual)</h2>
-    <div class="card">
-      <input class="inp" id="qrIn" placeholder="text or bitcoin: address..." value="bitcoin:1QCityWallet">
-      <canvas id="qrc" width="200" height="200"></canvas>
-      <button class="btn" onclick="genQR()">GENERATE</button>
-      <div class="warn">Visual pattern only — not a scannable QR code.</div>
     </div>
   </div>
 
@@ -682,10 +494,6 @@ textarea.inp{min-height:80px;resize:vertical}
       <div class="kv"><span class="k">Matrix Rain</span><span class="v"><input type="checkbox" id="tgl-matrix" checked onchange="toggleEffect('matrix',this)"></span></div>
       <div class="kv"><span class="k">Neural Net</span><span class="v"><input type="checkbox" id="tgl-neural" checked onchange="toggleEffect('neural',this)"></span></div>
       <div class="kv"><span class="k">Shader</span><span class="v"><input type="checkbox" id="tgl-shader" checked onchange="toggleEffect('shader',this)"></span></div>
-      <div class="kv"><span class="k">Particles</span><span class="v"><input type="checkbox" id="tgl-particles" checked onchange="toggleEffect('particles',this)"></span></div>
-      <div class="kv"><span class="k">DNA Helix</span><span class="v"><input type="checkbox" id="tgl-helix" checked onchange="toggleEffect('helix',this)"></span></div>
-      <div class="kv"><span class="k">Cube Grid</span><span class="v"><input type="checkbox" id="tgl-cube" checked onchange="toggleEffect('cube',this)"></span></div>
-      <div class="kv"><span class="k">Radar</span><span class="v"><input type="checkbox" id="tgl-radar" checked onchange="toggleEffect('radar',this)"></span></div>
       <div class="kv"><span class="k">Scanline</span><span class="v"><input type="checkbox" id="tgl-scan" checked onchange="toggleEffect('scan',this)"></span></div>
     </div>
 
@@ -701,1097 +509,1226 @@ textarea.inp{min-height:80px;resize:vertical}
     <h2 class="sec">About</h2>
     <div class="card">
       <div class="kv"><span class="k">App</span><span class="v">QCity Bitcoin Terminal</span></div>
-      <div class="kv"><span class="k">Version</span><span class="v">14.0</span></div>
+      <div class="kv"><span class="k">Version</span><span class="v">13.0</span></div>
       <div class="kv"><span class="k">Mode</span><span class="v">Educational / Visual</span></div>
     </div>
     <div class="warn" style="font-size:10px;line-height:1.7;margin-top:10px">
-      Bitcoin-focused security terminal. Real cryptography: SHA-256, SHA-512, SHA-1, HMAC-SHA512, AES-GCM, PBKDF2, Base58Check, WIF, live blockchain data. Simulated for safety: port scan, IP masking, trace route, vanity mining, cracking animation. Never stores private keys. Cannot break wallets.
+      Bitcoin-focused security terminal. Real cryptography: SHA-256, SHA-512, SHA-1, HMAC-SHA512, AES-GCM, PBKDF2, Base58Check, WIF, live blockchain data. Simulated for safety: port scan, IP masking, trace route, vanity mining, password cracking animation. This app never stores private keys and cannot break wallets.
     </div>
   </div>
 
-  <div id="foot">QCITY BITCOIN · v14 · EDUCATIONAL ONLY</div>
+  <div id="foot">QCITY BITCOIN · v13 · EDUCATIONAL ONLY</div>
 </div>
 
 <script>
 "use strict";
-/* ---------- UTIL ---------- */
-const HEXC='0123456789abcdef';
-const rHex=n=>{let s='';for(let i=0;i<n;i++)s+=HEXC[Math.floor(Math.random()*16)];return s;};
-const rInt=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-const $=id=>document.getElementById(id);
-function hexToBytes(h){h=h.replace(/[^0-9a-f]/gi,'');const o=new Uint8Array(h.length/2);for(let i=0;i<o.length;i++)o[i]=parseInt(h.substr(i*2,2),16);return o;}
-function bytesToHex(a){return Array.from(a).map(b=>b.toString(16).padStart(2,'0')).join('');}
+
+/* ---------- UTILITIES ---------- */
+const HEXC = '0123456789abcdef';
+const rHex = n => { let s=''; for(let i=0;i<n;i++) s+=HEXC[Math.floor(Math.random()*16)]; return s; };
+const rInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const $ = id => document.getElementById(id);
+function hexToBytes(h){
+  h = h.replace(/[^0-9a-f]/gi,'');
+  const o = new Uint8Array(h.length/2);
+  for(let i=0;i<o.length;i++) o[i] = parseInt(h.substr(i*2,2),16);
+  return o;
+}
+function bytesToHex(a){
+  return Array.from(a).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
 /* ---------- SESSION ---------- */
-const SESSION_ID=rHex(16);
-const SESSION_START=new Date();
-let EVENT_COUNT=0;
-function bump(){EVENT_COUNT++;const el=$('sessEv');if(el)el.textContent=EVENT_COUNT;}
+const SESSION_ID = rHex(16);
+const SESSION_START = new Date();
+let EVENT_COUNT = 0;
+function bump(){
+  EVENT_COUNT++;
+  const el = $('sessEv');
+  if(el) el.textContent = EVENT_COUNT;
+}
 
 /* ---------- BACKGROUND: SHADER ---------- */
 (function(){
-  const c=$('shader');if(!c)return;
-  const gl=c.getContext('webgl')||c.getContext('experimental-webgl');
-  if(!gl){c.style.display='none';return;}
-  const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}';
-  const fs='precision highp float;uniform float t;uniform vec2 r;'+
-    'void main(){vec2 uv=(gl_FragCoord.xy-0.5*r)/min(r.x,r.y);'+
-    'float a=0.0;for(int i=0;i<5;i++){float fi=float(i)+1.0;'+
-    'vec2 p=uv*fi*1.3;p+=vec2(sin(t*0.3+fi)*1.2,cos(t*0.25+fi)*1.2);'+
-    'a+=0.008/abs(sin(p.x+t*0.4)+cos(p.y+t*0.3)-0.6);}'+
+  const c = $('shader');
+  if(!c) return;
+  const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+  if(!gl){ c.style.display='none'; return; }
+  const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0,1); }';
+  const fs = 'precision highp float;uniform float t;uniform vec2 r;' +
+    'void main(){vec2 uv=(gl_FragCoord.xy-0.5*r)/min(r.x,r.y);' +
+    'float a=0.0;for(int i=0;i<5;i++){float fi=float(i)+1.0;' +
+    'vec2 p=uv*fi*1.3;p+=vec2(sin(t*0.3+fi)*1.2,cos(t*0.25+fi)*1.2);' +
+    'a+=0.008/abs(sin(p.x+t*0.4)+cos(p.y+t*0.3)-0.6);}' +
     'gl_FragColor=vec4(vec3(0.0,1.0,0.25)*a*0.5,1.0);}';
-  function mk(t,s){const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShader(x);return x;}
-  const p=gl.createProgram();
-  gl.attachShader(p,mk(gl.VERTEX_SHADER,vs));
-  gl.attachShader(p,mk(gl.FRAGMENT_SHADER,fs));
-  gl.linkProgram(p);gl.useProgram(p);
-  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  const loc=gl.getAttribLocation(p,'p');
-  gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
-  const tL=gl.getUniformLocation(p,'t'),rL=gl.getUniformLocation(p,'r');
-  function rs(){const w=innerWidth,h=innerHeight;c.width=w;c.height=h;gl.viewport(0,0,w,h);gl.uniform2f(rL,w,h);}
-  rs();addEventListener('resize',rs);
-  function loop(t){gl.uniform1f(tL,t*0.001);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);requestAnimationFrame(loop);}
+  function mkShader(t,s){ const x=gl.createShader(t); gl.shaderSource(x,s); gl.compileShader(x); return x; }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const tL = gl.getUniformLocation(prog,'t');
+  const rL = gl.getUniformLocation(prog,'r');
+  function resize(){
+    const w=innerWidth, h=innerHeight;
+    c.width=w; c.height=h;
+    gl.viewport(0,0,w,h);
+    gl.uniform2f(rL,w,h);
+  }
+  resize();
+  addEventListener('resize', resize);
+  function loop(t){
+    gl.uniform1f(tL, t*0.001);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(loop);
+  }
   requestAnimationFrame(loop);
 })();
 
 /* ---------- BACKGROUND: NEURAL ---------- */
 (function(){
-  const c=$('neural');if(!c)return;
-  const ctx=c.getContext('2d');
-  let W,H,nodes=[],N=40,MAX=140;
-  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;nodes=[];
-    for(let i=0;i<N;i++)nodes.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:1+Math.random()*1.5});}
-  rs();addEventListener('resize',rs);
-  setInterval(()=>{
+  const c = $('neural');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W,H,nodes=[];
+  const N = 40, MAX = 140;
+  function resize(){
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+    nodes = [];
+    for(let i=0;i<N;i++) nodes.push({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+      r: 1 + Math.random()*1.5
+    });
+  }
+  resize();
+  addEventListener('resize', resize);
+  setInterval(() => {
     ctx.clearRect(0,0,W,H);
-    for(const n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;}
-    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){
-      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<MAX){ctx.strokeStyle='rgba(0,255,65,'+(1-d/MAX)*.4+')';ctx.lineWidth=.6;
-        ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}
+    for(const n of nodes){
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
     }
-    for(const n of nodes){ctx.fillStyle='#00ff41';ctx.shadowColor='#00ff41';ctx.shadowBlur=5;
-      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;}
-  },33);
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx = nodes[i].x-nodes[j].x;
+        const dy = nodes[i].y-nodes[j].y;
+        const d = Math.sqrt(dx*dx+dy*dy);
+        if(d < MAX){
+          ctx.strokeStyle = 'rgba(0,255,65,' + (1-d/MAX)*0.4 + ')';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      ctx.fillStyle = '#00ff41';
+      ctx.shadowColor = '#00ff41';
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }, 33);
 })();
 
 /* ---------- BACKGROUND: MATRIX ---------- */
 (function(){
-  const c=$('matrix');if(!c)return;
-  const ctx=c.getContext('2d');
-  const chars='₿0123456789abcdefABCDEF';
-  const fs=14;let cols,drops;
-  function rs(){c.width=innerWidth;c.height=innerHeight;cols=Math.floor(c.width/fs);drops=new Array(cols).fill(1);}
-  rs();addEventListener('resize',rs);
-  setInterval(()=>{
-    ctx.fillStyle='rgba(0,0,0,0.06)';ctx.fillRect(0,0,c.width,c.height);
-    ctx.font=fs+'px monospace';
+  const c = $('matrix');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const chars = '₿0123456789abcdefABCDEF';
+  const fs = 14;
+  let cols, drops;
+  function resize(){
+    c.width = innerWidth;
+    c.height = innerHeight;
+    cols = Math.floor(c.width/fs);
+    drops = new Array(cols).fill(1);
+  }
+  resize();
+  addEventListener('resize', resize);
+  setInterval(() => {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.font = fs + 'px monospace';
     for(let i=0;i<drops.length;i++){
-      const ch=chars[Math.floor(Math.random()*chars.length)];
-      ctx.fillStyle=Math.random()>.97?'#b6ffd9':'#00ff41';
-      ctx.fillText(ch,i*fs,drops[i]*fs);
-      if(drops[i]*fs>c.height&&Math.random()>.975)drops[i]=0;
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillStyle = Math.random()>0.97 ? '#b6ffd9' : '#00ff41';
+      ctx.fillText(ch, i*fs, drops[i]*fs);
+      if(drops[i]*fs > c.height && Math.random()>0.975) drops[i] = 0;
       drops[i]++;
     }
-  },55);
-})();
-
-/* ---------- BACKGROUND: PARTICLES ---------- */
-(function(){
-  const c=$('particles');if(!c)return;
-  const ctx=c.getContext('2d');
-  let W,H,p=[];
-  function rs(){W=c.width=innerWidth;H=c.height=innerHeight;p=[];
-    for(let i=0;i<70;i++)p.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,s:Math.random()*2+.5,a:Math.random()*.6+.2});}
-  rs();addEventListener('resize',rs);
-  setInterval(()=>{
-    ctx.clearRect(0,0,W,H);
-    for(const x of p){x.x+=x.vx;x.y+=x.vy;
-      if(x.x<0)x.x=W;if(x.x>W)x.x=0;if(x.y<0)x.y=H;if(x.y>H)x.y=0;
-      ctx.fillStyle='rgba(0,255,65,'+x.a+')';
-      ctx.beginPath();ctx.arc(x.x,x.y,x.s,0,Math.PI*2);ctx.fill();}
-  },30);
-})();
-
-/* ---------- BACKGROUND: HELIX ---------- */
-(function(){
-  const c=$('helix');if(!c)return;
-  const ctx=c.getContext('2d');
-  let W,H;function rs(){W=c.width=innerWidth;H=c.height=innerHeight;}
-  rs();addEventListener('resize',rs);
-  let t=0;
-  setInterval(()=>{
-    ctx.clearRect(0,0,W,H);t+=.02;
-    for(let x=0;x<W;x+=25){
-      const ph=(x*.02)+t;
-      const y1=H/2+Math.sin(ph)*(H*.28);
-      const y2=H/2+Math.sin(ph+Math.PI)*(H*.28);
-      ctx.fillStyle='rgba(0,255,65,.6)';ctx.beginPath();ctx.arc(x,y1,2,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(0,217,255,.6)';ctx.beginPath();ctx.arc(x,y2,2,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='rgba(0,255,65,.12)';ctx.beginPath();ctx.moveTo(x,y1);ctx.lineTo(x,y2);ctx.stroke();
-    }
-  },50);
-})();
-
-/* ---------- BACKGROUND: CUBE GRID ---------- */
-(function(){
-  const c=$('cube');if(!c)return;
-  const ctx=c.getContext('2d');
-  let W,H;function rs(){W=c.width=innerWidth;H=c.height=innerHeight;}
-  rs();addEventListener('resize',rs);
-  let t=0;
-  setInterval(()=>{
-    ctx.clearRect(0,0,W,H);t+=.008;
-    const size=40,cx=W/2,cy=H/2;
-    for(let gx=-6;gx<=6;gx++)for(let gy=-4;gy<=4;gy++){
-      const wx=gx*size,wy=gy*size;
-      const wz=Math.sin(t+(gx+gy)*.3)*80;
-      const sc=400/(400+wz);
-      const px=cx+wx*sc,py=cy+wy*sc,r=2*sc;
-      ctx.fillStyle='rgba(0,255,65,'+(0.12+sc*.12)+')';
-      ctx.beginPath();ctx.arc(px,py,r,0,Math.PI*2);ctx.fill();
-    }
-  },40);
+  }, 55);
 })();
 
 /* ---------- TYPING BANNER ---------- */
-const PHRASES=[
-  'ENCRYPTION ENGINE READY','SHA-256 HASHING BLOCK','SCANNING BLOCKCHAIN ...',
-  'MASKING IP ...','AES-256 TUNNEL ACTIVE','BROADCASTING TX ...',
-  'ROTATING KEYS ...','PEER DISCOVERY ...','SYNCING HEADERS ...',
-  'VERIFYING SIGNATURE ...','UTXO SCAN ...','CHECKSUM VERIFIED',
-  'BIP39 ENTROPY ...','PROBING NODES ...','WBTC BRIDGE ACTIVE',
-  'SECP256K1 READY','MEMPOOL POLL ...','BLOCK RELAY ...'
+const PHRASES = [
+  'ENCRYPTION ENGINE READY',
+  'SHA-256 HASHING BLOCK',
+  'SCANNING BLOCKCHAIN ...',
+  'MASKING IP ...',
+  'AES-256 TUNNEL ACTIVE',
+  'BROADCASTING TX ...',
+  'ROTATING KEYS ...',
+  'PEER DISCOVERY ...',
+  'SYNCING HEADERS ...',
+  'VERIFYING SIGNATURE ...',
+  'UTXO SCAN ...',
+  'CHECKSUM VERIFIED',
+  'BIP39 ENTROPY ...',
+  'PROBING NODES ...',
+  'WBTC BRIDGE ACTIVE'
 ];
-let pIdx=0,cIdx=0,deleting=false;
+let pIdx = 0, cIdx = 0, deleting = false;
 function typeLoop(){
-  const p=PHRASES[pIdx];const el=$('typ');if(!el)return;
-  if(!deleting){cIdx++;el.textContent=p.slice(0,cIdx);
-    if(cIdx>=p.length){deleting=true;setTimeout(typeLoop,1400);return;}
-    setTimeout(typeLoop,45+Math.random()*30);
-  }else{cIdx--;el.textContent=p.slice(0,cIdx);
-    if(cIdx<=0){deleting=false;pIdx=(pIdx+1)%PHRASES.length;setTimeout(typeLoop,250);return;}
-    setTimeout(typeLoop,20);
+  const p = PHRASES[pIdx];
+  const el = $('typ');
+  if(!el) return;
+  if(!deleting){
+    cIdx++;
+    el.textContent = p.slice(0,cIdx);
+    if(cIdx >= p.length){ deleting = true; setTimeout(typeLoop, 1400); return; }
+    setTimeout(typeLoop, 45 + Math.random()*30);
+  } else {
+    cIdx--;
+    el.textContent = p.slice(0,cIdx);
+    if(cIdx <= 0){
+      deleting = false;
+      pIdx = (pIdx+1) % PHRASES.length;
+      setTimeout(typeLoop, 250);
+      return;
+    }
+    setTimeout(typeLoop, 20);
   }
 }
 
 /* ---------- IP MASK ---------- */
-const REGIONS=['Amsterdam','Zurich','Reykjavik','Singapore','Tokyo','Toronto','Frankfurt','Stockholm','Seoul','Geneva','Luxembourg','Helsinki','Oslo','Vienna','Dublin'];
-const MASK_IPS=['185.***.***.12','91.***.***.208','77.***.***.04','45.***.***.122','103.***.***.87','212.***.***.33','62.***.***.150','80.***.***.66','196.***.***.201'];
+const REGIONS = ['Amsterdam','Zurich','Reykjavik','Singapore','Tokyo','Toronto',
+  'Frankfurt','Stockholm','Seoul','Geneva','Luxembourg','Helsinki','Oslo','Vienna','Dublin'];
+const MASK_IPS = ['185.***.***.12','91.***.***.208','77.***.***.04','45.***.***.122',
+  '103.***.***.87','212.***.***.33','62.***.***.150','80.***.***.66','196.***.***.201'];
+
 function maskSequence(){
-  const ipm=$('ipMask'),ips=$('ipStat');if(!ipm)return;
-  ipm.className='vl';ips.textContent='> masking...';
-  ipm.textContent='███████████████';
-  setTimeout(()=>{
-    const ip=pick(MASK_IPS),reg=pick(REGIONS);
-    ipm.textContent=ip+' · '+reg;ipm.className='vl h';
-    ips.textContent='> IDENTITY MASKED — '+reg;
-    log('> IP masked → '+ip+' ('+reg+')','ok');bump();
-  },700);
-  setTimeout(()=>{ips.textContent='> decoy signal · node '+rHex(4).toUpperCase();},2200);
+  const ipm = $('ipMask'), ips = $('ipStat');
+  if(!ipm) return;
+  ipm.className = 'vl';
+  ips.textContent = '> masking...';
+  ipm.textContent = '███████████████';
+  setTimeout(() => {
+    const ip = pick(MASK_IPS);
+    const reg = pick(REGIONS);
+    ipm.textContent = ip + ' · ' + reg;
+    ipm.className = 'vl h';
+    ips.textContent = '> IDENTITY MASKED — ' + reg;
+    log('> IP masked → ' + ip + ' (' + reg + ')', 'ok');
+    bump();
+  }, 700);
+  setTimeout(() => {
+    ips.textContent = '> decoy signal · node ' + rHex(4).toUpperCase();
+  }, 2200);
 }
+
 function traceSequence(){
-  const ipm=$('ipMask'),ips=$('ipStat');if(!ipm)return;
-  ipm.className='vl t';ips.textContent='> tracing route...';
-  let hops=0;
-  const iv=setInterval(()=>{
-    ipm.textContent='→ '+rHex(2).toUpperCase()+'.'+rHex(2).toUpperCase()+
-      ' → '+rHex(2).toUpperCase()+'.'+rHex(2).toUpperCase()+
-      ' → '+rHex(2).toUpperCase()+'.'+rHex(2).toUpperCase();
+  const ipm = $('ipMask'), ips = $('ipStat');
+  if(!ipm) return;
+  ipm.className = 'vl t';
+  ips.textContent = '> tracing route...';
+  let hops = 0;
+  const iv = setInterval(() => {
+    ipm.textContent = '→ ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase() +
+      ' → ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase() +
+      ' → ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase();
     hops++;
-    if(hops>6){clearInterval(iv);
-      ipm.className='vl t';ipm.textContent='TRACE BLOCKED — HONEYPOT';
-      ips.textContent='> intruder redirected to decoy';
-      log('> trace blocked','wa');bump();
-      setTimeout(maskSequence,1800);}
-  },400);
+    if(hops > 6){
+      clearInterval(iv);
+      ipm.className = 'vl t';
+      ipm.textContent = 'TRACE BLOCKED — HONEYPOT';
+      ips.textContent = '> intruder redirected to decoy';
+      log('> trace attempt blocked', 'wa');
+      bump();
+      setTimeout(maskSequence, 1800);
+    }
+  }, 400);
 }
 
 /* ---------- CLOCK + STATS ---------- */
-const START_TIME=Date.now();
-let totalPackets=0,entropyLevel=8192;
+const START_TIME = Date.now();
+let totalPackets = 0, entropyLevel = 8192;
+
 function updateClock(){
-  const d=new Date();
-  $('clock').textContent=String(d.getUTCHours()).padStart(2,'0')+':'+
-    String(d.getUTCMinutes()).padStart(2,'0')+':'+
-    String(d.getUTCSeconds()).padStart(2,'0')+' UTC';
-  $('nodeId').textContent=rHex(4).toUpperCase();
-  const s=Math.floor((Date.now()-START_TIME)/1000);
-  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
-  $('uptime').textContent=(h?h+'h ':'')+(m?m+'m ':'')+sec+'s';
+  const d = new Date();
+  $('clock').textContent =
+    String(d.getUTCHours()).padStart(2,'0') + ':' +
+    String(d.getUTCMinutes()).padStart(2,'0') + ':' +
+    String(d.getUTCSeconds()).padStart(2,'0') + ' UTC';
+  $('nodeId').textContent = rHex(4).toUpperCase();
+  const s = Math.floor((Date.now()-START_TIME)/1000);
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  $('uptime').textContent = (h?h+'h ':'') + (m?m+'m ':'') + sec + 's';
 }
 function updateStats(){
-  entropyLevel+=rInt(-40,60);
-  if(entropyLevel<3000)entropyLevel=3000;
-  if(entropyLevel>9999)entropyLevel=9999;
-  $('s1').textContent=entropyLevel;
-  totalPackets+=rInt(5,40);
-  $('s2').textContent=totalPackets.toLocaleString();
-  $('s3').textContent=rInt(12,90)+'ms';
-  $('s4').textContent=rInt(96,100)+'%';
-  $('s5').textContent=rInt(8,32);
-  $('s6').textContent=rInt(20000,60000).toLocaleString();
+  entropyLevel += rInt(-40,60);
+  if(entropyLevel < 3000) entropyLevel = 3000;
+  if(entropyLevel > 9999) entropyLevel = 9999;
+  $('s1').textContent = entropyLevel;
+  totalPackets += rInt(5,40);
+  $('s2').textContent = totalPackets.toLocaleString();
+  $('s3').textContent = rInt(12,90) + 'ms';
+  $('s4').textContent = rInt(96,100) + '%';
+  $('s5').textContent = rInt(8,32);
+  $('s6').textContent = rInt(20000,60000).toLocaleString();
 }
 
 /* ---------- TABS ---------- */
 function initTabs(){
-  document.querySelectorAll('.tab').forEach(btn=>{
-    btn.onclick=()=>{
-      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
-      document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
       btn.classList.add('on');
-      const pane=$('p-'+btn.dataset.t);
-      if(pane)pane.classList.add('on');
-      if(btn.dataset.t==='explorer'){fetchExplorer();fetchOrderBook();}
-      if(btn.dataset.t==='system')runSystemCheck();
+      const pane = $('p-' + btn.dataset.t);
+      if(pane) pane.classList.add('on');
+      if(btn.dataset.t === 'explorer') fetchExplorer();
     };
   });
 }
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach(b=>{
-    if(b.dataset.t===name)b.classList.add('on');else b.classList.remove('on');
+  document.querySelectorAll('.tab').forEach(b => {
+    if(b.dataset.t === name){ b.classList.add('on'); }
+    else b.classList.remove('on');
   });
-  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
-  const pane=$('p-'+name);if(pane)pane.classList.add('on');
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  const pane = $('p-' + name);
+  if(pane) pane.classList.add('on');
 }
 
 /* ---------- WALLETS ---------- */
-const CHAINS={'0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum','0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'};
+const CHAIN_NAMES = {
+  '0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum',
+  '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
+};
+
 function detectWallets(){
-  if(typeof window.ethereum!=='undefined'){
-    ['metamask','coinbase','trust','xverse','leather','unisat','okx'].forEach(id=>{
-      const s=$('s-'+id),b=$('w-'+id);
-      if(s)s.textContent='LIVE';
-      if(b)b.classList.add('live');
+  if(typeof window.ethereum !== 'undefined'){
+    ['metamask','coinbase','trust','xverse','leather','unisat','okx'].forEach(id => {
+      const s = $('s-'+id), b = $('w-'+id);
+      if(s) s.textContent = 'LIVE';
+      if(b) b.classList.add('live');
     });
-    log('> injected wallet detected','ok');
-  }else log('> no injected wallet','dm');
+    log('> injected wallet detected', 'ok');
+  } else {
+    log('> no injected wallet found', 'dm');
+  }
 }
+
 async function connectInjected(name){
-  if(typeof window.ethereum==='undefined'){
-    showModal(name+' Not Detected','<p>Install '+name+' or open this page in its in-app browser.</p>');
+  if(typeof window.ethereum === 'undefined'){
+    showModal(name + ' Not Detected',
+      '<p>Install the ' + name + ' app, or open this page inside the ' + name + ' in-app browser.</p>');
     return;
   }
   try{
-    const accs=await window.ethereum.request({method:'eth_requestAccounts'});
-    if(!accs||!accs.length)return;
-    const acc=accs[0];
-    const ch=await window.ethereum.request({method:'eth_chainId'});
-    let bal='—';
-    try{const b=await window.ethereum.request({method:'eth_getBalance',params:[acc,'latest']});
-      bal=(parseInt(b,16)/1e18).toFixed(6)+' ETH';}catch(e){}
-    showAccount(acc,CHAINS[ch]||ch,bal,'EVM');
-    document.querySelectorAll('.wbtn').forEach(b=>b.classList.remove('connected'));
-    const btn=$('w-'+name.toLowerCase());
-    if(btn)btn.classList.add('connected');
-    log('> wallet: '+name+' · '+acc.slice(0,10)+'…','ok');bump();
-  }catch(e){showModal('Connection Failed','<p>'+e.message+'</p>');}
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    if(!accounts || !accounts.length) return;
+    const acc = accounts[0];
+    const chainHex = await window.ethereum.request({method:'eth_chainId'});
+    let bal = '—';
+    try{
+      const b = await window.ethereum.request({method:'eth_getBalance', params:[acc,'latest']});
+      bal = (parseInt(b,16)/1e18).toFixed(6) + ' ETH';
+    } catch(e){}
+    showAccount(acc, CHAIN_NAMES[chainHex] || chainHex, bal, 'EVM');
+    document.querySelectorAll('.wbtn').forEach(b => b.classList.remove('connected'));
+    const btn = $('w-'+name.toLowerCase());
+    if(btn) btn.classList.add('connected');
+    log('> wallet: ' + name + ' · ' + acc.slice(0,10) + '…', 'ok');
+    bump();
+  } catch(e){
+    showModal('Connection Failed', '<p>' + e.message + '</p>');
+  }
 }
+
 function connectWalletConnect(){
-  const uri=prompt('Paste WalletConnect URI:');
-  if(!uri)return;
-  showModal('WalletConnect','<p>URI received. Full WalletConnect requires the @walletconnect/web3-provider library.</p>');
+  const uri = prompt('Paste WalletConnect URI:');
+  if(!uri) return;
+  showModal('WalletConnect',
+    '<p>URI received.</p><p>Full WalletConnect requires the @walletconnect/web3-provider library. This is a demo placeholder.</p>');
 }
-function showAccount(addr,chain,balance,type){
-  $('acct').style.display='block';
-  $('aAd').textContent=addr;$('aCh').textContent=chain;$('aBal').textContent=balance;$('aType').textContent=type;
+
+function showAccount(addr, chain, balance, type){
+  $('acct').style.display = 'block';
+  $('aAd').textContent = addr;
+  $('aCh').textContent = chain;
+  $('aBal').textContent = balance;
+  $('aType').textContent = type;
 }
+
 function disconnectWallet(){
-  $('acct').style.display='none';
-  document.querySelectorAll('.wbtn').forEach(b=>b.classList.remove('connected'));
-  log('> disconnected','wa');
+  $('acct').style.display = 'none';
+  document.querySelectorAll('.wbtn').forEach(b => b.classList.remove('connected'));
+  log('> wallet disconnected', 'wa');
 }
 
 /* ---------- ADDRESS ---------- */
 function classifyBTC(a){
-  if(!a)return null;
-  if(/^1[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))return{type:'P2PKH (Legacy)',net:'mainnet',enc:'Base58Check'};
-  if(/^3[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))return{type:'P2SH (SegWit)',net:'mainnet',enc:'Base58Check'};
-  if(/^bc1q[a-z0-9]{38,58}$/.test(a))return{type:'P2WPKH (Native SegWit)',net:'mainnet',enc:'Bech32'};
-  if(/^bc1p[a-z0-9]{58}$/.test(a))return{type:'P2TR (Taproot)',net:'mainnet',enc:'Bech32m'};
-  if(/^[mn][1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))return{type:'P2PKH (testnet)',net:'testnet',enc:'Base58Check'};
-  if(/^2[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))return{type:'P2SH (testnet)',net:'testnet',enc:'Base58Check'};
-  if(/^tb1[a-z0-9]{38,58}$/.test(a))return{type:'SegWit (testnet)',net:'testnet',enc:'Bech32'};
+  if(!a) return null;
+  if(/^1[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2PKH (Legacy)', net:'mainnet', enc:'Base58Check'};
+  if(/^3[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2SH (SegWit-compatible)', net:'mainnet', enc:'Base58Check'};
+  if(/^bc1q[a-z0-9]{38,58}$/.test(a))
+    return {type:'P2WPKH (Native SegWit)', net:'mainnet', enc:'Bech32'};
+  if(/^bc1p[a-z0-9]{58}$/.test(a))
+    return {type:'P2TR (Taproot)', net:'mainnet', enc:'Bech32m'};
+  if(/^[mn][1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2PKH (testnet)', net:'testnet', enc:'Base58Check'};
+  if(/^2[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2SH (testnet)', net:'testnet', enc:'Base58Check'};
+  if(/^tb1[a-z0-9]{38,58}$/.test(a))
+    return {type:'SegWit (testnet)', net:'testnet', enc:'Bech32'};
   return null;
 }
+
 function analyzeAddress(){
-  const a=$('aInput').value.trim();const out=$('aOut');
-  if(!a){out.textContent='Empty input.';return;}
-  const info=classifyBTC(a);
-  if(!info){out.textContent='✗ Not a valid Bitcoin address format.';return;}
-  let txt='✓ VALID BITCOIN ADDRESS\n\n';
-  txt+='Address:   '+a+'\nType:      '+info.type+'\nNetwork:   '+info.net+'\nEncoding:  '+info.enc+'\nLength:    '+a.length+' chars\n';
-  out.textContent=txt;bump();
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  const info = classifyBTC(a);
+  if(!info){ out.textContent = '✗ Not a valid Bitcoin address format.'; return; }
+  let txt = '✓ VALID BITCOIN ADDRESS\n\n';
+  txt += 'Address:   ' + a + '\n';
+  txt += 'Type:      ' + info.type + '\n';
+  txt += 'Network:   ' + info.net + '\n';
+  txt += 'Encoding:  ' + info.enc + '\n';
+  txt += 'Length:    ' + a.length + ' chars\n';
+  out.textContent = txt;
+  bump();
 }
+
 async function checkBalance(){
-  const a=$('aInput').value.trim();const out=$('aOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying blockchain.info...';
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying blockchain.info...';
   try{
-    const r=await fetch('https://blockchain.info/q/addressbalance/'+a+'?cors=true');
-    const s=await r.text();const n=parseInt(s);
-    if(isNaN(n)){out.textContent='Could not fetch.';return;}
-    let txt='◉ BALANCE LOOKUP\n\nAddress:   '+a+'\nSatoshis:  '+n.toLocaleString()+'\nBTC:       '+(n/1e8).toFixed(8)+'\n';
-    out.textContent=txt;
-    log('> balance: '+(n/1e8).toFixed(8)+' BTC','ok');bump();
-  }catch(e){out.textContent='Query failed: '+e.message;}
+    const r = await fetch('https://blockchain.info/q/addressbalance/' + a + '?cors=true');
+    const s = await r.text();
+    const n = parseInt(s);
+    if(isNaN(n)){ out.textContent = 'Could not fetch. Address may be unused or invalid.'; return; }
+    let txt = '◉ BALANCE LOOKUP\n\n';
+    txt += 'Address:   ' + a + '\n';
+    txt += 'Satoshis:  ' + n.toLocaleString() + '\n';
+    txt += 'BTC:       ' + (n/1e8).toFixed(8) + '\n';
+    out.textContent = txt;
+    log('> balance: ' + a.slice(0,10) + '… = ' + (n/1e8).toFixed(8) + ' BTC', 'ok');
+    bump();
+  } catch(e){
+    out.textContent = 'Query failed: ' + e.message;
+  }
 }
+
 async function lookupAddressFull(){
-  const a=$('aInput').value.trim();const out=$('aOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying...';
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying...';
   try{
-    const r=await fetch('https://blockchain.info/rawaddr/'+a+'?limit=5&cors=true');
-    const j=await r.json();
-    let txt='ADDRESS SUMMARY\n\nAddress:        '+j.address+'\n'+
-      'Total received: '+(j.total_received/1e8).toFixed(8)+' BTC\n'+
-      'Total sent:     '+(j.total_sent/1e8).toFixed(8)+' BTC\n'+
-      'Final balance:  '+(j.final_balance/1e8).toFixed(8)+' BTC\n'+
-      'Transactions:   '+j.n_tx+'\n\nRECENT:\n';
-    (j.txs||[]).slice(0,5).forEach(t=>{txt+='  '+t.hash.slice(0,16)+'…  '+(t.result/1e8).toFixed(8)+' BTC\n';});
-    out.textContent=txt;bump();
-  }catch(e){out.textContent='Lookup failed: '+e.message;}
+    const r = await fetch('https://blockchain.info/rawaddr/' + a + '?limit=5&cors=true');
+    const j = await r.json();
+    let txt = 'ADDRESS SUMMARY\n\n';
+    txt += 'Address:        ' + j.address + '\n';
+    txt += 'Total received: ' + (j.total_received/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Total sent:     ' + (j.total_sent/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Final balance:  ' + (j.final_balance/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Transactions:   ' + j.n_tx + '\n\n';
+    txt += 'RECENT:\n';
+    (j.txs||[]).slice(0,5).forEach(t => {
+      txt += '  ' + t.hash.slice(0,16) + '…  ' + (t.result/1e8).toFixed(8) + ' BTC\n';
+    });
+    out.textContent = txt;
+    log('> address lookup: ' + a.slice(0,12) + '…', 'ok');
+    bump();
+  } catch(e){
+    out.textContent = 'Lookup failed: ' + e.message;
+  }
 }
+
 function batchCheck(){
-  const raw=$('bInput').value.trim();const out=$('bOut');
-  if(!raw){out.textContent='Empty input.';return;}
-  const lines=raw.split('\n').map(x=>x.trim()).filter(Boolean);
-  let valid=0,invalid=0,txt='';
-  lines.forEach(a=>{
-    const info=classifyBTC(a);
-    if(info){valid++;txt+='✓ '+a.slice(0,20)+'…  '+info.type+'\n';}
-    else{invalid++;txt+='✗ '+a.slice(0,20)+'…  invalid\n';}
+  const raw = $('bInput').value.trim();
+  const out = $('bOut');
+  if(!raw){ out.textContent = 'Empty input.'; return; }
+  const lines = raw.split('\n').map(x => x.trim()).filter(Boolean);
+  let valid = 0, invalid = 0, txt = '';
+  lines.forEach(a => {
+    const info = classifyBTC(a);
+    if(info){ valid++; txt += '✓ ' + a.slice(0,20) + '…  ' + info.type + '\n'; }
+    else { invalid++; txt += '✗ ' + a.slice(0,20) + '…  invalid\n'; }
   });
-  out.textContent='Valid: '+valid+'  |  Invalid: '+invalid+'\n\n'+txt;
+  out.textContent = 'Valid: ' + valid + '  |  Invalid: ' + invalid + '\n\n' + txt;
 }
 
 /* ---------- HASH ---------- */
 async function sha256(msg){
-  const buf=new TextEncoder().encode(msg);
-  const h=await crypto.subtle.digest('SHA-256',buf);
+  const buf = new TextEncoder().encode(msg);
+  const h = await crypto.subtle.digest('SHA-256', buf);
   return bytesToHex(new Uint8Array(h));
 }
-async function doSHA256(){$('hOut').textContent=await sha256($('hInput').value);}
+async function doSHA256(){
+  $('hOut').textContent = await sha256($('hInput').value);
+}
 async function doDoubleSHA(){
-  const h1=await sha256($('hInput').value);
-  const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-  $('hOut').textContent=bytesToHex(new Uint8Array(h2buf));
+  const h1 = await sha256($('hInput').value);
+  const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+  $('hOut').textContent = bytesToHex(new Uint8Array(h2buf));
 }
 async function doSHA512(){
-  const buf=new TextEncoder().encode($('hInput').value);
-  const h=await crypto.subtle.digest('SHA-512',buf);
-  $('hOut').textContent=bytesToHex(new Uint8Array(h));
+  const buf = new TextEncoder().encode($('hInput').value);
+  const h = await crypto.subtle.digest('SHA-512', buf);
+  $('hOut').textContent = bytesToHex(new Uint8Array(h));
 }
 async function doSHA1(){
-  const buf=new TextEncoder().encode($('hInput').value);
-  const h=await crypto.subtle.digest('SHA-1',buf);
-  $('hOut').textContent=bytesToHex(new Uint8Array(h));
+  const buf = new TextEncoder().encode($('hInput').value);
+  const h = await crypto.subtle.digest('SHA-1', buf);
+  $('hOut').textContent = bytesToHex(new Uint8Array(h));
 }
 async function doHMAC(){
-  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode('Bitcoin seed'),
-    {name:'HMAC',hash:'SHA-512'},false,['sign']);
-  const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode($('hInput').value));
-  $('hOut').textContent=bytesToHex(new Uint8Array(sig));
-}
-async function hash256ToAddress(){
-  const h=await sha256($('hInput').value);
-  const bytes=hexToBytes(h);
-  const withVer=new Uint8Array(21);
-  withVer[0]=0x00;withVer.set(bytes.slice(0,20),1);
-  const h1=await sha256(bytesToHex(withVer));
-  const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-  const chk=new Uint8Array(h2buf).slice(0,4);
-  const full=new Uint8Array(25);
-  full.set(withVer,0);full.set(chk,21);
-  const addr=b58EncodeStr(full);
-  $('hOut').textContent='SHA-256:  '+h+'\n\nDerived BTC address:\n'+addr+'\n\n(educational · not spendable)';
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('Bitcoin seed'),
+    {name:'HMAC', hash:'SHA-512'}, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode($('hInput').value));
+  $('hOut').textContent = bytesToHex(new Uint8Array(sig));
 }
 
 /* ---------- BASE58 ---------- */
-const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+const B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 function b58EncodeStr(bytes){
-  let num=0n;
-  for(const b of bytes)num=num*256n+BigInt(b);
-  let s='';
-  while(num>0n){s=B58[Number(num%58n)]+s;num=num/58n;}
-  for(const b of bytes){if(b===0)s='1'+s;else break;}
+  let num = 0n;
+  for(const b of bytes) num = num * 256n + BigInt(b);
+  let s = '';
+  while(num > 0n){ s = B58[Number(num % 58n)] + s; num = num / 58n; }
+  for(const b of bytes){ if(b === 0) s = '1' + s; else break; }
   return s;
 }
 function b58DecodeStr(str){
-  let num=0n;
-  for(const c of str){const i=B58.indexOf(c);if(i===-1)throw new Error('Invalid base58 char: '+c);num=num*58n+BigInt(i);}
-  const out=[];
-  while(num>0n){out.unshift(Number(num%256n));num=num/256n;}
-  for(const c of str){if(c==='1')out.unshift(0);else break;}
+  let num = 0n;
+  for(const c of str){
+    const i = B58.indexOf(c);
+    if(i === -1) throw new Error('Invalid base58 char: ' + c);
+    num = num * 58n + BigInt(i);
+  }
+  const out = [];
+  while(num > 0n){ out.unshift(Number(num % 256n)); num = num / 256n; }
+  for(const c of str){ if(c === '1') out.unshift(0); else break; }
   return new Uint8Array(out);
 }
+
 function b58Encode(){
-  const t=$('eInput').value.trim();
+  const t = $('eInput').value.trim();
   try{
-    const bytes=/^[0-9a-f]+$/i.test(t)?hexToBytes(t):new TextEncoder().encode(t);
-    $('eOut').textContent=b58EncodeStr(bytes);
-  }catch(e){$('eOut').textContent='Error: '+e.message;}
+    const bytes = /^[0-9a-f]+$/i.test(t) ? hexToBytes(t) : new TextEncoder().encode(t);
+    $('eOut').textContent = b58EncodeStr(bytes);
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
 function b58Decode(){
-  const t=$('eInput').value.trim();
+  const t = $('eInput').value.trim();
   try{
-    const bytes=b58DecodeStr(t);
-    $('eOut').textContent='HEX: '+bytesToHex(bytes)+'\nUTF-8: '+new TextDecoder().decode(bytes);
-  }catch(e){$('eOut').textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(t);
+    $('eOut').textContent = 'HEX: ' + bytesToHex(bytes) + '\nUTF-8: ' + new TextDecoder().decode(bytes);
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
 async function b58Check(){
-  const t=$('eInput').value.trim();
+  const t = $('eInput').value.trim();
   try{
-    const bytes=b58DecodeStr(t);
-    if(bytes.length<5){$('eOut').textContent='Too short.';return;}
-    const payload=bytes.slice(0,-4);const chk=bytes.slice(-4);
-    const h1=await sha256(bytesToHex(payload));
-    const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-    const expected=bytesToHex(new Uint8Array(h2buf)).slice(0,8);
-    const actual=bytesToHex(chk);const ok=expected===actual;
-    const verNames={0x00:'P2PKH mainnet',0x05:'P2SH mainnet',0x6F:'P2PKH testnet',0xC4:'P2SH testnet',0x80:'WIF mainnet',0xEF:'WIF testnet'};
-    let txt='BASE58CHECK VERIFICATION\n\nPayload:   '+bytesToHex(payload).slice(0,40)+'\n'+
-      'Checksum:  '+actual+'\nExpected:  '+expected+'\n'+
-      'Status:    '+(ok?'✓ VALID':'✗ INVALID')+'\n'+
-      'Version:   0x'+payload[0].toString(16).padStart(2,'0')+' ('+(verNames[payload[0]]||'unknown')+')';
-    $('eOut').textContent=txt;
-  }catch(e){$('eOut').textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(t);
+    if(bytes.length < 5){ $('eOut').textContent = 'Too short.'; return; }
+    const payload = bytes.slice(0, -4);
+    const chk = bytes.slice(-4);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const expected = bytesToHex(new Uint8Array(h2buf)).slice(0, 8);
+    const actual = bytesToHex(chk);
+    const ok = expected === actual;
+    const verNames = {0x00:'P2PKH mainnet', 0x05:'P2SH mainnet', 0x6F:'P2PKH testnet',
+      0xC4:'P2SH testnet', 0x80:'WIF mainnet', 0xEF:'WIF testnet'};
+    let txt = 'BASE58CHECK VERIFICATION\n\n';
+    txt += 'Payload:   ' + bytesToHex(payload).slice(0,40) + '\n';
+    txt += 'Checksum:  ' + actual + '\n';
+    txt += 'Expected:  ' + expected + '\n';
+    txt += 'Status:    ' + (ok ? '✓ VALID' : '✗ INVALID') + '\n';
+    txt += 'Version:   0x' + payload[0].toString(16).padStart(2,'0') + ' (' + (verNames[payload[0]] || 'unknown') + ')';
+    $('eOut').textContent = txt;
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
-function hexEncode(){$('eOut').textContent=bytesToHex(new TextEncoder().encode($('eInput').value));}
+function hexEncode(){
+  $('eOut').textContent = bytesToHex(new TextEncoder().encode($('eInput').value));
+}
 function hexDecode(){
-  try{$('eOut').textContent=new TextDecoder().decode(hexToBytes($('eInput').value));}
-  catch(e){$('eOut').textContent='Invalid hex.';}
+  try{ $('eOut').textContent = new TextDecoder().decode(hexToBytes($('eInput').value)); }
+  catch(e){ $('eOut').textContent = 'Invalid hex.'; }
 }
-function base64Enc(){try{$('eOut').textContent=btoa(unescape(encodeURIComponent($('eInput').value)));}catch(e){$('eOut').textContent='Error.';}}
-function base64Dec(){try{$('eOut').textContent=decodeURIComponent(escape(atob($('eInput').value)));}catch(e){$('eOut').textContent='Invalid base64.';}}
-function urlEnc(){$('eOut').textContent=encodeURIComponent($('eInput').value);}
-function urlDec(){try{$('eOut').textContent=decodeURIComponent($('eInput').value);}catch(e){$('eOut').textContent='Invalid.';}}
+function base64Enc(){
+  try{ $('eOut').textContent = btoa(unescape(encodeURIComponent($('eInput').value))); }
+  catch(e){ $('eOut').textContent = 'Error.'; }
+}
+function base64Dec(){
+  try{ $('eOut').textContent = decodeURIComponent(escape(atob($('eInput').value))); }
+  catch(e){ $('eOut').textContent = 'Invalid base64.'; }
+}
+function urlEnc(){
+  $('eOut').textContent = encodeURIComponent($('eInput').value);
+}
 
 /* ---------- KEYS / WIF ---------- */
 function genPrivKey(){
-  const arr=new Uint8Array(32);crypto.getRandomValues(arr);
-  $('pkOut').textContent=bytesToHex(arr);
-  log('> private key generated (real random)','ok');bump();
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  $('pkOut').textContent = bytesToHex(arr);
+  log('> private key generated (real random)', 'ok');
+  bump();
 }
 async function wifEncode(){
-  const hex=$('wifIn').value.trim().replace(/[^0-9a-f]/gi,'');const out=$('wifOut');
-  if(hex.length!==64){out.textContent='Error: 64 hex chars required.';return;}
+  const hex = $('wifIn').value.trim().replace(/[^0-9a-f]/gi,'');
+  const out = $('wifOut');
+  if(hex.length !== 64){ out.textContent = 'Error: 64 hex chars required.'; return; }
   try{
-    const payload=new Uint8Array(33);payload[0]=0x80;payload.set(hexToBytes(hex),1);
-    const h1=await sha256(bytesToHex(payload));
-    const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-    const chk=new Uint8Array(h2buf).slice(0,4);
-    const full=new Uint8Array(37);full.set(payload,0);full.set(chk,33);
-    const wif=b58EncodeStr(full);
-    out.textContent='WIF (mainnet):\n'+wif+'\n\nLength: '+wif.length+' chars';
-    log('> WIF encoded','ok');
-  }catch(e){out.textContent='Error: '+e.message;}
+    const payload = new Uint8Array(33);
+    payload[0] = 0x80;
+    payload.set(hexToBytes(hex), 1);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const chk = new Uint8Array(h2buf).slice(0,4);
+    const full = new Uint8Array(37);
+    full.set(payload, 0);
+    full.set(chk, 33);
+    const wif = b58EncodeStr(full);
+    out.textContent = 'WIF (mainnet):\n' + wif + '\n\nLength: ' + wif.length + ' chars';
+    log('> WIF encoded', 'ok');
+  } catch(e){ out.textContent = 'Error: ' + e.message; }
 }
 async function wifDecode(){
-  const wif=$('wifDecIn').value.trim();const out=$('wifDecOut');
-  if(!wif){out.textContent='Empty input.';return;}
+  const wif = $('wifDecIn').value.trim();
+  const out = $('wifDecOut');
+  if(!wif){ out.textContent = 'Empty input.'; return; }
   try{
-    const bytes=b58DecodeStr(wif);
-    if(bytes.length<5){out.textContent='Too short.';return;}
-    const payload=bytes.slice(0,-4);const chk=bytes.slice(-4);
-    const h1=await sha256(bytesToHex(payload));
-    const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-    const expected=bytesToHex(new Uint8Array(h2buf)).slice(0,8);
-    const valid=expected===bytesToHex(chk);
-    const verNames={0x80:'WIF mainnet',0xEF:'WIF testnet'};
-    let txt='WIF DECODE\n\nPrefix:   0x'+payload[0].toString(16).padStart(2,'0')+
-      ' ('+(verNames[payload[0]]||'unknown')+')\n'+
-      'Key hex:  '+bytesToHex(payload.slice(1))+'\n'+
-      'Checksum: '+(valid?'✓ VALID':'✗ INVALID');
-    out.textContent=txt;
-  }catch(e){out.textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(wif);
+    if(bytes.length < 5){ out.textContent = 'Too short.'; return; }
+    const payload = bytes.slice(0, -4);
+    const chk = bytes.slice(-4);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const expected = bytesToHex(new Uint8Array(h2buf)).slice(0,8);
+    const valid = expected === bytesToHex(chk);
+    const verNames = {0x80:'WIF mainnet', 0xEF:'WIF testnet'};
+    let txt = 'WIF DECODE\n\n';
+    txt += 'Prefix:   0x' + payload[0].toString(16).padStart(2,'0') + ' (' + (verNames[payload[0]] || 'unknown') + ')\n';
+    txt += 'Key hex:  ' + bytesToHex(payload.slice(1)) + '\n';
+    txt += 'Checksum: ' + (valid ? '✓ VALID' : '✗ INVALID');
+    out.textContent = txt;
+  } catch(e){ out.textContent = 'Error: ' + e.message; }
 }
 function updateEntropy(){
-  const t=$('entIn').value;
-  if(!t.length){$('entBar').style.width='0%';$('entOut').textContent='—';return;}
-  let pool=0;
-  if(/[a-z]/.test(t))pool+=26;
-  if(/[A-Z]/.test(t))pool+=26;
-  if(/[0-9]/.test(t))pool+=10;
-  if(/[^A-Za-z0-9]/.test(t))pool+=32;
-  const bits=t.length*Math.log2(pool||1);
-  $('entBar').style.width=Math.min(100,bits)+'%';
+  const t = $('entIn').value;
+  if(!t.length){ $('entBar').style.width = '0%'; $('entOut').textContent = '—'; return; }
+  let pool = 0;
+  if(/[a-z]/.test(t)) pool += 26;
+  if(/[A-Z]/.test(t)) pool += 26;
+  if(/[0-9]/.test(t)) pool += 10;
+  if(/[^A-Za-z0-9]/.test(t)) pool += 32;
+  const bits = t.length * Math.log2(pool || 1);
+  $('entBar').style.width = Math.min(100, bits) + '%';
   let quality;
-  if(bits<30)quality='VERY WEAK';
-  else if(bits<50)quality='WEAK';
-  else if(bits<80)quality='FAIR';
-  else if(bits<128)quality='STRONG';
-  else quality='EXCELLENT';
-  $('entOut').textContent='Length: '+t.length+'\nEntropy: '+bits.toFixed(1)+' bits\nQuality: '+quality;
+  if(bits < 30) quality = 'VERY WEAK';
+  else if(bits < 50) quality = 'WEAK';
+  else if(bits < 80) quality = 'FAIR';
+  else if(bits < 128) quality = 'STRONG';
+  else quality = 'EXCELLENT';
+  $('entOut').textContent = 'Length: ' + t.length + '\nEntropy: ' + bits.toFixed(1) + ' bits\nQuality: ' + quality;
 }
 function genVanity(){
-  const pre=$('vanIn').value.trim()||'QC';
-  const chars='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-  let s='1'+pre;
-  while(s.length<34)s+=chars[Math.floor(Math.random()*chars.length)];
-  $('vanOut').textContent=s;
-  log('> vanity address generated (simulated)','wa');
+  const pre = $('vanIn').value.trim() || 'QC';
+  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let s = '1' + pre;
+  while(s.length < 34) s += chars[Math.floor(Math.random()*chars.length)];
+  $('vanOut').textContent = s;
+  log('> vanity address generated (simulated)', 'wa');
 }
 
 /* ---------- MNEMONIC ---------- */
-const WORDS=['abandon','ability','able','about','above','absent','absorb','abstract','absurd','abuse','access','accident','account','accuse','achieve','acid','acoustic','acquire','across','act','action','actor','actress','actual','adapt','add','addict','address','adjust','admit','adult','advance','advice','aerobic','affair','afford','afraid','again','age','agent','agree','ahead','aim','air','airport','aisle','alarm','album','alcohol','alert','alien','all','alley','allow','almost','alone','alpha','already','also','alter','always','amateur','amazing','among','amount','amused'];
+const WORDS = ['abandon','ability','able','about','above','absent','absorb','abstract',
+  'absurd','abuse','access','accident','account','accuse','achieve','acid','acoustic',
+  'acquire','across','act','action','actor','actress','actual','adapt','add','addict',
+  'address','adjust','admit','adult','advance','advice','aerobic','affair','afford',
+  'afraid','again','age','agent','agree','ahead','aim','air','airport','aisle','alarm',
+  'album','alcohol','alert','alien','all','alley','allow','almost','alone','alpha',
+  'already','also','alter','always','amateur','amazing','among','amount','amused'];
+
 function genMnemonic(n){
-  const picked=[];
-  while(picked.length<n){
-    const w=WORDS[Math.floor(Math.random()*WORDS.length)];
-    if(!picked.includes(w))picked.push(w);
+  const picked = [];
+  while(picked.length < n){
+    const w = WORDS[Math.floor(Math.random()*WORDS.length)];
+    if(!picked.includes(w)) picked.push(w);
   }
-  $('mn'+n).textContent=picked.join(' ');
-  log('> '+n+'-word mnemonic generated (visual)','wa');bump();
+  $('mn'+n).textContent = picked.join(' ');
+  log('> ' + n + '-word mnemonic generated (visual)', 'wa');
+  bump();
 }
 
-/* ---------- ENCRYPT ---------- */
-async function deriveKey(pass,salt){
-  const baseKey=await crypto.subtle.importKey('raw',new TextEncoder().encode(pass),{name:'PBKDF2'},false,['deriveKey']);
-  return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},baseKey,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+/* ---------- ENCRYPT (AES-GCM + PBKDF2) ---------- */
+async function deriveKey(pass, salt){
+  const baseKey = await crypto.subtle.importKey('raw',
+    new TextEncoder().encode(pass), {name:'PBKDF2'}, false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt:salt, iterations:100000, hash:'SHA-256'},
+    baseKey, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
 }
 async function doEncrypt(){
-  const text=$('encText').value,pass=$('encPass').value;
-  if(!text||!pass){$('encOut').textContent='Need text and passphrase.';return;}
+  const text = $('encText').value;
+  const pass = $('encPass').value;
+  if(!text || !pass){ $('encOut').textContent = 'Need text and passphrase.'; return; }
   try{
-    const salt=crypto.getRandomValues(new Uint8Array(16));
-    const iv=crypto.getRandomValues(new Uint8Array(12));
-    const key=await deriveKey(pass,salt);
-    const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,new TextEncoder().encode(text));
-    const payload=new Uint8Array(16+12+ct.byteLength);
-    payload.set(salt,0);payload.set(iv,16);payload.set(new Uint8Array(ct),28);
-    $('encOut').textContent=btoa(String.fromCharCode(...payload));
-  }catch(e){$('encOut').textContent='Error: '+e.message;}
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(pass, salt);
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv:iv},
+      key, new TextEncoder().encode(text));
+    const payload = new Uint8Array(16 + 12 + ct.byteLength);
+    payload.set(salt, 0); payload.set(iv, 16); payload.set(new Uint8Array(ct), 28);
+    $('encOut').textContent = btoa(String.fromCharCode(...payload));
+  } catch(e){ $('encOut').textContent = 'Error: ' + e.message; }
 }
 async function doDecrypt(){
-  const b64=$('encOut').textContent.trim();
-  const pass=$('encPass').value;
-  if(!b64||b64==='—')return;
+  const b64 = $('encOut').textContent.trim();
+  const pass = $('encPass').value;
+  if(!b64 || b64 === '—'){ return; }
   try{
-    const raw=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
-    const salt=raw.slice(0,16),iv=raw.slice(16,28),ct=raw.slice(28);
-    const key=await deriveKey(pass,salt);
-    const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);
-    $('encOut').textContent=new TextDecoder().decode(pt);
-  }catch(e){$('encOut').textContent='Decryption failed.';}
+    const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const salt = raw.slice(0,16), iv = raw.slice(16,28), ct = raw.slice(28);
+    const key = await deriveKey(pass, salt);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:iv}, key, ct);
+    $('encOut').textContent = new TextDecoder().decode(pt);
+  } catch(e){ $('encOut').textContent = 'Decryption failed. Wrong passphrase or corrupted.'; }
 }
 function doXor(){
-  const text=$('xorText').value,key=$('xorKey').value||'K';
-  const out=[];
-  for(let i=0;i<text.length;i++)out.push((text.charCodeAt(i)^key.charCodeAt(i%key.length)).toString(16).padStart(2,'0'));
-  $('xorOut').textContent=out.join(' ');
+  const text = $('xorText').value;
+  const key = $('xorKey').value || 'K';
+  const out = [];
+  for(let i=0;i<text.length;i++){
+    out.push((text.charCodeAt(i) ^ key.charCodeAt(i % key.length)).toString(16).padStart(2,'0'));
+  }
+  $('xorOut').textContent = out.join(' ');
 }
 
-/* ---------- CRACK ---------- */
-let crackInterval=null;
-function useLastHash(){
-  const h=$('hOut').textContent;
-  if(h&&h!=='—')$('crackHash').value=h;
-  switchTab('crack');
-}
+/* ---------- CRACK SIMULATION ---------- */
+let crackInterval = null;
+const CRACK_WORDS = ['password','bitcoin','wallet','admin','123456','qwerty','letmein',
+  'master','satoshii','nakamoto','hodl','moon','blockchain','satoshi','genesis',
+  'qcity','btc','crypto','diamond','handshake','alpha','bravo','delta','omega'];
+
 function startCrack(mode){
-  const target=$('crackHash').value.trim();
-  if(!target){$('crackOut').textContent='> paste a SHA-256 hash above first.';return;}
+  const target = $('crackHash').value.trim();
+  if(!target){ $('crackOut').textContent = '> paste a SHA-256 hash above first.'; return; }
   stopCrack();
-  const out=$('crackOut'),fill=$('crackFill');
-  out.textContent='> crack mode: '+mode.toUpperCase()+'\n> target: '+target.slice(0,24)+'…\n\n';
-  let progress=0;
-  const speeds={dictionary:rInt(50000,150000),brute:rInt(200000,900000),rainbow:rInt(500000,2000000)};
-  const speed=speeds[mode]||100000;
-  let tried=0;const start=Date.now();
-  crackInterval=setInterval(()=>{
-    tried+=speed;
-    progress=Math.min(100,progress+.3+Math.random()*.7);
-    fill.style.width=progress+'%';
-    const elapsed=((Date.now()-start)/1000).toFixed(1);
-    const rate=(tried/Math.max(elapsed,.1)).toFixed(0);
-    out.textContent='> crack mode: '+mode.toUpperCase()+'\n> target: '+target.slice(0,24)+'…\n'+
-      '> elapsed: '+elapsed+'s\n> tried: '+tried.toLocaleString()+'\n> rate: '+Number(rate).toLocaleString()+' h/s\n\n'+
-      (mode==='dictionary'?'> trying word #'+rInt(1,9999)+'\n':mode==='brute'?'> brute: '+rHex(12)+'\n':'> rainbow lookup: '+rHex(8)+'\n');
-    if(progress>=100){
-      stopCrack();fill.style.width='100%';
-      out.textContent+='\n> ⚠ SIMULATION COMPLETE — no real hash cracked.\n'+
-        '> Real SHA-256 requires ~10^77 operations.\n> Bitcoin security is mathematically intact.\n';
-      log('> crack simulation completed','wa');
+  const out = $('crackOut'), fill = $('crackFill');
+  out.textContent = '> crack mode: ' + mode.toUpperCase() + '\n> target: ' + target.slice(0,24) + '…\n\n';
+  let progress = 0;
+  const speeds = { dictionary: rInt(50000,150000), brute: rInt(200000,900000), rainbow: rInt(500000,2000000) };
+  const speed = speeds[mode] || 100000;
+  let tried = 0;
+  const start = Date.now();
+  crackInterval = setInterval(() => {
+    tried += speed;
+    progress = Math.min(100, progress + 0.3 + Math.random()*0.7);
+    fill.style.width = progress + '%';
+    const elapsed = ((Date.now()-start)/1000).toFixed(1);
+    const rate = (tried / Math.max(elapsed, 0.1)).toFixed(0);
+    out.textContent = '> crack mode: ' + mode.toUpperCase() + '\n' +
+      '> target: ' + target.slice(0,24) + '…\n' +
+      '> elapsed: ' + elapsed + 's\n' +
+      '> tried: ' + tried.toLocaleString() + '\n' +
+      '> rate: ' + Number(rate).toLocaleString() + ' h/s\n\n' +
+      (mode === 'dictionary' ?
+        '> trying word #' + rInt(1,9999) + ': ' + pick(CRACK_WORDS) + '\n' :
+        mode === 'brute' ?
+        '> brute: ' + rHex(12) + '\n' :
+        '> rainbow lookup: ' + rHex(8) + '\n');
+    if(progress >= 100){
+      stopCrack();
+      fill.style.width = '100%';
+      out.textContent += '\n> ⚠ SIMULATION COMPLETE — no real hash was cracked.\n' +
+        '> Real SHA-256 requires ~10^77 operations for a full keyspace.\n' +
+        '> Bitcoin wallet security is mathematically intact.\n';
+      log('> crack simulation completed', 'wa');
     }
-  },120);
-  log('> crack simulation: '+mode,'wa');bump();
+  }, 120);
+  log('> crack simulation started: ' + mode, 'wa');
+  bump();
 }
-function stopCrack(){if(crackInterval){clearInterval(crackInterval);crackInterval=null;}}
+function stopCrack(){
+  if(crackInterval){ clearInterval(crackInterval); crackInterval = null; }
+}
 
 /* ---------- EXPLORER ---------- */
 async function fetchExplorer(){
   try{
-    const r=await fetch('https://blockchain.info/latestblock?cors=true');
-    const j=await r.json();
-    $('xHeight').textContent=j.height.toLocaleString();
-    $('xHash').textContent=j.hash.slice(0,32)+'…';
-    $('xTime').textContent=new Date(j.time*1000).toLocaleString();
-  }catch(e){$('xHeight').textContent='unavailable';}
+    const r = await fetch('https://blockchain.info/latestblock?cors=true');
+    const j = await r.json();
+    $('xHeight').textContent = j.height.toLocaleString();
+    $('xHash').textContent = j.hash.slice(0,32) + '…';
+    $('xTime').textContent = new Date(j.time*1000).toLocaleString();
+  } catch(e){ $('xHeight').textContent = 'unavailable'; }
   try{
-    const r=await fetch('https://blockchain.info/q/getdifficulty?cors=true');
-    const d=parseFloat(await r.text());
-    $('xDiff').textContent=d.toExponential(4);
-    const hr=d*Math.pow(2,32)/600;
-    $('xHashRate').textContent=(hr/1e18).toFixed(2)+' EH/s';
-  }catch(e){}
+    const r = await fetch('https://blockchain.info/q/getdifficulty?cors=true');
+    const d = parseFloat(await r.text());
+    $('xDiff').textContent = d.toExponential(4);
+    const hr = d * Math.pow(2,32) / 600;
+    $('xHashRate').textContent = (hr/1e18).toFixed(2) + ' EH/s';
+  } catch(e){}
   try{
-    const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-    const j=await r.json();
-    $('xPrice').textContent='$'+parseFloat(j.lastPrice).toLocaleString('en-US',{maximumFractionDigits:2});
-    const chg=parseFloat(j.priceChangePercent);
-    const cEl=$('xChange');
-    cEl.textContent=(chg>=0?'+':'')+chg.toFixed(2)+'%';
-    cEl.className='v '+(chg>=0?'pos':'neg');
-    $('xVol').textContent=parseFloat(j.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0})+' USDT';
-    $('xHL').textContent='$'+parseFloat(j.highPrice).toLocaleString('en-US',{maximumFractionDigits:0})+
-      ' / $'+parseFloat(j.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
-    $('xTrades').textContent=parseInt(j.count).toLocaleString();
-  }catch(e){}
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    const j = await r.json();
+    $('xPrice').textContent = '$' + parseFloat(j.lastPrice).toLocaleString('en-US',{maximumFractionDigits:2});
+    const chg = parseFloat(j.priceChangePercent);
+    const cEl = $('xChange');
+    cEl.textContent = (chg>=0?'+':'') + chg.toFixed(2) + '%';
+    cEl.className = 'v ' + (chg>=0 ? 'pos' : 'neg');
+    $('xVol').textContent = parseFloat(j.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0}) + ' USDT';
+    $('xHL').textContent = '$' + parseFloat(j.highPrice).toLocaleString('en-US',{maximumFractionDigits:0})
+      + ' / $' + parseFloat(j.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+  } catch(e){}
 }
-async function fetchOrderBook(){
-  try{
-    const r=await fetch('https://api.binance.com/api/v3/depth?symbol=BTCUSDT&limit=15');
-    const j=await r.json();
-    const bids=j.bids.map(b=>({p:+b[0],q:+b[1]}));
-    const asks=j.asks.map(a=>({p:+a[0],q:+a[1]}));
-    const bvol=bids.reduce((s,b)=>s+b.q,0);
-    const avol=asks.reduce((s,a)=>s+a.q,0);
-    $('obBids').innerHTML=bids.map(b=>'<div class="orow"><span>'+b.p.toFixed(1)+'</span><span>'+b.q.toFixed(4)+'</span></div>').join('');
-    $('obAsks').innerHTML=asks.map(a=>'<div class="orow"><span>'+a.p.toFixed(1)+'</span><span>'+a.q.toFixed(4)+'</span></div>').join('');
-    if(bids.length&&asks.length){
-      $('obBid').textContent='$'+bids[0].p.toFixed(2);
-      $('obAsk').textContent='$'+asks[0].p.toFixed(2);
-      $('obSpread').textContent='$'+(asks[0].p-bids[0].p).toFixed(2);
-      const imb=((bvol-avol)/(bvol+avol))*100;
-      const imbEl=$('obImb');
-      imbEl.textContent=imb.toFixed(2)+'%';
-      imbEl.className='v '+(imb>=0?'pos':'neg');
-    }
-  }catch(e){}
-}
+
 async function lookupAddress(){
-  const a=$('xAddr').value.trim();const out=$('xOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying...';
+  const a = $('xAddr').value.trim();
+  const out = $('xOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying blockchain.info...';
   try{
-    const r=await fetch('https://blockchain.info/rawaddr/'+a+'?limit=5&cors=true');
-    const j=await r.json();
-    let txt='ADDRESS SUMMARY\n\nAddress:        '+j.address+'\n'+
-      'Total received: '+(j.total_received/1e8).toFixed(8)+' BTC\n'+
-      'Total sent:     '+(j.total_sent/1e8).toFixed(8)+' BTC\n'+
-      'Final balance:  '+(j.final_balance/1e8).toFixed(8)+' BTC\n'+
-      'Transactions:   '+j.n_tx+'\n\nRECENT:\n';
-    (j.txs||[]).slice(0,5).forEach(t=>{txt+='  '+t.hash.slice(0,16)+'…  '+(t.result/1e8).toFixed(8)+' BTC\n';});
-    out.textContent=txt;bump();
-  }catch(e){out.textContent='Lookup failed: '+e.message;}
+    const r = await fetch('https://blockchain.info/rawaddr/' + a + '?limit=5&cors=true');
+    const j = await r.json();
+    let txt = 'ADDRESS SUMMARY\n\n';
+    txt += 'Address:        ' + j.address + '\n';
+    txt += 'Total received: ' + (j.total_received/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Total sent:     ' + (j.total_sent/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Final balance:  ' + (j.final_balance/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Transactions:   ' + j.n_tx + '\n\nRECENT:\n';
+    (j.txs||[]).slice(0,5).forEach(t => {
+      txt += '  ' + t.hash.slice(0,16) + '…  ' + (t.result/1e8).toFixed(8) + ' BTC\n';
+    });
+    out.textContent = txt;
+    log('> address lookup complete', 'ok');
+    bump();
+  } catch(e){ out.textContent = 'Lookup failed: ' + e.message; }
 }
+
 async function lookupUTXO(){
-  const a=$('xAddr').value.trim();const out=$('xOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying UTXOs...';
+  const a = $('xAddr').value.trim();
+  const out = $('xOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying UTXOs...';
   try{
-    const r=await fetch('https://blockchain.info/unspent?active='+a+'&cors=true');
-    const j=await r.json();
-    const outs=j.unspent_outputs||[];
-    let txt='UTXOs for '+a.slice(0,20)+'…\n\nCount: '+outs.length+'\n\n';
-    let total=0;
-    outs.slice(0,10).forEach(u=>{const v=u.value/1e8;total+=v;txt+='  '+u.tx_hash_big_endian.slice(0,16)+'…  #'+u.tx_output_n+'  '+v.toFixed(8)+' BTC\n';});
-    txt+='\nTotal: '+total.toFixed(8)+' BTC';
-    out.textContent=txt;
-  }catch(e){out.textContent='No UTXOs found.';}
+    const r = await fetch('https://blockchain.info/unspent?active=' + a + '&cors=true');
+    const j = await r.json();
+    const outs = j.unspent_outputs || [];
+    let txt = 'UTXOs for ' + a.slice(0,20) + '…\n\nCount: ' + outs.length + '\n\n';
+    let total = 0;
+    outs.slice(0,10).forEach(u => {
+      const v = u.value/1e8;
+      total += v;
+      txt += '  ' + u.tx_hash_big_endian.slice(0,16) + '…  #' + u.tx_output_n + '  ' + v.toFixed(8) + ' BTC\n';
+    });
+    txt += '\nTotal: ' + total.toFixed(8) + ' BTC';
+    out.textContent = txt;
+  } catch(e){ out.textContent = 'No UTXOs found or query failed.'; }
 }
 
 /* ---------- SCAN ---------- */
-let scanInterval=null;
-const SERVICES={21:'FTP',22:'SSH',23:'Telnet',25:'SMTP',53:'DNS',80:'HTTP',110:'POP3',143:'IMAP',443:'HTTPS',445:'SMB',3306:'MySQL',3389:'RDP',5432:'PostgreSQL',5900:'VNC',6379:'Redis',8080:'HTTP-Alt',8333:'Bitcoin P2P',8332:'Bitcoin RPC',18333:'Bitcoin Testnet',50001:'Electrum',9735:'Lightning'};
+let scanInterval = null;
+const SERVICES = {21:'FTP',22:'SSH',23:'Telnet',25:'SMTP',53:'DNS',80:'HTTP',
+  110:'POP3',143:'IMAP',443:'HTTPS',445:'SMB',3306:'MySQL',3389:'RDP',
+  5432:'PostgreSQL',5900:'VNC',6379:'Redis',8080:'HTTP-Alt',8333:'Bitcoin P2P',
+  8332:'Bitcoin RPC',18333:'Bitcoin Testnet',50001:'Electrum',9735:'Lightning'};
+
 function startScan(){
-  const host=$('scHost').value.trim()||'127.0.0.1';
-  const range=$('scRange').value.trim()||'1-1024';
-  const parts=range.split('-').map(x=>parseInt(x)||1);
-  const a=parts[0],b=parts[1]||a+1000;
-  const out=$('scOut');
-  out.textContent='> scanning '+host+' ports '+a+'-'+b+'\n';
-  let cur=a;stopScan();
-  scanInterval=setInterval(()=>{
+  const host = $('scHost').value.trim() || '127.0.0.1';
+  const range = $('scRange').value.trim() || '1-1024';
+  const parts = range.split('-').map(x => parseInt(x) || 1);
+  const a = parts[0], b = parts[1] || a + 1000;
+  const out = $('scOut');
+  out.textContent = '> scanning ' + host + ' ports ' + a + '-' + b + '\n';
+  let cur = a;
+  stopScan();
+  scanInterval = setInterval(() => {
     for(let i=0;i<5;i++){
-      const port=cur++;
-      if(port>b){stopScan();out.textContent+='\n> complete.\n';return;}
-      const open=Math.random()>.92;
-      out.textContent+='> port '+port+' '+(open?'OPEN':'closed')+'\n';
-      if(open)out.textContent+='   ⚠ '+(SERVICES[port]||'unknown')+'\n';
+      const port = cur++;
+      if(port > b){ stopScan(); out.textContent += '\n> complete.\n'; return; }
+      const open = Math.random() > 0.92;
+      out.textContent += '> port ' + port + ' ' + (open ? 'OPEN' : 'closed') + '\n';
+      if(open) out.textContent += '   ⚠ ' + (SERVICES[port] || 'unknown') + '\n';
     }
-    out.scrollTop=out.scrollHeight;
-  },120);
-  log('> port scan started','wa');
+    out.scrollTop = out.scrollHeight;
+  }, 120);
+  log('> port scan started on ' + host, 'wa');
 }
-function stopScan(){if(scanInterval){clearInterval(scanInterval);scanInterval=null;}}
+function stopScan(){
+  if(scanInterval){ clearInterval(scanInterval); scanInterval = null; }
+}
 function probeNodes(){
-  const ports=[8333,18333,8332,50001,9735];
-  ports.forEach((p,i)=>{
-    const el=$('p'+(i+1));if(!el)return;
-    el.textContent='probing...';el.className='v';
-    setTimeout(()=>{
-      const up=Math.random()>.3;
-      el.textContent=up?'● OPEN ('+SERVICES[p]+')':'○ closed';
-      el.className='v '+(up?'pos':'neg');
-    },200+i*150);
+  const ports = [8333, 18333, 8332, 50001, 9735];
+  ports.forEach((p, i) => {
+    const el = $('p' + (i+1));
+    if(!el) return;
+    el.textContent = 'probing...';
+    el.className = 'v';
+    setTimeout(() => {
+      const up = Math.random() > 0.3;
+      el.textContent = up ? '● OPEN (' + SERVICES[p] + ')' : '○ closed';
+      el.className = 'v ' + (up ? 'pos' : 'neg');
+    }, 200 + i*150);
   });
-  log('> probing node ports','if');
-}
-
-/* ---------- SYSTEM ---------- */
-const cpuPts=[],ramPts=[],netPts=[];
-function detectOS(ua){
-  if(/iPad|iPhone|iPod/.test(ua))return'iOS / iPadOS';
-  if(/Android/.test(ua))return'Android';
-  if(/Windows NT 10/.test(ua))return'Windows 10/11';
-  if(/Mac OS X/.test(ua))return'macOS';
-  if(/Linux/.test(ua))return'Linux';
-  return'Unknown';
-}
-function detectBrowser(ua){
-  if(/Edg\//.test(ua))return'Edge';
-  if(/OPR\//.test(ua))return'Opera';
-  if(/Chrome\//.test(ua))return'Chrome';
-  if(/Firefox\//.test(ua))return'Firefox';
-  if(/Safari\//.test(ua))return'Safari';
-  return'Unknown';
-}
-function detectDevice(ua){
-  if(/iPad/.test(ua))return'iPad';
-  if(/iPhone/.test(ua))return'iPhone';
-  if(/Android/.test(ua)&&/Mobile/.test(ua))return'Android Phone';
-  if(/Android/.test(ua))return'Android Tablet';
-  if(/Macintosh/.test(ua))return'Mac';
-  if(/Windows/.test(ua))return'Windows PC';
-  if(/Linux/.test(ua))return'Linux PC';
-  return'Unknown';
-}
-function detectGPU(){
-  try{
-    const c=document.createElement('canvas');
-    const gl2=c.getContext('webgl2');
-    const gl=gl2||c.getContext('webgl');
-    if(!gl)return{ok:false,renderer:'No WebGL',gl2:false};
-    const dbg=gl.getExtension('WEBGL_debug_renderer_info');
-    return{ok:true,gl2:!!gl2,renderer:dbg?(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)||'Unknown'):(gl.getParameter(gl.RENDERER)||'Unknown')};
-  }catch(e){return{ok:false,renderer:'Error',gl2:false};}
-}
-async function runSystemCheck(){
-  const ua=navigator.userAgent;
-  const cores=navigator.hardwareConcurrency||0;
-  const ramGB=navigator.deviceMemory||0;
-  const gpu=detectGPU();
-  const screenW=window.screen.width*(window.devicePixelRatio||1);
-  const screenH=window.screen.height*(window.devicePixelRatio||1);
-  $('d-device').textContent=detectDevice(ua);
-  $('d-os').textContent=detectOS(ua);
-  $('d-browser').textContent=detectBrowser(ua);
-  $('d-cores').textContent=cores?cores+' cores':'Not exposed';
-  $('d-ram').textContent=ramGB?ramGB+' GB':'Not exposed';
-  $('d-gpu').textContent=gpu.renderer;
-  $('d-webgl').textContent=gpu.ok?(gpu.gl2?'WebGL 2':'WebGL 1'):'Not supported';
-  $('d-webgl').className='v '+(gpu.ok?'pos':'neg');
-  $('d-webgpu').textContent=('gpu' in navigator)?'Available':'Not exposed';
-  $('d-screen').textContent=Math.round(screenW)+'×'+Math.round(screenH);
-  $('d-dpr').textContent=(window.devicePixelRatio||1).toFixed(2)+'×';
-  const nc=navigator.connection;
-  $('d-net').textContent=nc&&nc.downlink?nc.downlink+' Mbps':'Not exposed';
-  $('d-touch').textContent=('ontouchstart' in window)?'Yes':'No';
-  $('d-lang').textContent=navigator.language||'—';
-  $('d-tz').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone||'—';
-  $('d-platform').textContent=navigator.platform||'—';
-  $('d-cookie').textContent=navigator.cookieEnabled?'Yes':'No';
-  $('d-dnt').textContent=navigator.doNotTrack||'Not set';
-
-  const isMobile=/iPad|iPhone|iPod|Android/.test(ua);
-  const v=$('verdict');
-  if(!gpu.ok){
-    v.style.color='#ff2b4e';
-    v.innerHTML='✗ NOT SUPPORTED<br><small>WebGL missing. Try a newer browser.</small>';
-  }else if(cores&&cores<4&&!isMobile){
-    v.style.color='#ffcc00';
-    v.innerHTML='⚠ BELOW MINIMUM<br><small>Detected '+cores+' cores. Minimum 4.</small>';
-  }else if(cores>=8&&ramGB>=8&&gpu.gl2){
-    v.style.color='#00ff41';
-    v.innerHTML='✓ RECOMMENDED TIER<br><small>Meets or exceeds recommended specs.</small>';
-  }else{
-    v.style.color='#00ff41';
-    v.innerHTML='✓ MEETS MINIMUM<br><small>Runs. For best: 8+ cores, 12 GB RAM, WebGL 2.</small>';
-  }
-
-  const fp=[ua,screenW,screenH,cores,ramGB,navigator.language,Intl.DateTimeFormat().resolvedOptions().timeZone].join('|');
-  const h=await sha256(fp);
-  $('fingerprint').textContent=h;
-  drawSysCharts();
-}
-function drawSysCharts(){
-  cpuPts.push(rInt(15,95));ramPts.push(rInt(30,85));netPts.push(rInt(50,900));
-  if(cpuPts.length>40)cpuPts.shift();
-  if(ramPts.length>40)ramPts.shift();
-  if(netPts.length>40)netPts.shift();
-  const mk=(arr,max)=>arr.map((v,i)=>(i/(arr.length-1||1))*300+','+(80-(v/max)*70)).join(' ');
-  const cl=$('cpuLine'),rl=$('ramLine'),nl=$('netLine');
-  if(cl)cl.setAttribute('points',mk(cpuPts,100));
-  if(rl)rl.setAttribute('points',mk(ramPts,100));
-  if(nl)nl.setAttribute('points',mk(netPts,900));
-}
-(function(){
-  const hm=$('heatmap');if(!hm)return;
-  for(let i=0;i<100;i++){const d=document.createElement('div');d.className='c';hm.appendChild(d);}
-  setInterval(()=>{
-    hm.querySelectorAll('.c').forEach(c=>{
-      if(Math.random()>.85){
-        const inten=Math.random();
-        c.style.background=inten>.7?'#00ff41':inten>.4?'#00a82d':'#005f18';
-      }
-    });
-  },500);
-})();
-
-/* ---------- TOOLS ---------- */
-function genUUID(){
-  const arr=new Uint8Array(16);crypto.getRandomValues(arr);
-  arr[6]=(arr[6]&0x0f)|0x40;arr[8]=(arr[8]&0x3f)|0x80;
-  const hex=bytesToHex(arr);
-  $('uuidOut').textContent=hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20,32);
-}
-function convertTs(){
-  let n=parseInt($('tsIn').value.trim());
-  if(isNaN(n)){$('tsOut').textContent='Invalid.';return;}
-  if(n<1e12)n*=1000;
-  const d=new Date(n);
-  $('tsOut').textContent='UTC: '+d.toUTCString()+'\nLocal: '+d.toLocaleString();
-}
-function genRnd(){
-  const min=parseInt($('rndMin').value)||0;
-  const max=parseInt($('rndMax').value)||100;
-  $('rndOut').textContent=rInt(min,max);
-}
-function convertCol(){
-  const hex=$('colIn').value.trim();
-  const m=hex.match(/^#?([a-f0-9]{6})$/i);
-  if(!m){$('colOut').textContent='Invalid hex.';return;}
-  const r=parseInt(m[1].slice(0,2),16),g=parseInt(m[1].slice(2,4),16),b=parseInt(m[1].slice(4,6),16);
-  $('colOut').textContent='RGB: rgb('+r+', '+g+', '+b+')\nPacked: 0x'+m[1].toUpperCase();
-}
-const MORSE={A:'.-',B:'-...',C:'-.-.',D:'-..',E:'.',F:'..-.',G:'--.',H:'....',I:'..',J:'.---',K:'-.-',L:'.-..',M:'--',N:'-.',O:'---',P:'.--.',Q:'--.-',R:'.-.',S:'...',T:'-',U:'..-',V:'...-',W:'.--',X:'-..-',Y:'-.--',Z:'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.',' ':' / '};
-function doMorse(){
-  const t=$('morseIn').value.toUpperCase();
-  const out=[];
-  for(const c of t)out.push(MORSE[c]||'');
-  $('morseOut').textContent=out.join(' ');
-}
-const ASCII_MAP={
-  A:[' █████  ','██   ██','███████','██   ██','██   ██'],
-  B:['██████  ','██   ██','██████  ','██   ██','██████  '],
-  C:[' ██████ ','██      ','██      ','██      ',' ██████ '],
-  Q:[' ██████ ','██    ██','██ ██ ██',' ██████ ','      ██'],
-  S:[' ██████ ','██      ',' ██████ ','      ██','██████  '],
-  O:[' ██████ ','██    ██','██    ██','██    ██',' ██████ '],
-  T:['████████','   ██   ','   ██   ','   ██   ','   ██   '],
-  B:['██████  ','██   ██','██████  ','██   ██','██████  '],
-  I:['██████','  ██  ','  ██  ','  ██  ','██████'],
-  C2:[' ██████ ','██      ','██      ','██      ',' ██████ '],
-  N:['██    ██','███   ██','██ ██ ██','██   ███','██    ██']
-};
-function doAscii(){
-  const t=$('asciiIn').value.toUpperCase().slice(0,6);
-  const lines=['','','','',''];
-  for(const c of t){
-    const glyph=ASCII_MAP[c]||ASCII_MAP[' ']||['     ','     ','     ','     ','     '];
-    for(let i=0;i<5;i++)lines[i]+=(glyph[i]||'')+'  ';
-  }
-  $('asciiOut').textContent=lines.join('\n');
-}
-function decodeJWT(){
-  const t=$('jwtIn').value.trim();
-  const parts=t.split('.');
-  if(parts.length<3){$('jwtOut').textContent='Invalid JWT.';return;}
-  try{
-    const header=JSON.parse(atob(parts[0].replace(/-/g,'+').replace(/_/g,'/')));
-    const payload=JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
-    $('jwtOut').textContent='HEADER:\n'+JSON.stringify(header,null,2)+'\n\nPAYLOAD:\n'+JSON.stringify(payload,null,2)+'\n\nSIGNATURE:\n'+parts[2].slice(0,40)+'…';
-  }catch(e){$('jwtOut').textContent='Decode error: '+e.message;}
-}
-function testRegex(){
-  const pat=$('regexPat').value,txt=$('regexTxt').value;
-  try{
-    const re=new RegExp(pat,'g');
-    const matches=[...txt.matchAll(re)];
-    $('regexOut').textContent='Matches: '+matches.length+'\n'+
-      matches.map(m=>'  "'+m[0]+'" @ '+m.index).join('\n');
-  }catch(e){$('regexOut').textContent='Regex error: '+e.message;}
-}
-function genQR(){
-  const txt=$('qrIn').value||'QCity';
-  const c=$('qrc');const ctx=c.getContext('2d');
-  const size=25;const cell=c.width/size;
-  ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
-  let h=0;for(let i=0;i<txt.length;i++)h=(h*31+txt.charCodeAt(i))|0;
-  let seed=Math.abs(h)||1;
-  function rand(){seed=(seed*9301+49297)%233280;return seed/233280;}
-  ctx.fillStyle='#00ff41';
-  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-    const isCorner=(x<7&&y<7)||(x>size-8&&y<7)||(x<7&&y>size-8);
-    if(isCorner){
-      const cx=x<7?x:x-(size-7),cy=y<7?y:y-(size-7);
-      const d=Math.max(Math.abs(cx-3),Math.abs(cy-3));
-      if(d===2||d===0)ctx.fillRect(x*cell,y*cell,cell,cell);
-    }else if(rand()>.5)ctx.fillRect(x*cell,y*cell,cell,cell);
-  }
+  log('> probing node ports', 'if');
 }
 
 /* ---------- CONSOLE ---------- */
-function cLog(msg,cls){
-  const d=document.createElement('div');
-  d.className=cls||'ok';d.textContent=msg;
+function cLog(msg, cls){
+  const d = document.createElement('div');
+  d.className = cls || 'ok';
+  d.textContent = msg;
   $('cout').appendChild(d);
-  while($('cout').children.length>200)$('cout').removeChild($('cout').firstChild);
-  $('cout').scrollTop=$('cout').scrollHeight;
+  while($('cout').children.length > 200) $('cout').removeChild($('cout').firstChild);
+  $('cout').scrollTop = $('cout').scrollHeight;
 }
+
 async function runConsole(){
-  const inp=$('cInput');const raw=inp.value.trim();inp.value='';
-  if(!raw)return;
-  cLog('# '+raw,'ok');
-  const parts=raw.split(/\s+/);
-  const cmd=parts[0].toLowerCase();
-  const rest=parts.slice(1).join(' ');
+  const inp = $('cInput');
+  const raw = inp.value.trim();
+  inp.value = '';
+  if(!raw) return;
+  cLog('# ' + raw, 'ok');
+  const parts = raw.split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+  const rest = parts.slice(1).join(' ');
+
   switch(cmd){
     case 'help':
-      cLog('commands:','if');
-      ['help','btc','block','addr <x>','bal <x>','hash <x>','dhash <x>','wif <hex>','b58 <hex>','decode <b58>','probe','scan','trace','mask','clear','theme <n>','rand <n>','version','whoami'].forEach(c=>cLog('  '+c,'dm'));
+      cLog('commands:', 'if');
+      ['help','btc','block','addr <x>','bal <x>','hash <x>','dhash <x>',
+       'wif <hex>','b58 <hex>','decode <b58>','probe','scan','trace','mask',
+       'clear','theme <n>','rand <n>','version','whoami'].forEach(c => cLog('  ' + c, 'dm'));
       break;
     case 'btc':
-      try{const r=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-        const j=await r.json();cLog('BTC: $'+parseFloat(j.price).toLocaleString(),'ok');}catch(e){cLog('failed','er');}
+      try{
+        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+        const j = await r.json();
+        cLog('BTC: $' + parseFloat(j.price).toLocaleString(), 'ok');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'block':
-      try{const r=await fetch('https://blockchain.info/latestblock?cors=true');
-        const j=await r.json();cLog('height: '+j.height,'ok');cLog('hash: '+j.hash,'dm');}catch(e){cLog('failed','er');}
+      try{
+        const r = await fetch('https://blockchain.info/latestblock?cors=true');
+        const j = await r.json();
+        cLog('height: ' + j.height, 'ok');
+        cLog('hash:   ' + j.hash, 'dm');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'addr':
-      if(!rest){cLog('usage: addr <btc-address>','er');break;}
-      {const info=classifyBTC(rest);
-        if(info)cLog('✓ valid · '+info.type+' · '+info.net,'ok');
-        else cLog('✗ invalid','er');}
+      if(!rest){ cLog('usage: addr <btc-address>', 'er'); break; }
+      {
+        const info = classifyBTC(rest);
+        if(info) cLog('✓ valid · ' + info.type + ' · ' + info.net, 'ok');
+        else cLog('✗ invalid', 'er');
+      }
       break;
     case 'bal':
-      if(!rest){cLog('usage: bal <address>','er');break;}
-      try{const r=await fetch('https://blockchain.info/q/addressbalance/'+rest+'?cors=true');
-        const s=await r.text();const n=parseInt(s);
-        if(isNaN(n))cLog('no data','er');else cLog('balance: '+(n/1e8).toFixed(8)+' BTC','ok');}catch(e){cLog('failed','er');}
+      if(!rest){ cLog('usage: bal <address>', 'er'); break; }
+      try{
+        const r = await fetch('https://blockchain.info/q/addressbalance/' + rest + '?cors=true');
+        const s = await r.text();
+        const n = parseInt(s);
+        if(isNaN(n)) cLog('no data', 'er');
+        else cLog('balance: ' + (n/1e8).toFixed(8) + ' BTC', 'ok');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'hash':
-      if(!rest){cLog('usage: hash <text>','er');break;}
-      cLog('sha256: '+await sha256(rest),'if');
+      if(!rest){ cLog('usage: hash <text>', 'er'); break; }
+      cLog('sha256: ' + await sha256(rest), 'if');
       break;
     case 'dhash':
-      if(!rest){cLog('usage: dhash <text>','er');break;}
-      {const h1=await sha256(rest);
-        const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-        cLog('dsha256: '+bytesToHex(new Uint8Array(h2buf)),'if');}
+      if(!rest){ cLog('usage: dhash <text>', 'er'); break; }
+      {
+        const h1 = await sha256(rest);
+        const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+        cLog('dsha256: ' + bytesToHex(new Uint8Array(h2buf)), 'if');
+      }
       break;
     case 'wif':
-      if(!rest||rest.length!==64){cLog('usage: wif <64 hex>','er');break;}
-      try{const payload=new Uint8Array(33);payload[0]=0x80;payload.set(hexToBytes(rest),1);
-        const h1=await sha256(bytesToHex(payload));
-        const h2buf=await crypto.subtle.digest('SHA-256',hexToBytes(h1));
-        const full=new Uint8Array(37);full.set(payload,0);full.set(new Uint8Array(h2buf).slice(0,4),33);
-        cLog('wif: '+b58EncodeStr(full),'ok');}catch(e){cLog('error','er');}
+      if(!rest || rest.length !== 64){ cLog('usage: wif <64 hex chars>', 'er'); break; }
+      try{
+        const payload = new Uint8Array(33);
+        payload[0] = 0x80;
+        payload.set(hexToBytes(rest), 1);
+        const h1 = await sha256(bytesToHex(payload));
+        const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+        const full = new Uint8Array(37);
+        full.set(payload, 0);
+        full.set(new Uint8Array(h2buf).slice(0,4), 33);
+        cLog('wif: ' + b58EncodeStr(full), 'ok');
+      } catch(e){ cLog('error', 'er'); }
       break;
     case 'b58':
-      if(!rest){cLog('usage: b58 <hex>','er');break;}
-      try{cLog('b58: '+b58EncodeStr(hexToBytes(rest)),'ok');}catch(e){cLog('error','er');}
+      if(!rest){ cLog('usage: b58 <hex>', 'er'); break; }
+      try{ cLog('b58: ' + b58EncodeStr(hexToBytes(rest)), 'ok'); }
+      catch(e){ cLog('error: ' + e.message, 'er'); }
       break;
     case 'decode':
-      if(!rest){cLog('usage: decode <base58>','er');break;}
-      try{cLog('hex: '+bytesToHex(b58DecodeStr(rest)),'ok');}catch(e){cLog('error','er');}
+      if(!rest){ cLog('usage: decode <base58>', 'er'); break; }
+      try{ cLog('hex: ' + bytesToHex(b58DecodeStr(rest)), 'ok'); }
+      catch(e){ cLog('error: ' + e.message, 'er'); }
       break;
-    case 'probe':probeNodes();cLog('probing...','wa');break;
-    case 'scan':startScan();cLog('scan started','wa');break;
-    case 'trace':traceSequence();cLog('trace triggered','wa');break;
-    case 'mask':maskSequence();cLog('mask refresh','ok');break;
-    case 'clear':$('cout').innerHTML='';cLog('cleared','dm');break;
+    case 'probe': probeNodes(); cLog('probing ports...', 'wa'); break;
+    case 'scan': startScan(); cLog('scan started', 'wa'); break;
+    case 'trace': traceSequence(); cLog('trace triggered', 'wa'); break;
+    case 'mask': maskSequence(); cLog('mask refresh', 'ok'); break;
+    case 'clear':
+      $('cout').innerHTML = '';
+      cLog('cleared', 'dm');
+      break;
     case 'theme':
       if(['green','amber','cyan','red','purple'].includes(rest)){
-        document.body.className=rest==='green'?'':'t-'+rest;cLog('theme: '+rest,'ok');
-      }else cLog('unknown theme','er');
+        document.body.className = rest === 'green' ? '' : 't-' + rest;
+        cLog('theme: ' + rest, 'ok');
+      } else cLog('unknown theme', 'er');
       break;
-    case 'rand':cLog('random: '+rHex(Math.min(parseInt(rest)||8,128)),'ok');break;
-    case 'version':cLog('qcity-terminal v14','if');break;
-    case 'whoami':cLog('root@qcity','if');cLog('session: '+SESSION_ID,'dm');break;
-    default:cLog('unknown: '+cmd,'er');cLog('type "help"','dm');
+    case 'rand':
+      cLog('random: ' + rHex(Math.min(parseInt(rest) || 8, 128)), 'ok');
+      break;
+    case 'version': cLog('qcity-terminal v13', 'if'); break;
+    case 'whoami':
+      cLog('root@qcity', 'if');
+      cLog('session: ' + SESSION_ID, 'dm');
+      break;
+    default:
+      cLog('unknown: ' + cmd, 'er');
+      cLog('type "help"', 'dm');
   }
 }
 
 /* ---------- LOG ---------- */
-function log(msg,cls){
-  const el=$('term');if(!el)return;
-  const d=document.createElement('div');
-  d.className='ln '+(cls||'ok');d.textContent=msg;
+function log(msg, cls){
+  const el = $('term');
+  if(!el) return;
+  const d = document.createElement('div');
+  d.className = 'ln ' + (cls || 'ok');
+  d.textContent = msg;
   el.appendChild(d);
-  while(el.children.length>200)el.removeChild(el.firstChild);
-  el.scrollTop=el.scrollHeight;bump();
+  while(el.children.length > 200) el.removeChild(el.firstChild);
+  el.scrollTop = el.scrollHeight;
+  bump();
 }
+
 function filterLog(){
-  const kw=$('logFilter').value.toLowerCase();
-  $('term').querySelectorAll('.ln').forEach(l=>{
-    l.style.display=(!kw||l.textContent.toLowerCase().includes(kw))?'':'none';
+  const kw = $('logFilter').value.toLowerCase();
+  $('term').querySelectorAll('.ln').forEach(l => {
+    l.style.display = (!kw || l.textContent.toLowerCase().includes(kw)) ? '' : 'none';
   });
 }
-const LOG_MSGS=[
-  ['> peer handshake ok','ok'],
-  ['> block height synced','dm'],
-  ['> mempool: '+rInt(20000,50000)+' tx','if'],
-  ['> new block '+rHex(16),'if'],
-  ['> fee rate: '+rInt(5,80)+' sat/vB','dm'],
-  ['> UTXO scan complete','ok'],
-  ['> WARN: unconfirmed tx '+rHex(12),'wa'],
-  ['> rejected: invalid signature','er'],
-  ['> broadcasting to '+rInt(3,12)+' peers','if'],
-  ['> nonce: '+rHex(8),'dm'],
-  ['> merkle root verified','ok'],
-  ['> SECP256K1 signature OK','ok'],
-  ['> key rotation in '+rInt(200,900)+'s','dm'],
-  ['> peer from '+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255),'if'],
-  ['> b58check verify: PASS','ok'],
-  ['> AES-256 tunnel rekeyed','ok'],
-  ['> entropy pool refreshed','dm'],
-  ['> mempool cleared','if']
+
+const LOG_MSGS = [
+  ['> peer handshake ok', 'ok'],
+  ['> block height synced', 'dm'],
+  ['> mempool: ' + rInt(20000,50000) + ' tx', 'if'],
+  ['> new block ' + rHex(16), 'if'],
+  ['> fee rate: ' + rInt(5,80) + ' sat/vB', 'dm'],
+  ['> UTXO scan complete', 'ok'],
+  ['> WARN: unconfirmed tx ' + rHex(12), 'wa'],
+  ['> rejected: invalid signature', 'er'],
+  ['> broadcasting to ' + rInt(3,12) + ' peers', 'if'],
+  ['> nonce: ' + rHex(8), 'dm'],
+  ['> merkle root verified', 'ok'],
+  ['> SECP256K1 signature OK', 'ok'],
+  ['> key rotation in ' + rInt(200,900) + 's', 'dm'],
+  ['> peer from ' + rInt(1,255) + '.' + rInt(1,255) + '.' + rInt(1,255) + '.' + rInt(1,255), 'if'],
+  ['> b58check verify: PASS', 'ok'],
+  ['> AES-256 tunnel rekeyed', 'ok'],
+  ['> entropy pool refreshed', 'dm'],
+  ['> mempool cleared', 'if']
 ];
-function triggerMask(){log('> masking identity...','if');maskSequence();}
-function clearLog(){$('term').innerHTML='';log('> log cleared','dm');log('> ready','ok');}
+
+function triggerMask(){ log('> masking identity...', 'if'); maskSequence(); }
+function clearLog(){
+  $('term').innerHTML = '';
+  log('> log cleared', 'dm');
+  log('> ready', 'ok');
+}
 function lightning(){
-  const c=document.createElement('canvas');
-  c.style.cssText='position:fixed;inset:0;z-index:99;pointer-events:none';
-  c.width=innerWidth;c.height=innerHeight;
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:fixed;inset:0;z-index:99;pointer-events:none';
+  c.width = innerWidth; c.height = innerHeight;
   document.body.appendChild(c);
-  const ctx=c.getContext('2d');
-  ctx.strokeStyle='#00ff41';ctx.lineWidth=2;
-  ctx.shadowColor='#00ff41';ctx.shadowBlur=20;
+  const ctx = c.getContext('2d');
+  ctx.strokeStyle = '#00ff41';
+  ctx.lineWidth = 2;
+  ctx.shadowColor = '#00ff41';
+  ctx.shadowBlur = 20;
   function bolt(){
-    let x=Math.random()*c.width,y=0;
-    ctx.beginPath();ctx.moveTo(x,y);
-    while(y<c.height){x+=(Math.random()-.5)*60;y+=20+Math.random()*40;ctx.lineTo(x,y);}
+    let x = Math.random() * c.width, y = 0;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    while(y < c.height){
+      x += (Math.random() - 0.5) * 60;
+      y += 20 + Math.random() * 40;
+      ctx.lineTo(x, y);
+    }
     ctx.stroke();
   }
-  bolt();if(Math.random()>.5)bolt();
-  setTimeout(()=>c.remove(),350);
-  log('> ⚡ lightning','wa');
+  bolt();
+  if(Math.random() > 0.5) bolt();
+  setTimeout(() => c.remove(), 350);
+  log('> ⚡ lightning', 'wa');
 }
 
 /* ---------- NEWS ---------- */
 async function fetchNews(){
-  const fb=['Bitcoin network hashrate at all-time high','Long-term holders accumulating on-chain','Lightning network capacity growing','Spot ETF inflows steady this week','Miners selling less — supply squeeze','Addresses with 1+ BTC at record','Difficulty adjustment expected soon'];
+  const fallback = [
+    'Bitcoin network hashrate at all-time high',
+    'Long-term holders accumulating on-chain',
+    'Lightning network capacity growing',
+    'Spot ETF inflows steady this week',
+    'Miners selling less — supply squeeze',
+    'Addresses with 1+ BTC at record',
+    'Difficulty adjustment expected soon'
+  ];
   try{
-    const r=await fetch('https://api.coingecko.com/api/v3/global');
-    const j=await r.json();
-    const dom=j.data.market_cap_percentage.btc.toFixed(1);
-    const cap=(j.data.total_market_cap.usd/1e12).toFixed(2);
-    const items=['BTC dominance '+dom+'% · Total cap $'+cap+'T','Active coins: '+j.data.active_cryptocurrencies.to
+    const r = await fetch('https://api.coingecko.com/api/v3/global');
+    const j = await r.json();
+    const dom = j.data.market_cap_percentage.btc.toFixed(1);
+    const cap = (j.data.total_market_cap.usd/1e12).toFixed(2);
+    const items = [
+      'BTC dominance ' + dom + '% · Total cap $' + cap + 'T',
+      'Active coins: ' + j.data.active_cryptocurrencies.toLocaleString()
+    ].concat(fallback);
+    $('newsInner').innerHTML = items.map(t => '<span class="it">' + t + '</span>').join('');
+  } catch(e){
+    $('newsInner').innerHTML = fallback.map(t => '<span class="it">' + t + '</span>').join('');
+  }
+}
+
+/* ---------- THEME + EFFECTS + MODAL ---------- */
+function setTheme(name, el){
+  document.body.className = name === 'green' ? '' : 't-' + name;
+  document.querySelectorAll('.tdot').forEach(d => d.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+}
+function toggleEffect(id, checkbox){
+  const el = $(id);
+  if(el) el.style.display = checkbox.checked ? '' : 'none';
+}
+function copyEl(id){
+  const t = $(id).textContent;
+  try{
+    navigator.clipboard.writeText(t);
+    log('> copied to clipboard', 'ok');
+  } catch(e){}
+}
+function showModal(title, body){
+  $('mTitle').textContent = title;
+  $('mBody').innerHTML = body;
+  $('modal').classList.add('on');
+}
+function closeModal(){
+  $('modal').classList.remove('on');
+}
+function exportLog(){
+  const lines = [];
+  $('term').querySelectorAll('.ln').forEach(l => lines.push(l.textContent));
+  const hdr = 'QCity Bitcoin Terminal — Session Log\n' +
+    'Session ID: ' + SESSION_ID + '\n' +
+    'Started: ' + SESSION_START.toISOString() + '\n' +
+    '-------------------------------------\n\n';
+  const blob = new Blob([hdr + lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'qcity-log-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ---------- BOOT ---------- */
+function boot(){
+  initTabs();
+  detectWallets();
+  typeLoop();
+  updateClock();
+  updateStats();
+  fetchExplorer();
+  fetchNews();
+  genPrivKey();
+  genMnemonic(12);
+  genMnemonic(24);
+
+  $('sessId').textContent = SESSION_ID;
+  $('sessStart').textContent = SESSION_START.toLocaleString();
+
+  const bootMsgs = [
+    ['> qcity-terminal v13', 'if'],
+    ['> loading crypto modules...', 'dm'],
+    ['> SHA-256: ACTIVE', 'ok'],
+    ['> SHA-512: ACTIVE', 'ok'],
+    ['> SHA-1: ACTIVE', 'ok'],
+    ['> HMAC-SHA512: ACTIVE', 'ok'],
+    ['> AES-GCM + PBKDF2: ACTIVE', 'ok'],
+    ['> Base58Check: ACTIVE', 'ok'],
+    ['> SECP256K1: READY', 'ok'],
+    ['> Bitcoin RPC: STANDBY', 'ok'],
+    ['> system ready.', 'ok']
+  ];
+  bootMsgs.forEach((b, i) => setTimeout(() => log(b[0], b[1]), 250 + i*250));
+
+  setInterval(updateClock, 1000);
+  setInterval(updateStats, 1000);
+  setInterval(() => {
+    const [m, c] = pick(LOG_MSGS);
+    log(m, c);
+  }, 700 + Math.random()*900);
+  setInterval(maskSequence, 12000);
+  setInterval(() => { if(Math.random() > 0.6) traceSequence(); }, 18000);
+  setInterval(fetchExplorer, 60000);
+  setInterval(fetchNews, 120000);
+
+  document.addEventListener('keydown', e => {
+    if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+    if(e.key === 'Escape') closeModal();
+  });
+
+  $('cInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') runConsole();
+  });
+  $('aInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') analyzeAddress();
+  });
+  $('xAddr').addEventListener('keydown', e => {
+    if(e.key === 'Enter') lookupAddress();
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
+</script>
+</body>
+</html>
