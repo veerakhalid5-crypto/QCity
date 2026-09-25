@@ -7,68 +7,54 @@
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;background:#000;color:#00ff9d;
-  font-family:'Courier New',monospace;font-size:14px;overflow-x:hidden;
-  -webkit-tap-highlight-color:transparent}
+  font-family:'Courier New',monospace;font-size:14px;overflow-x:hidden}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:rgba(0,20,10,0.4)}
 ::-webkit-scrollbar-thumb{background:#00b877;border-radius:3px}
-
-/* ===== THEME VARS ===== */
-:root{
-  --main:#00ff9d;
-  --main-dim:#00b877;
-  --main-dark:#007a55;
-  --bg-panel:rgba(0,20,10,0.85);
-  --bg-panel-strong:rgba(0,20,10,0.92);
-  --accent:#00bfff;
-  --warn:#ffcc00;
-  --err:#ff3366;
-}
+:root{--main:#00ff9d;--main-dim:#00b877;--main-dark:#007a55;
+  --bg:rgba(0,20,10,0.85);--bg-strong:rgba(0,20,10,0.92);
+  --accent:#00bfff;--warn:#ffcc00;--err:#ff3366}
 body.theme-blue{--main:#00bfff;--main-dim:#0077a8;--main-dark:#004466;
-  --bg-panel:rgba(0,10,20,0.85);--bg-panel-strong:rgba(0,10,20,0.92);--accent:#00ff9d}
+  --bg:rgba(0,10,20,0.85);--bg-strong:rgba(0,10,20,0.92);--accent:#00ff9d}
 body.theme-red{--main:#ff3366;--main-dim:#c41e4a;--main-dark:#6b0f28;
-  --bg-panel:rgba(20,0,5,0.85);--bg-panel-strong:rgba(20,0,5,0.92);--accent:#ffcc00}
+  --bg:rgba(20,0,5,0.85);--bg-strong:rgba(20,0,5,0.92);--accent:#ffcc00}
 body.theme-purple{--main:#b26bff;--main-dim:#7a42c4;--main-dark:#3a1f66;
-  --bg-panel:rgba(10,0,20,0.85);--bg-panel-strong:rgba(10,0,20,0.92);--accent:#00ff9d}
+  --bg:rgba(10,0,20,0.85);--bg-strong:rgba(10,0,20,0.92);--accent:#00ff9d}
 body.theme-amber{--main:#ffb000;--main-dim:#a87000;--main-dark:#5c3d00;
-  --bg-panel:rgba(20,15,0,0.85);--bg-panel-strong:rgba(20,15,0,0.92);--accent:#00ff9d}
+  --bg:rgba(20,15,0,0.85);--bg-strong:rgba(20,15,0,0.92);--accent:#00ff9d}
 
-/* ===== BACKGROUND ===== */
-#shader{position:fixed;inset:0;z-index:0;opacity:0.4}
-#aurora{position:fixed;inset:0;z-index:0;opacity:0.25;pointer-events:none}
-#neural{position:fixed;inset:0;z-index:1;opacity:0.55}
-#matrix{position:fixed;inset:0;z-index:2;opacity:0.18}
-#particles{position:fixed;inset:0;z-index:3;opacity:0.5;pointer-events:none}
-#helix{position:fixed;left:0;top:0;width:100%;height:100%;z-index:4;opacity:0.12;pointer-events:none}
-#cube3d{position:fixed;inset:0;z-index:4;opacity:0.18;pointer-events:none}
-#hexgrid{position:fixed;inset:0;z-index:5;opacity:0.05;pointer-events:none;
-  background-image:linear-gradient(rgba(0,255,157,0.6) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,255,157,0.6) 1px,transparent 1px);
+#shader,#aurora,#neural,#matrix,#particles,#helix,#cube3d{position:fixed;inset:0}
+#shader{z-index:0;opacity:.4}
+#aurora{z-index:0;opacity:.25;pointer-events:none}
+#neural{z-index:1;opacity:.55}
+#matrix{z-index:2;opacity:.18}
+#particles{z-index:3;opacity:.5;pointer-events:none}
+#helix{z-index:4;opacity:.12;pointer-events:none}
+#cube3d{z-index:4;opacity:.18;pointer-events:none}
+#hexgrid{position:fixed;inset:0;z-index:5;opacity:.05;pointer-events:none;
+  background-image:linear-gradient(rgba(0,255,157,.6) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,255,157,.6) 1px,transparent 1px);
   background-size:44px 44px;animation:hexScroll 22s linear infinite}
-@keyframes hexScroll{0%{background-position:0 0}100%{background-position:44px 44px}}
-#radar{position:fixed;top:50%;left:50%;width:1000px;height:1000px;margin:-500px 0 0 -500px;
-  border-radius:50%;z-index:6;pointer-events:none;opacity:0.07;
+@keyframes hexScroll{0%{background-position:0 0}100%{background-position:key44framespx 44px}}
+#radar{position flick:fixed;top:50%;left:50%;width:1000px;height:1000px;
+  margin:-500px 0 0 -500px;border-radiuser:50%;z-index:6;Tpointer-events:none;opacity:.07;
   background:conic-gradient(from 0deg,transparent 0deg,rgba(0,255,157,1) 35deg,transparent 35deg);
   animation:radarSpin 5s linear infinite}
 @keyframes radarSpin{to{transform:rotate(360deg)}}
 #scanline{position:fixed;left:0;width:100%;height:3px;z-index:7;
   background:linear-gradient(90deg,transparent,#00ff9d,transparent);
-  opacity:0.6;pointer-events:none;animation:scan 3.5s linear infinite;
+  opacity:.6;pointer-events:none;animation:scan 3.5s linear infinite;
   box-shadow:0 0 24px #00ff9d}
 @keyframes scan{0%{top:-5px}100%{top:100%}}
-#lightning{position:fixed;inset:0;z-index:7;pointer-events:none;opacity:0}
+#lightning{position:fixed;inset:0;z-index:7;pointer-events:none}
 #vignette{position:fixed;inset:0;z-index:8;pointer-events:none;
-  background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,0.92) 100%)}
+  background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.92) 100%)}
 #flicker{position:fixed;inset:0;z-index:9;pointer-events:none;
-  background:rgba(0,255,157,0.012);animation:flick 0.12s infinite steps(2)}
-@keyframes flick{0%,100%{opacity:0.2}50%{opacity:0.55}}
-#noise{position:fixed;inset:0;z-index:9;pointer-events:none;opacity:0.04;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)'/%3E%3C/svg%3E")}
+  background:rgba(0,255,157,.012);animation:flick .12s infinite steps(2)}
+@keyframes flick{0%,100%{opacity:.2}50%{opacity:.55}}
 
-/* ===== APP ===== */
 #app{position:relative;z-index:10;min-height:100%;max-width:820px;margin:0 auto;
   padding:14px 14px 30px;display:flex;flex-direction:column}
-
 #title{text-align:center;margin-bottom:4px;flex-shrink:0}
 h1{font-size:24px;margin:0;color:var(--main);letter-spacing:5px;font-weight:900;
   text-shadow:0 0 14px var(--main),0 0 5px var(--main);
@@ -79,7 +65,7 @@ h1::before{color:#ff3366;animation:glitch1 3.4s infinite;
   clip-path:polygon(0 0,100% 0,100% 44%,0 44%)}
 h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
   clip-path:polygon(0 56%,100% 56%,100% 100%,0 100%)}
-@keyframes flickerT{0%,96%,100%{opacity:1}97%{opacity:0.3}98%{opacity:0.9}}
+@{0%,96%,100%{opacity:1}97%{opacity:.3}98%{opacity:.9}}
 @keyframes glitch1{0%,92%,100%{transform:translate(0)}
   93%{transform:translate(-4px,-2px)}95%{transform:translate(3px,1px)}
   97%{transform:translate(-2px,2px)}}
@@ -89,24 +75,20 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 .sub{color:var(--main-dim);font-size:10px;letter-spacing:3px;margin-top:2px}
 .sub::before{content:'[ ';color:var(--main)}
 .sub::after{content:' ]';color:var(--main)}
-
-/* ===== BANNERS ===== */
-#typebanner{flex-shrink:0;background:var(--bg-panel);
-  border:1px solid var(--main-dim);border-radius:6px;padding:7px 12px;
-  margin:8px 0;font-size:11px;color:var(--main);letter-spacing:1px;
-  min-height:26px;display:flex;align-items:center;gap:6px}
+#typebanner{flex-shrink:0;background:var(--bg);border:1px solid var(--main-dim);
+  border-radius:6px;padding:7px 12px;margin:8px 0;font-size:11px;color:var(--main);
+  letter-spacing:1px;min-height:26px;display:flex;align-items:center;gap:6px}
 #typebanner .prompt{color:var(--main);font-weight:700}
 #typebanner .text{color:var(--main);text-shadow:0 0 6px var(--main)}
 #typebanner .cursor{display:inline-block;width:8px;height:12px;background:var(--main);
   animation:blink 1s steps(2) infinite;margin-left:2px;box-shadow:0 0 8px var(--main)}
 @keyframes blink{50%{opacity:0}}
-
-#ipbanner{flex-shrink:0;background:var(--bg-panel-strong);
-  border:1px solid var(--main);border-radius:8px;padding:8px 12px;margin-bottom:10px;
-  box-shadow:0 0 16px rgba(0,255,157,0.3),0 0 8px rgba(0,255,157,0.4) inset;
+#ipbanner{flex-shrink:0;background:var(--bg-strong);border:1px solid var(--main);
+  border-radius:8px;padding:8px 12px;margin-bottom:10px;
+  box-shadow:0 0 16px rgba(0,255,157,.3),0 0 8px rgba(0,255,157,.4) inset;
   font-size:11px;line-height:1.6;position:relative;overflow:hidden}
 #ipbanner::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(0,255,157,0.08),transparent);
+  background:linear-gradient(90deg,transparent,rgba(0,255,157,.08),transparent);
   transform:translateX(-100%);animation:sweep 3s infinite}
 @keyframes sweep{100%{transform:translateX(100%)}}
 #ipbanner .row{display:flex;justify-content:space-between;align-items:center;
@@ -115,33 +97,25 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 #ipbanner .value{color:var(--main);font-weight:700;font-variant-numeric:tabular-nums;
   text-shadow:0 0 8px var(--main);transition:opacity .2s}
 #ipbanner .value.hidden{color:var(--warn);text-shadow:0 0 8px var(--warn)}
-#ipbanner .value.masking{opacity:0.4}
+#ipbanner .value.masking{opacity:.4}
 #ipbanner .value.traced{color:var(--accent);text-shadow:0 0 8px var(--accent)}
 #ipbanner .status{color:var(--warn);font-size:9px;letter-spacing:1px;
   animation:pulse 1.4s infinite;margin-top:2px}
-
-/* ===== NEWS TICKER ===== */
-#newsticker{flex-shrink:0;background:var(--bg-panel-strong);
-  border:1px solid var(--main-dim);border-radius:6px;overflow:hidden;
-  height:26px;margin-bottom:10px;position:relative}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#newsticker{flex-shrink:0;background:var(--bg-strong);border:1px solid var(--main-dim);
+  border-radius:6px;overflow:hidden;height:26px;margin-bottom:10px;position:relative}
 #newsticker .inner{display:flex;gap:30px;padding-left:100%;white-space:nowrap;
-  animation:newsScroll 60s linear infinite;line-height:26px;font-size:11px;
-  color:var(--main)}
+  animation:newsScroll 60s linear infinite;line-height:26px;font-size:11px;color:var(--main)}
 @keyframes newsScroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
 #newsticker .item::before{content:'◆ ';color:var(--accent)}
-
-/* ===== STATUS ===== */
 #statusbar{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
   font-size:10px;color:var(--main-dim);letter-spacing:1px;padding:6px 10px;
-  background:var(--bg-panel);border:1px solid var(--main-dark);border-radius:6px;
+  background:var(--bg);border:1px solid var(--main-dark);border-radius:6px;
   margin-bottom:10px;flex-shrink:0}
 #statusbar .live{color:var(--main)}
 #statusbar .live::before{content:'● ';animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
-
-/* ===== STATS ===== */
 #stats{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:10px;flex-shrink:0}
-.stat{background:var(--bg-panel);border:1px solid var(--main-dark);border-radius:6px;
+.stat{background:var(--bg);border:1px solid var(--main-dark);border-radius:6px;
   padding:6px 3px;text-align:center;position:relative;overflow:hidden}
 .stat::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;
   background:linear-gradient(90deg,transparent,var(--main),transparent);
@@ -150,74 +124,61 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 .stat .label{font-size:7px;color:var(--main-dim);letter-spacing:.5px;margin-bottom:2px}
 .stat .value{font-size:11px;font-weight:700;color:var(--main);
   text-shadow:0 0 8px var(--main);font-variant-numeric:tabular-nums}
-
-/* ===== TABS ===== */
-#tabbar{display:flex;gap:3px;margin-bottom:12px;background:var(--bg-panel-strong);
+#tabbar{display:flex;gap:3px;margin-bottom:12px;background:var(--bg-strong);
   border:1px solid var(--main-dim);border-radius:8px;padding:4px;overflow-x:auto;
-  box-shadow:0 0 20px rgba(0,255,157,0.15);flex-shrink:0}
+  flex-shrink:0}
 .tabbtn{flex:1;min-width:62px;background:transparent;color:var(--main-dim);border:none;
   padding:8px 4px;border-radius:6px;cursor:pointer;font-family:inherit;
   font-size:9px;letter-spacing:1px;font-weight:700;transition:all .2s;
   white-space:nowrap;position:relative}
-.tabbtn:hover{color:var(--main);background:rgba(0,255,157,0.05)}
-.tabbtn.on{background:rgba(0,255,157,0.15);color:var(--main);
-  box-shadow:0 0 14px rgba(0,255,157,0.5) inset,0 0 8px rgba(0,255,157,0.3);
-  text-shadow:0 0 8px var(--main)}
+.tabbtn:hover{color:var(--main);background:rgba(0,255,157,.05)}
+.tabbtn.on{background:rgba(0,255,157,.15);color:var(--main);
+  box-shadow:0 0 14px rgba(0,255,157,.5) inset;text-shadow:0 0 8px var(--main)}
 .tabbtn.on::after{content:'';position:absolute;bottom:2px;left:20%;right:20%;
   height:1px;background:var(--main);box-shadow:0 0 6px var(--main)}
-
 .tabpane{display:none;animation:fadein .35s;flex:1}
 .tabpane.on{display:block}
 @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* ===== CARDS ===== */
 .section-title{color:var(--main-dim);font-size:11px;letter-spacing:2px;margin:14px 0 8px;
   text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .section-title::before{content:'▸';color:var(--main)}
 .section-title::after{content:'';flex:1;height:1px;
   background:linear-gradient(90deg,var(--main-dim),transparent)}
 .section-title .badge{margin-left:auto;font-size:9px;padding:2px 6px;
-  background:rgba(0,255,157,0.12);border:1px solid var(--main);border-radius:4px;
+  background:rgba(0,255,157,.12);border:1px solid var(--main);border-radius:4px;
   color:var(--main);letter-spacing:1px}
-
-.card{background:var(--bg-panel);border:1px solid var(--main-dim);border-radius:8px;
+.card{background:var(--bg);border:1px solid var(--main-dim);border-radius:8px;
   padding:12px 14px;margin-bottom:10px}
 .card h4{margin:0 0 8px;font-size:10px;color:var(--main-dim);letter-spacing:2px;
   text-transform:uppercase;font-weight:700}
-
 .row{display:flex;justify-content:space-between;padding:5px 0;
-  border-bottom:1px dashed rgba(0,255,157,0.2);font-size:11px;line-height:1.4}
+  border-bottom:1px dashed rgba(0,255,157,.2);font-size:11px;line-height:1.4}
 .row:last-child{border-bottom:none}
 .row span:first-child{color:var(--main-dim);flex-shrink:0;margin-right:8px}
 .row span:last-child{color:var(--main);font-weight:600;text-align:right;word-break:break-word}
-
-/* ===== WALLETS ===== */
-.wallet-btn{width:100%;background:rgba(0,20,10,0.75);border:1px solid var(--main-dim);
+.wallet-btn{width:100%;background:rgba(0,20,10,.75);border:1px solid var(--main-dim);
   border-radius:8px;padding:11px 13px;margin-bottom:8px;cursor:pointer;
   color:var(--main);font-family:inherit;font-size:12px;display:flex;
   align-items:center;gap:10px;text-align:left;transition:all .2s;
   letter-spacing:1px;position:relative;overflow:hidden}
 .wallet-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(0,255,157,0.15),transparent);
+  background:linear-gradient(90deg,transparent,rgba(0,255,157,.15),transparent);
   transition:left .5s}
-.wallet-btn:hover{border-color:var(--main);box-shadow:0 0 16px rgba(0,255,157,0.5)}
+.wallet-btn:hover{border-color:var(--main);box-shadow:0 0 16px rgba(0,255,157,.5)}
 .wallet-btn:hover::before{left:100%}
 .wallet-btn .icon{width:28px;height:28px;border:1px solid var(--main-dim);border-radius:6px;
   display:flex;align-items:center;justify-content:center;font-size:14px;
-  flex-shrink:0;background:rgba(0,255,157,0.08)}
+  flex-shrink:0;background:rgba(0,255,157,.08)}
 .wallet-btn .meta{flex:1}
 .wallet-btn .name{font-weight:700;color:var(--main);letter-spacing:1px;font-size:11px}
 .wallet-btn .desc{font-size:9px;color:var(--main-dim);letter-spacing:.5px;margin-top:2px}
 .wallet-btn .status{font-size:9px;color:var(--main-dim);letter-spacing:1px}
 .wallet-btn.available .status{color:var(--main);text-shadow:0 0 6px var(--main)}
 .wallet-btn.available{border-color:var(--main)}
-.wallet-btn.connected{border-color:var(--main);box-shadow:0 0 20px rgba(0,255,157,0.6) inset}
-
-#account{background:var(--bg-panel);border:1px solid var(--main);
-  border-radius:8px;padding:14px;margin-bottom:12px;display:none;
-  box-shadow:0 0 20px rgba(0,255,157,0.2) inset}
-#account h2{font-size:10px;color:var(--main-dim);margin:0 0 8px;letter-spacing:2px;
-  text-transform:uppercase}
+.wallet-btn.connected{border-color:var(--main);box-shadow:0 0 20px rgba(0,255,157,.6) inset}
+#account{background:var(--bg);border:1px solid var(--main);border-radius:8px;
+  padding:14px;margin-bottom:12px;display:none;box-shadow:0 0 20px rgba(0,255,157,.2) inset}
+#account h2{font-size:10px;color:var(--main-dim);margin:0 0 8px;letter-spacing:2px;text-transform:uppercase}
 #account .addr{font-family:monospace;font-size:12px;color:var(--main);
   word-break:break-all;text-shadow:0 0 6px var(--main);margin-bottom:8px}
 .disconnect{background:transparent;color:var(--err);border:1px solid var(--err);
@@ -225,96 +186,76 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
   font-family:inherit;font-size:11px;margin-top:10px;width:100%;
   letter-spacing:1px;transition:all .2s}
 .disconnect:hover{background:var(--err);color:#000}
-
-/* ===== SEARCH ===== */
 #searchBox{display:flex;gap:6px;margin-bottom:12px}
-#searchInput{flex:1;background:var(--bg-panel-strong);border:1px solid var(--main-dim);
+#searchInput{flex:1;background:var(--bg-strong);border:1px solid var(--main-dim);
   color:var(--main);padding:10px 12px;border-radius:6px;font-family:inherit;
   font-size:11px;outline:none;transition:all .2s;width:100%}
-#searchInput:focus{border-color:var(--main);box-shadow:0 0 14px rgba(0,255,157,0.5)}
+#searchInput:focus{border-color:var(--main);box-shadow:0 0 14px rgba(0,255,157,.5)}
 #searchInput::placeholder{color:var(--main-dark)}
-#searchBtn{background:rgba(0,255,157,0.1);color:var(--main);border:1px solid var(--main);
+#searchBtn{background:rgba(0,255,157,.1);color:var(--main);border:1px solid var(--main);
   padding:10px 14px;border-radius:6px;font-weight:700;cursor:pointer;
   font-family:inherit;font-size:10px;letter-spacing:1px;transition:all .2s}
-#searchBtn:hover{background:var(--main);color:#000;box-shadow:0 0 18px var(--main)}
-
-#searchResult{background:var(--bg-panel);border:1px solid var(--main-dim);
+#searchBtn:hover{background:var(--main);color:#000}
+#searchResult{background:var(--bg);border:1px solid var(--main-dim);
   border-radius:8px;padding:12px;margin-bottom:12px;display:none;
   font-size:11px;word-break:break-all}
-#searchResult.valid{border-color:var(--main);box-shadow:0 0 14px rgba(0,255,157,0.35)}
-#searchResult.invalid{border-color:var(--err);box-shadow:0 0 14px rgba(255,51,102,0.3)}
+#searchResult.valid{border-color:var(--main);box-shadow:0 0 14px rgba(0,255,157,.35)}
+#searchResult.invalid{border-color:var(--err);box-shadow:0 0 14px rgba(255,51,102,.3)}
 #searchResult .label{color:var(--main-dim);font-size:9px;letter-spacing:1px;margin:6px 0 3px}
 #searchResult .label:first-child{margin-top:0}
 #searchResult .value{color:var(--main);font-family:monospace;font-size:10px;word-break:break-all}
 #searchResult.invalid .value{color:var(--err)}
-
-/* ===== REQUIREMENTS ===== */
 .req-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 @media(max-width:640px){.req-grid{grid-template-columns:1fr}}
-.req-card{background:var(--bg-panel);border:1px solid var(--main-dim);
-  border-radius:8px;padding:12px 14px}
-.req-card.min{border-color:var(--warn);box-shadow:0 0 10px rgba(255,204,0,0.15)}
-.req-card.rec{border-color:var(--main);box-shadow:0 0 12px rgba(0,255,157,0.25)}
-.req-card h3{margin:0 0 10px;font-size:11px;letter-spacing:2px;
-  text-transform:uppercase;font-weight:700}
-.req-card.min h3{color:var(--warn);text-shadow:0 0 8px rgba(255,204,0,0.6)}
-.req-card.rec h3{color:var(--main);text-shadow:0 0 8px var(--main)}
+.req-card{background:var(--bg);border:1px solid var(--main-dim);border-radius:8px;padding:12px 14px}
+.req-card.min{border-color:var(--warn);box-shadow:0 0 10px rgba(255,204,0,.15)}
+.req-card.rec{border-color:var(--main);box-shadow:0 0 12px rgba(0,255,157,.25)}
+.req-card h3{margin:0 0 10px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.req-card.min h3{color:var(--warn)}
+.req-card.rec h3{color:var(--main)}
 .req-card .row{font-size:10px}
-
 #verdict{padding:12px;border-radius:8px;text-align:center;font-size:12px;
   font-weight:700;letter-spacing:1px;margin-bottom:12px}
-#verdict.pass{background:rgba(0,255,157,0.12);color:var(--main);
-  border:1px solid rgba(0,255,157,0.4);text-shadow:0 0 8px var(--main)}
-#verdict.warn{background:rgba(255,204,0,0.12);color:var(--warn);
-  border:1px solid rgba(255,204,0,0.4);text-shadow:0 0 8px var(--warn)}
-#verdict.fail{background:rgba(255,51,102,0.12);color:var(--err);
-  border:1px solid rgba(255,51,102,0.4);text-shadow:0 0 8px var(--err)}
+#verdict.pass{background:rgba(0,255,157,.12);color:var(--main);
+  border:1px solid rgba(0,255,157,.4);text-shadow:0 0 8px var(--main)}
+#verdict.warn{background:rgba(255,204,0,.12);color:var(--warn);
+  border:1px solid rgba(255,204,0,.4);text-shadow:0 0 8px var(--warn)}
+#verdict.fail{background:rgba(255,51,102,.12);color:var(--err);
+  border:1px solid rgba(255,51,102,.4);text-shadow:0 0 8px var(--err)}
 #verdict small{display:block;font-size:10px;font-weight:400;margin-top:6px;
   color:var(--main-dim);letter-spacing:0;text-shadow:none}
-
-/* ===== NETWORK ===== */
-.net-card{background:var(--bg-panel);border:1px solid var(--main-dim);
+.net-card{background:var(--bg);border:1px solid var(--main-dim);
   border-radius:8px;padding:12px 14px;margin-bottom:10px}
-.net-card h4{margin:0 0 10px;font-size:10px;color:var(--main-dim);letter-spacing:2px;
-  text-transform:uppercase}
+.net-card h4{margin:0 0 10px;font-size:10px;color:var(--main-dim);letter-spacing:2px;text-transform:uppercase}
 .net-card .big{font-size:20px;color:var(--main);text-align:center;
-  text-shadow:0 0 10px var(--main);padding:6px 0;font-weight:700;
-  font-variant-numeric:tabular-nums}
+  text-shadow:0 0 10px var(--main);padding:6px 0;font-weight:700;font-variant-numeric:tabular-nums}
 .pulse{display:inline-block;width:8px;height:8px;background:var(--main);
   border-radius:50%;margin-right:6px;animation:pulse 1.5s infinite}
-
-/* Watchlist */
 .watch-item{display:flex;justify-content:space-between;align-items:center;
-  padding:7px 0;border-bottom:1px dashed rgba(0,255,157,0.15);font-size:11px;
-  cursor:pointer;transition:background .15s}
-.watch-item:hover{background:rgba(0,255,157,0.04)}
+  padding:7px 0;border-bottom:1px dashed rgba(0,255,157,.15);font-size:11px;cursor:pointer}
+.watch-item:hover{background:rgba(0,255,157,.04)}
 .watch-item:last-child{border-bottom:none}
 .watch-item .sym{color:var(--main);font-weight:700;letter-spacing:1px;width:60px}
 .watch-item .px{color:var(--main);font-variant-numeric:tabular-nums;flex:1;text-align:right;padding-right:12px}
 .watch-item .chg{font-variant-numeric:tabular-nums;font-weight:700;width:70px;text-align:right}
 .watch-item .up{color:var(--main)}
 .watch-item .down{color:var(--err)}
-
-/* ===== TOOLS ===== */
 .enc-input{width:100%;background:#000;border:1px solid var(--main-dim);color:var(--main);
   padding:8px 10px;border-radius:4px;font-family:inherit;font-size:11px;
   outline:none;margin-bottom:6px}
-.enc-input:focus{border-color:var(--main);box-shadow:0 0 10px rgba(0,255,157,0.3)}
+.enc-input:focus{border-color:var(--main);box-shadow:0 0 10px rgba(0,255,157,.3)}
 .enc-output{background:#000;border:1px solid var(--main-dim);color:var(--accent);
   padding:8px 10px;border-radius:4px;font-family:monospace;font-size:10px;
-  word-break:break-all;min-height:36px;line-height:1.5;
-  font-variant-numeric:tabular-nums}
-.enc-btn{background:rgba(0,255,157,0.1);color:var(--main);border:1px solid var(--main);
+  word-break:break-all;min-height:36px;line-height:1.5;font-variant-numeric:tabular-nums}
+.enc-btn{background:rgba(0,255,157,.1);color:var(--main);border:1px solid var(--main);
   padding:6px 12px;border-radius:4px;font-family:inherit;font-weight:700;
   cursor:pointer;font-size:10px;letter-spacing:1px;margin-top:6px;transition:all .2s;
   margin-right:4px}
 .enc-btn:hover{background:var(--main);color:#000;box-shadow:0 0 14px var(--main)}
 .enc-btn.red{border-color:var(--err);color:var(--err)}
-.enc-btn.red:hover{background:var(--err);color:#000;box-shadow:0 0 14px var(--err)}
+.enc-btn.red:hover{background:var(--err);color:#000}
 .enc-btn.blue{border-color:var(--accent);color:var(--accent)}
 .enc-btn.blue:hover{background:var(--accent);color:#000}
-
-/* ===== CONSOLE ===== */
 #consoleOut{background:#000;border:1px solid var(--main-dim);color:var(--main);
   padding:10px;border-radius:6px;font-family:monospace;font-size:11px;
   height:280px;overflow-y:auto;line-height:1.5;margin-bottom:8px}
@@ -326,90 +267,60 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 .console-input-wrap{display:flex;gap:6px;align-items:center}
 #consoleIn{flex:1;background:#000;border:1px solid var(--main-dim);color:var(--main);
   padding:9px 11px;border-radius:6px;font-family:inherit;font-size:12px;outline:none}
-#consoleIn:focus{border-color:var(--main);box-shadow:0 0 12px rgba(0,255,157,0.4)}
-
-/* Terminal (log feed) */
-#terminal{background:var(--bg-panel-strong);border:1px solid var(--main);
+#consoleIn:focus{border-color:var(--main)}
+#terminal{background:var(--bg-strong);border:1px solid var(--main);
   border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.55;
   color:var(--main);overflow-y:auto;height:340px;
-  box-shadow:0 0 22px rgba(0,255,157,0.25) inset;margin-bottom:10px;
-  scrollbar-width:thin;scrollbar-color:var(--main-dim) transparent}
+  box-shadow:0 0 22px rgba(0,255,157,.25) inset;margin-bottom:10px}
 #terminal .line{margin-bottom:2px;word-break:break-all;opacity:0;animation:fadein .3s forwards}
 #terminal .ok{color:var(--main)}
 #terminal .warn{color:var(--warn)}
 #terminal .err{color:var(--err)}
 #terminal .info{color:var(--accent)}
 #terminal .dim{color:var(--main-dark)}
-
-/* Chart area */
 .mini-chart{background:#000;border:1px solid var(--main-dim);border-radius:6px;
-  padding:8px;height:110px;margin-bottom:10px;overflow:hidden;position:relative}
+  padding:8px;height:110px;margin-bottom:10px;position:relative}
 .mini-chart svg{width:100%;height:100%;display:block}
-.mini-chart .lbl{position:absolute;top:4px;left:8px;font-size:9px;color:var(--main-dim);
-  letter-spacing:1px}
-
-/* Waveform */
+.mini-chart .lbl{position:absolute;top:4px;left:8px;font-size:9px;color:var(--main-dim);letter-spacing:1px}
 #waveCanvas{background:#000;border:1px solid var(--main-dim);border-radius:6px;
   width:100%;height:80px;display:block;margin-bottom:10px}
-
-/* Order book */
 .orderbook{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:10px}
 .ob-side{background:#000;border:1px solid var(--main-dark);border-radius:4px;
   padding:6px;font-variant-numeric:tabular-nums;max-height:220px;overflow-y:auto}
 .ob-side .ob-row{display:flex;justify-content:space-between;padding:2px 0;
-  border-bottom:1px dashed rgba(0,255,157,0.1)}
+  border-bottom:1px dashed rgba(0,255,157,.1)}
 .ob-side .ob-row:last-child{border-bottom:none}
 .ob-bids .ob-row span:first-child{color:var(--main)}
 .ob-asks .ob-row span:first-child{color:var(--err)}
 .ob-side .ob-row span:last-child{color:var(--main-dim)}
-
-/* Grid of small info tiles */
 .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
-.info-tile{background:var(--bg-panel);border:1px solid var(--main-dark);
+.info-tile{background:var(--bg);border:1px solid var(--main-dark);
   border-radius:6px;padding:8px;text-align:center}
 .info-tile .label{font-size:8px;color:var(--main-dim);letter-spacing:1px}
 .info-tile .val{font-size:13px;color:var(--main);font-weight:700;margin-top:3px;
   text-shadow:0 0 6px var(--main);font-variant-numeric:tabular-nums}
-
-/* Heatmap */
 .heatmap{display:grid;grid-template-columns:repeat(20,1fr);gap:2px;padding:4px;
   background:#000;border:1px solid var(--main-dark);border-radius:6px;margin-bottom:10px}
-.heatmap .cell{aspect-ratio:1;background:var(--main-dark);border-radius:2px;
-  transition:background .5s}
-
-/* Theme picker */
+.heatmap .cell{aspect-ratio:1;background:var(--main-dark);border-radius:2px;transition:background .5s}
 .theme-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
 .theme-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;
-  border:2px solid rgba(255,255,255,0.15);transition:all .2s}
+  border:2px solid rgba(255,255,255,.15);transition:all .2s}
 .theme-dot:hover{transform:scale(1.15);border-color:#fff}
 .theme-dot.sel{border-color:#fff;box-shadow:0 0 12px currentColor}
-
-/* QR canvas */
 #qrCanvas{background:#000;border:1px solid var(--main-dim);border-radius:6px;
   display:block;margin:6px auto;image-rendering:pixelated}
-
-/* Keyboard shortcuts */
-.kbd{display:inline-block;padding:1px 6px;background:rgba(0,255,157,0.12);
+.kbd{display:inline-block;padding:1px 6px;background:rgba(0,255,157,.12);
   border:1px solid var(--main-dim);border-radius:3px;font-size:10px;
   color:var(--main);font-family:monospace}
-
-/* Loader */
-.loader{display:inline-block;width:12px;height:12px;border:2px solid var(--main-dim);
-  border-top-color:var(--main);border-radius:50%;animation:spin 0.8s linear infinite;
-  vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Modal */
 #modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;
-  justify-content:center;background:rgba(0,0,0,0.85);padding:20px}
+  justify-content:center;background:rgba(0,0,0,.85);padding:20px}
 #modal.on{display:flex}
-#modal .box{background:var(--bg-panel-strong);border:1px solid var(--main);
+#modal .box{background:var(--bg-strong);border:1px solid var(--main);
   border-radius:8px;padding:20px;max-width:500px;width:100%;
-  box-shadow:0 0 30px rgba(0,255,157,0.4)}
-#modal h3{color:var(--main);margin:0 0 10px;font-size:14px;letter-spacing:2px;
-  text-transform:uppercase}
+  box-shadow:0 0 30px rgba(0,255,157,.4)}
+#modal h3{color:var(--main);margin:0 0 10px;font-size:14px;letter-spacing:2px;text-transform:uppercase}
 #modal p{color:var(--main-dim);font-size:12px;line-height:1.6;margin:6px 0}
-
+#foot{text-align:center;font-size:9px;color:var(--main-dark);letter-spacing:2px;padding:10px 0 4px}
 @media(max-width:600px){
   h1{font-size:17px;letter-spacing:2px}
   #stats{grid-template-columns:repeat(4,1fr)}
@@ -430,10 +341,9 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 <div id="hexgrid"></div>
 <div id="radar"></div>
 <div id="scanline"></div>
-<div id="lightning"></div>
+<canvas id="lightning"></canvas>
 <div id="vignette"></div>
 <div id="flicker"></div>
-<div id="noise"></div>
 
 <div id="modal" onclick="closeModal(event)">
   <div class="box" onclick="event.stopPropagation()">
@@ -456,22 +366,12 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
   </div>
 
   <div id="ipbanner">
-    <div class="row">
-      <span class="label">YOUR IP</span>
-      <span class="value" id="ip-real">203.***.***.47</span>
-    </div>
-    <div class="row">
-      <span class="label">MASKED AS</span>
-      <span class="value" id="ip-mask">—</span>
-    </div>
+    <div class="row"><span class="label">YOUR IP</span><span class="value" id="ip-real">203.***.***.47</span></div>
+    <div class="row"><span class="label">MASKED AS</span><span class="value" id="ip-mask">—</span></div>
     <div class="status" id="ip-status">> initializing mask…</div>
   </div>
 
-  <div id="newsticker">
-    <div class="inner" id="newsInner">
-      <span class="item">Loading live market news…</span>
-    </div>
-  </div>
+  <div id="newsticker"><div class="inner" id="newsInner"><span class="item">Loading live market news…</span></div></div>
 
   <div id="statusbar">
     <span class="live">SYSTEM ONLINE</span>
@@ -505,7 +405,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
     <button class="tabbtn" data-t="settings">SETTINGS</button>
   </div>
 
-  <!-- ============ WALLETS ============ -->
   <div class="tabpane on" id="tab-wallet">
     <div id="account">
       <h2>◉ Connected</h2>
@@ -521,58 +420,27 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
     <div class="section-title">Available Wallets <span class="badge" id="walletCount">0 live</span></div>
 
     <button class="wallet-btn" id="w-metamask" onclick="connectInjected('MetaMask')">
-      <div class="icon">🦊</div>
-      <div class="meta"><div class="name">METAMASK</div><div class="desc">Ethereum / EVM / BTC Snaps</div></div>
-      <div class="status" id="s-metamask">SCAN</div>
-    </button>
+      <div class="icon">🦊</div><div class="meta"><div class="name">METAMASK</div><div class="desc">Ethereum / EVM / BTC Snaps</div></div><div class="status" id="s-metamask">SCAN</div></button>
     <button class="wallet-btn" id="w-coinbase" onclick="connectInjected('Coinbase')">
-      <div class="icon">🔵</div>
-      <div class="meta"><div class="name">COINBASE WALLET</div><div class="desc">Ethereum / Base / Bitcoin</div></div>
-      <div class="status" id="s-coinbase">SCAN</div>
-    </button>
+      <div class="icon">🔵</div><div class="meta"><div class="name">COINBASE WALLET</div><div class="desc">Ethereum / Base / Bitcoin</div></div><div class="status" id="s-coinbase">SCAN</div></button>
     <button class="wallet-btn" id="w-trust" onclick="connectInjected('Trust')">
-      <div class="icon">🛡️</div>
-      <div class="meta"><div class="name">TRUST WALLET</div><div class="desc">BTC / ETH / Multi-chain</div></div>
-      <div class="status" id="s-trust">SCAN</div>
-    </button>
+      <div class="icon">🛡️</div><div class="meta"><div class="name">TRUST WALLET</div><div class="desc">BTC / ETH / Multi-chain</div></div><div class="status" id="s-trust">SCAN</div></button>
     <button class="wallet-btn" id="w-phantom" onclick="connectPhantom()">
-      <div class="icon">👻</div>
-      <div class="meta"><div class="name">PHANTOM</div><div class="desc">Solana / Bitcoin</div></div>
-      <div class="status" id="s-phantom">SCAN</div>
-    </button>
+      <div class="icon">👻</div><div class="meta"><div class="name">PHANTOM</div><div class="desc">Solana / Bitcoin</div></div><div class="status" id="s-phantom">SCAN</div></button>
     <button class="wallet-btn" id="w-xverse" onclick="connectInjected('Xverse')">
-      <div class="icon">₿</div>
-      <div class="meta"><div class="name">XVERSE</div><div class="desc">Bitcoin / Ordinals</div></div>
-      <div class="status" id="s-xverse">SCAN</div>
-    </button>
+      <div class="icon">₿</div><div class="meta"><div class="name">XVERSE</div><div class="desc">Bitcoin / Ordinals</div></div><div class="status" id="s-xverse">SCAN</div></button>
     <button class="wallet-btn" id="w-leather" onclick="connectInjected('Leather')">
-      <div class="icon">🟠</div>
-      <div class="meta"><div class="name">LEATHER</div><div class="desc">Bitcoin / Stacks</div></div>
-      <div class="status" id="s-leather">SCAN</div>
-    </button>
+      <div class="icon">🟠</div><div class="meta"><div class="name">LEATHER</div><div class="desc">Bitcoin / Stacks</div></div><div class="status" id="s-leather">SCAN</div></button>
     <button class="wallet-btn" id="w-okx" onclick="connectInjected('OKX')">
-      <div class="icon">⭕</div>
-      <div class="meta"><div class="name">OKX WALLET</div><div class="desc">Multi-chain</div></div>
-      <div class="status" id="s-okx">SCAN</div>
-    </button>
+      <div class="icon">⭕</div><div class="meta"><div class="name">OKX WALLET</div><div class="desc">Multi-chain</div></div><div class="status" id="s-okx">SCAN</div></button>
     <button class="wallet-btn" id="w-rabby" onclick="connectInjected('Rabby')">
-      <div class="icon">🐰</div>
-      <div class="meta"><div class="name">RABBY</div><div class="desc">EVM multi-chain</div></div>
-      <div class="status" id="s-rabby">SCAN</div>
-    </button>
+      <div class="icon">🐰</div><div class="meta"><div class="name">RABBY</div><div class="desc">EVM multi-chain</div></div><div class="status" id="s-rabby">SCAN</div></button>
     <button class="wallet-btn" id="w-rainbow" onclick="connectInjected('Rainbow')">
-      <div class="icon">🌈</div>
-      <div class="meta"><div class="name">RAINBOW</div><div class="desc">Ethereum / EVM</div></div>
-      <div class="status" id="s-rainbow">SCAN</div>
-    </button>
+      <div class="icon">🌈</div><div class="meta"><div class="name">RAINBOW</div><div class="desc">Ethereum / EVM</div></div><div class="status" id="s-rainbow">SCAN</div></button>
     <button class="wallet-btn" id="w-wc" onclick="connectWalletConnect()">
-      <div class="icon">🔗</div>
-      <div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR / URI</div></div>
-      <div class="status">OPEN</div>
-    </button>
+      <div class="icon">🔗</div><div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR / URI</div></div><div class="status">OPEN</div></button>
   </div>
 
-  <!-- ============ SEARCH ============ -->
   <div class="tabpane" id="tab-search">
     <div class="section-title">Address Lookup</div>
     <div id="searchBox">
@@ -580,25 +448,21 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button id="searchBtn" onclick="lookupWallet()">SEARCH</button>
     </div>
     <div id="searchResult"></div>
-
     <div class="section-title">Recent Checks</div>
     <div id="recentList" class="card" style="font-size:10px;color:var(--main-dim)">No recent lookups.</div>
-
-    <div class="section-title">Address Format Guide</div>
+    <div class="section-title">Format Guide</div>
     <div class="card">
       <div class="row"><span>Bitcoin</span><span>starts 1 / 3 / bc1</span></div>
-      <div class="row"><span>Ethereum / EVM</span><span>starts 0x · 40 hex chars</span></div>
-      <div class="row"><span>Solana</span><span>base58 · 32-44 chars</span></div>
+      <div class="row"><span>Ethereum / EVM</span><span>starts 0x · 40 hex</span></div>
+      <div class="row"><span>Solana</span><span>base58 · 32-44</span></div>
       <div class="row"><span>Litecoin</span><span>starts L / M / ltc1</span></div>
       <div class="row"><span>Dogecoin</span><span>starts D · 34 chars</span></div>
     </div>
   </div>
 
-  <!-- ============ SYSTEM ============ -->
   <div class="tabpane" id="tab-system">
     <div class="section-title">Device Report</div>
     <div id="verdict">Analyzing…</div>
-
     <div class="req-grid">
       <div class="req-card min">
         <h3>◆ Minimum</h3>
@@ -621,7 +485,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
         <div class="row"><span>Storage</span><span>200 MB free</span></div>
       </div>
     </div>
-
     <div class="section-title">Your Device</div>
     <div class="card">
       <div class="row"><span>Device</span><span id="d-device">—</span></div>
@@ -638,70 +501,52 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="row"><span>Language</span><span id="d-lang">—</span></div>
       <div class="row"><span>Timezone</span><span id="d-tz">—</span></div>
       <div class="row"><span>Platform</span><span id="d-platform">—</span></div>
-      <div class="row"><span>Cookie Enabled</span><span id="d-cookie">—</span></div>
+      <div class="row"><span>Cookies</span><span id="d-cookie">—</span></div>
       <div class="row"><span>Do Not Track</span><span id="d-dnt">—</span></div>
     </div>
-
     <div class="section-title">Live System Monitor <span class="badge">LIVE</span></div>
-    <div class="mini-chart">
-      <div class="lbl">CPU %</div>
+    <div class="mini-chart"><div class="lbl">CPU %</div>
       <svg id="cpuChart" viewBox="0 0 300 80" preserveAspectRatio="none">
         <polyline id="cpuLine" fill="none" stroke="#00ff9d" stroke-width="1.5" points=""/>
       </svg>
     </div>
-    <div class="mini-chart">
-      <div class="lbl">RAM %</div>
+    <div class="mini-chart"><div class="lbl">RAM %</div>
       <svg id="ramChart" viewBox="0 0 300 80" preserveAspectRatio="none">
         <polyline id="ramLine" fill="none" stroke="#00bfff" stroke-width="1.5" points=""/>
       </svg>
     </div>
-    <div class="mini-chart">
-      <div class="lbl">NET I/O KB/s</div>
+    <div class="mini-chart"><div class="lbl">NET I/O KB/s</div>
       <svg id="netChart" viewBox="0 0 300 80" preserveAspectRatio="none">
         <polyline id="netLine" fill="none" stroke="#ffcc00" stroke-width="1.5" points=""/>
       </svg>
     </div>
-
     <div class="section-title">Live Heatmap</div>
     <div class="heatmap" id="heatmap"></div>
-
     <div class="section-title">Fingerprint Hash</div>
-    <div class="card">
-      <div class="enc-output" id="fingerprint">computing…</div>
-    </div>
+    <div class="card"><div class="enc-output" id="fingerprint">computing…</div></div>
   </div>
 
-  <!-- ============ NETWORK ============ -->
   <div class="tabpane" id="tab-network">
     <div class="section-title"><span class="pulse"></span>Live Bitcoin</div>
-
-    <div class="net-card">
-      <h4>BTC / USDT</h4>
+    <div class="net-card"><h4>BTC / USDT</h4>
       <div class="big" id="btc-price">—</div>
       <div class="row"><span>24h change</span><span id="btc-change">—</span></div>
       <div class="row"><span>24h high</span><span id="btc-high">—</span></div>
       <div class="row"><span>24h low</span><span id="btc-low">—</span></div>
       <div class="row"><span>24h volume</span><span id="btc-vol">—</span></div>
       <div class="row"><span>Trades</span><span id="btc-trades">—</span></div>
-      <div class="row"><span>Bid / Ask</span><span id="btc-bidask">—</span></div>
     </div>
-
-    <div class="net-card">
-      <h4>Blockchain</h4>
+    <div class="net-card"><h4>Blockchain</h4>
       <div class="row"><span>Block height</span><span id="bc-height">—</span></div>
       <div class="row"><span>Latest hash</span><span id="bc-hash">—</span></div>
       <div class="row"><span>Time</span><span id="bc-time">—</span></div>
     </div>
-
-    <div class="net-card">
-      <h4>Market Pulse</h4>
+    <div class="net-card"><h4>Market Pulse</h4>
       <div class="row"><span>Fear / Greed</span><span id="fear-greed">—</span></div>
       <div class="row"><span>Dominance BTC</span><span id="btc-dom">—</span></div>
     </div>
-
     <div class="section-title">Live Waveform</div>
     <canvas id="waveCanvas"></canvas>
-
     <div class="section-title">Latency Test</div>
     <div class="card">
       <button class="enc-btn" onclick="runLatencyTest()">RUN 10 PINGS</button>
@@ -709,49 +554,26 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
     </div>
   </div>
 
-  <!-- ============ MARKET ============ -->
   <div class="tabpane" id="tab-market">
     <div class="section-title">Watchlist <span class="badge">LIVE</span></div>
     <div class="card" id="watchlist">
-      <div class="watch-item" data-sym="BTCUSDT">
-        <span class="sym">BTC</span><span class="px" id="wl-BTCUSDT">—</span><span class="chg" id="wc-BTCUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="ETHUSDT">
-        <span class="sym">ETH</span><span class="px" id="wl-ETHUSDT">—</span><span class="chg" id="wc-ETHUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="BNBUSDT">
-        <span class="sym">BNB</span><span class="px" id="wl-BNBUSDT">—</span><span class="chg" id="wc-BNBUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="SOLUSDT">
-        <span class="sym">SOL</span><span class="px" id="wl-SOLUSDT">—</span><span class="chg" id="wc-SOLUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="XRPUSDT">
-        <span class="sym">XRP</span><span class="px" id="wl-XRPUSDT">—</span><span class="chg" id="wc-XRPUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="XAUTUSDT">
-        <span class="sym">XAUT</span><span class="px" id="wl-XAUTUSDT">—</span><span class="chg" id="wc-XAUTUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="DOGEUSDT">
-        <span class="sym">DOGE</span><span class="px" id="wl-DOGEUSDT">—</span><span class="chg" id="wc-DOGEUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="ADAUSDT">
-        <span class="sym">ADA</span><span class="px" id="wl-ADAUSDT">—</span><span class="chg" id="wc-ADAUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="AVAXUSDT">
-        <span class="sym">AVAX</span><span class="px" id="wl-AVAXUSDT">—</span><span class="chg" id="wc-AVAXUSDT">—</span>
-      </div>
-      <div class="watch-item" data-sym="LINKUSDT">
-        <span class="sym">LINK</span><span class="px" id="wl-LINKUSDT">—</span><span class="chg" id="wc-LINKUSDT">—</span>
-      </div>
+      <div class="watch-item" data-sym="BTCUSDT"><span class="sym">BTC</span><span class="px" id="wl-BTCUSDT">—</span><span class="chg" id="wc-BTCUSDT">—</span></div>
+      <div class="watch-item" data-sym="ETHUSDT"><span class="sym">ETH</span><span class="px" id="wl-ETHUSDT">—</span><span class="chg" id="wc-ETHUSDT">—</span></div>
+      <div class="watch-item" data-sym="BNBUSDT"><span class="sym">BNB</span><span class="px" id="wl-BNBUSDT">—</span><span class="chg" id="wc-BNBUSDT">—</span></div>
+      <div class="watch-item" data-sym="SOLUSDT"><span class="sym">SOL</span><span class="px" id="wl-SOLUSDT">—</span><span class="chg" id="wc-SOLUSDT">—</span></div>
+      <div class="watch-item" data-sym="XRPUSDT"><span class="sym">XRP</span><span class="px" id="wl-XRPUSDT">—</span><span class="chg" id="wc-XRPUSDT">—</span></div>
+      <div class="watch-item" data-sym="XAUTUSDT"><span class="sym">XAUT</span><span class="px" id="wl-XAUTUSDT">—</span><span class="chg" id="wc-XAUTUSDT">—</span></div>
+      <div class="watch-item" data-sym="DOGEUSDT"><span class="sym">DOGE</span><span class="px" id="wl-DOGEUSDT">—</span><span class="chg" id="wc-DOGEUSDT">—</span></div>
+      <div class="watch-item" data-sym="ADAUSDT"><span class="sym">ADA</span><span class="px" id="wl-ADAUSDT">—</span><span class="chg" id="wc-ADAUSDT">—</span></div>
+      <div class="watch-item" data-sym="AVAXUSDT"><span class="sym">AVAX</span><span class="px" id="wl-AVAXUSDT">—</span><span class="chg" id="wc-AVAXUSDT">—</span></div>
+      <div class="watch-item" data-sym="LINKUSDT"><span class="sym">LINK</span><span class="px" id="wl-LINKUSDT">—</span><span class="chg" id="wc-LINKUSDT">—</span></div>
     </div>
-
     <div class="section-title">BTC / USDT 1h Sparkline</div>
     <div class="mini-chart">
       <svg id="btcSpark" viewBox="0 0 300 80" preserveAspectRatio="none">
         <polyline id="btcSparkLine" fill="none" stroke="#00ff9d" stroke-width="1.5" points=""/>
       </svg>
     </div>
-
     <div class="section-title">24h Quick Stats</div>
     <div class="info-grid">
       <div class="info-tile"><div class="label">BUY VOL</div><div class="val" id="q1">—</div></div>
@@ -761,20 +583,16 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="info-tile"><div class="label">HIGH</div><div class="val" id="q5">—</div></div>
       <div class="info-tile"><div class="label">LOW</div><div class="val" id="q6">—</div></div>
     </div>
-
-    <div class="section-title">Mini Candlestick (1m × 30)</div>
+    <div class="section-title">Mini Candles (1m × 30)</div>
     <canvas id="candleCanvas" style="width:100%;height:140px;background:#000;border:1px solid var(--main-dim);border-radius:6px"></canvas>
   </div>
 
-  <!-- ============ ORDERS ============ -->
   <div class="tabpane" id="tab-orders">
     <div class="section-title"><span class="pulse"></span>Order Book — BTC / USDT</div>
-
     <div class="orderbook">
       <div class="ob-side ob-bids" id="bids"><div style="color:var(--main-dim);font-size:10px">Loading bids…</div></div>
       <div class="ob-side ob-asks" id="asks"><div style="color:var(--main-dim);font-size:10px">Loading asks…</div></div>
     </div>
-
     <div class="section-title" style="margin-top:14px">Depth Summary</div>
     <div class="net-card">
       <div class="row"><span>Best Bid</span><span id="ob-bid">—</span></div>
@@ -785,31 +603,26 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="row"><span>Ask Volume</span><span id="ob-avol">—</span></div>
       <div class="row"><span>Imbalance</span><span id="ob-imb">—</span></div>
     </div>
-
     <div class="section-title">Recent Trades</div>
     <div class="card" id="recentTrades" style="font-size:10px;font-family:monospace">
       <div style="color:var(--main-dim)">Loading trades…</div>
     </div>
   </div>
 
-  <!-- ============ TOOLS ============ -->
   <div class="tabpane" id="tab-tools">
     <div class="section-title">Hash & Encoding</div>
-
     <div class="card">
       <h4>◆ SHA-256</h4>
       <input class="enc-input" id="hashInput" placeholder="type anything…" value="QCity Wallet">
       <div class="enc-output" id="hashOutput">—</div>
       <button class="enc-btn" onclick="doHash()">HASH</button>
     </div>
-
     <div class="card">
       <h4>◆ SHA-512</h4>
       <input class="enc-input" id="hash512Input" placeholder="type anything…" value="QCity">
       <div class="enc-output" id="hash512Output">—</div>
       <button class="enc-btn" onclick="doHash512()">HASH 512</button>
     </div>
-
     <div class="card">
       <h4>◆ Base64 Encode / Decode</h4>
       <input class="enc-input" id="b64Input" placeholder="type anything…" value="Bitcoin">
@@ -817,7 +630,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button class="enc-btn" onclick="doB64()">ENCODE</button>
       <button class="enc-btn" onclick="doB64Decode()">DECODE</button>
     </div>
-
     <div class="card">
       <h4>◆ URL Encode / Decode</h4>
       <input class="enc-input" id="urlInput" placeholder="type anything…" value="https://qcity.io/?q=hello world">
@@ -825,63 +637,50 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button class="enc-btn" onclick="doUrlEnc()">ENCODE</button>
       <button class="enc-btn" onclick="doUrlDec()">DECODE</button>
     </div>
-
     <div class="section-title">Key & Address Generators</div>
-
     <div class="card">
       <h4>◆ Random Private Key (32 bytes)</h4>
       <div class="enc-output" id="keyOutput">—</div>
       <button class="enc-btn" onclick="genKey()">GENERATE</button>
       <div style="color:var(--warn);font-size:9px;margin-top:6px;line-height:1.5">
-        ⚠ Educational only. Never use a browser-generated key to store real funds.
-      </div>
+        ⚠ Educational only. Never use a browser-generated key to store real funds.</div>
     </div>
-
     <div class="card">
       <h4>◆ Random BTC Address (visual)</h4>
       <div class="enc-output" id="btcAddrOutput">—</div>
       <button class="enc-btn" onclick="genBtcAddr()">GENERATE</button>
       <div style="color:var(--warn);font-size:9px;margin-top:6px;line-height:1.5">
-        ⚠ Simulated. Not a real spendable address.
-      </div>
+        ⚠ Simulated. Not a real spendable address.</div>
     </div>
-
     <div class="card">
       <h4>◆ 12-Word Mnemonic (visual)</h4>
       <div class="enc-output" id="mnemonicOutput">—</div>
       <button class="enc-btn" onclick="genMnemonic()">GENERATE</button>
       <div style="color:var(--warn);font-size:9px;margin-top:6px;line-height:1.5">
-        ⚠ Simulated. Not derived from real entropy.
-      </div>
+        ⚠ Simulated. Not derived from real entropy.</div>
     </div>
-
     <div class="card">
       <h4>◆ 24-Word Mnemonic (visual)</h4>
       <div class="enc-output" id="mnemonic24Output">—</div>
       <button class="enc-btn" onclick="genMnemonic24()">GENERATE</button>
     </div>
-
     <div class="section-title">Utilities</div>
-
     <div class="card">
       <h4>◆ Password Strength</h4>
       <input class="enc-input" id="pwdInput" placeholder="type a password…" type="password" oninput="checkPwd()">
       <div class="enc-output" id="pwdOutput">—</div>
     </div>
-
     <div class="card">
       <h4>◆ UUID v4 Generator</h4>
       <div class="enc-output" id="uuidOutput">—</div>
       <button class="enc-btn" onclick="genUUID()">GENERATE</button>
     </div>
-
     <div class="card">
       <h4>◆ Timestamp Converter</h4>
       <input class="enc-input" id="tsInput" placeholder="unix seconds or ms…" value="1700000000">
       <div class="enc-output" id="tsOutput">—</div>
       <button class="enc-btn" onclick="convertTs()">CONVERT</button>
     </div>
-
     <div class="card">
       <h4>◆ Random Number</h4>
       <input class="enc-input" id="randMin" placeholder="min" value="1">
@@ -889,14 +688,12 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="enc-output" id="randOut">—</div>
       <button class="enc-btn" onclick="genRandNum()">GENERATE</button>
     </div>
-
     <div class="card">
       <h4>◆ Color Converter</h4>
       <input class="enc-input" id="colorInput" placeholder="#00ff9d" value="#00ff9d">
       <div class="enc-output" id="colorOut">—</div>
       <button class="enc-btn" onclick="convertColor()">CONVERT</button>
     </div>
-
     <div class="section-title">QR Code</div>
     <div class="card">
       <h4>◆ QR Code Generator (visual)</h4>
@@ -904,52 +701,45 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <canvas id="qrCanvas" width="200" height="200"></canvas>
       <button class="enc-btn" onclick="genQR()">GENERATE QR</button>
       <div style="color:var(--warn);font-size:9px;margin-top:6px;line-height:1.5">
-        ⚠ Visual pattern only — not a scannable QR code.
-      </div>
+        ⚠ Visual pattern only — not a scannable QR code.</div>
     </div>
-
     <div style="color:var(--main-dim);font-size:9px;line-height:1.6;text-align:center;margin-top:10px">
-      All operations run locally. Nothing leaves your device.
-    </div>
+      All operations run locally. Nothing leaves your device.</div>
   </div>
 
-  <!-- ============ CONSOLE ============ -->
   <div class="tabpane" id="tab-console">
     <div class="section-title">Interactive Console</div>
     <div id="consoleOut"></div>
     <div class="console-input-wrap">
       <span style="color:var(--main)">$</span>
-      <input id="consoleIn" placeholder="type a command: help, status, scan, trace, mask, hash, price, whoami, clear…" autocomplete="off" spellcheck="false">
+      <input id="consoleIn" placeholder="type a command: help, status, scan, trace, mask, hash, price, whoami…" autocomplete="off" spellcheck="false">
       <button class="enc-btn" style="margin-top:0" onclick="runConsole()">RUN</button>
     </div>
     <div class="card" style="margin-top:10px">
       <h4>Commands</h4>
-      <div class="row"><span>help</span><span>list all commands</span></div>
-      <div class="row"><span>status</span><span>show status</span></div>
+      <div class="row"><span>help</span><span>list all</span></div>
+      <div class="row"><span>status</span><span>system status</span></div>
       <div class="row"><span>scan</span><span>port scan</span></div>
       <div class="row"><span>trace</span><span>route trace</span></div>
       <div class="row"><span>mask</span><span>remask IP</span></div>
       <div class="row"><span>hash &lt;text&gt;</span><span>SHA-256</span></div>
       <div class="row"><span>price</span><span>BTC price</span></div>
-      <div class="row"><span>whoami</span><span>session info</span></div>
-      <div class="row"><span>clear</span><span>clear console</span></div>
-      <div class="row"><span>version</span><span>show version</span></div>
-      <div class="row"><span>uptime</span><span>session uptime</span></div>
+      <div class="row"><span>whoami</span><span>session</span></div>
+      <div class="row"><span>clear</span><span>clear</span></div>
+      <div class="row"><span>version</span><span>version</span></div>
+      <div class="row"><span>uptime</span><span>uptime</span></div>
       <div class="row"><span>rand &lt;n&gt;</span><span>random hex</span></div>
       <div class="row"><span>theme &lt;name&gt;</span><span>green/blue/red/purple/amber</span></div>
-      <div class="row"><span>matrix</span><span>toggle matrix rain</span></div>
-      <div class="row"><span>storm</span><span>trigger lightning</span></div>
-      <div class="row"><span>beep</span><span>play a beep</span></div>
-      <div class="row"><span>export</span><span>download session log</span></div>
+      <div class="row"><span>matrix</span><span>toggle matrix</span></div>
+      <div class="row"><span>storm</span><span>lightning</span></div>
+      <div class="row"><span>beep</span><span>beep</span></div>
+      <div class="row"><span>export</span><span>download log</span></div>
     </div>
   </div>
 
-  <!-- ============ LOG ============ -->
   <div class="tabpane" id="tab-log">
     <div class="section-title">Live Terminal Log</div>
-    <div id="terminal">
-      <div class="line info">> qcity-terminal v11.0 booting...</div>
-    </div>
+    <div id="terminal"><div class="line info">> qcity-terminal v11.0 booting...</div></div>
     <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
       <button class="enc-btn" onclick="triggerScan()">RUN SCAN</button>
       <button class="enc-btn" onclick="triggerMask()">NEW MASK</button>
@@ -957,12 +747,9 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button class="enc-btn red" onclick="triggerReset()">RESET LOG</button>
     </div>
     <div class="section-title" style="margin-top:14px">Filter Log</div>
-    <div class="card">
-      <input class="enc-input" id="logFilter" placeholder="filter by keyword…" oninput="filterLog()">
-    </div>
+    <div class="card"><input class="enc-input" id="logFilter" placeholder="filter by keyword…" oninput="filterLog()"></div>
   </div>
 
-  <!-- ============ SETTINGS ============ -->
   <div class="tabpane" id="tab-settings">
     <div class="section-title">Theme</div>
     <div class="theme-row">
@@ -972,7 +759,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="theme-dot" style="background:#b26bff" onclick="setTheme('purple',this)"></div>
       <div class="theme-dot" style="background:#ffb000" onclick="setTheme('amber',this)"></div>
     </div>
-
     <div class="section-title">Effects</div>
     <div class="card">
       <div class="row"><span>Matrix Rain</span><span><input type="checkbox" id="tglMatrix" checked onchange="toggleEffect('matrix')"></span></div>
@@ -982,9 +768,7 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="row"><span>3D Cube Grid</span><span><input type="checkbox" id="tglCube" checked onchange="toggleEffect('cube')"></span></div>
       <div class="row"><span>Radar Sweep</span><span><input type="checkbox" id="tglRadar" checked onchange="toggleEffect('radar')"></span></div>
       <div class="row"><span>Scanline</span><span><input type="checkbox" id="tglScan" checked onchange="toggleEffect('scan')"></span></div>
-      <div class="row"><span>Noise</span><span><input type="checkbox" id="tglNoise" checked onchange="toggleEffect('noise')"></span></div>
     </div>
-
     <div class="section-title">Sound</div>
     <div class="card">
       <div class="row"><span>Enable Sound</span><span><input type="checkbox" id="tglSound" onchange="toggleSound()"></span></div>
@@ -992,7 +776,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button class="enc-btn" onclick="playBeep(880,0.1)">TEST BEEP</button>
       <button class="enc-btn" onclick="playAlarm()">TEST ALARM</button>
     </div>
-
     <div class="section-title">Keyboard Shortcuts</div>
     <div class="card">
       <div class="row"><span><span class="kbd">1</span>–<span class="kbd">9</span></span><span>switch tabs</span></div>
@@ -1003,7 +786,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <div class="row"><span><span class="kbd">?</span></span><span>help modal</span></div>
       <div class="row"><span><span class="kbd">Esc</span></span><span>close modal</span></div>
     </div>
-
     <div class="section-title">Session</div>
     <div class="card">
       <div class="row"><span>Session ID</span><span id="sessionId">—</span></div>
@@ -1012,7 +794,6 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
       <button class="enc-btn" onclick="exportLog()">EXPORT LOG</button>
       <button class="enc-btn red" onclick="clearAll()">RESET ALL</button>
     </div>
-
     <div class="section-title">About</div>
     <div class="card">
       <div class="row"><span>App</span><span>QCity Bitcoin</span></div>
@@ -1110,11 +891,10 @@ function bumpEvents(){ totalEvents++; const el = document.getElementById('totalE
     ctx.clearRect(0,0,W,H);
     t += 0.005;
     for(let i=0;i<3;i++){
-      const grad = ctx.createLinearGradient(0, H*0.3 + Math.sin(t + i)*100, W, H*0.7);
-      const hue = (i*80 + t*30) % 360;
-      grad.addColorStop(0, `hsla(${140 + i*20}, 100%, 50%, 0)`);
-      grad.addColorStop(0.5, `hsla(${140 + i*20}, 100%, 60%, 0.3)`);
-      grad.addColorStop(1, `hsla(${140 + i*20}, 100%, 50%, 0)`);
+      const grad = ctx.createLinearGradient(0, H*0.3 + Math.sin(t+i)*100, W, H*0.7);
+      grad.addColorStop(0, `hsla(${140+i*20}, 100%, 50%, 0)`);
+      grad.addColorStop(0.5, `hsla(${140+i*20}, 100%, 60%, 0.3)`);
+      grad.addColorStop(1, `hsla(${140+i*20}, 100%, 50%, 0)`);
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
     }
@@ -1174,8 +954,7 @@ let matrixOn = true;
   const chars='アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプ0123456789ABCDEF₿';
   let cols,drops,fontSize=15;
   function resize(){
-    c.width = innerWidth;
-    c.height = innerHeight;
+    c.width = innerWidth; c.height = innerHeight;
     cols = Math.floor(c.width/fontSize);
     drops = new Array(cols).fill(1);
   }
@@ -1321,7 +1100,7 @@ function triggerStorm(){
   bumpEvents();
 }
 
-/* ==================== SOUND ENGINE ==================== */
+/* ==================== SOUND ==================== */
 let audioCtx = null;
 let soundOn = false;
 let masterVolume = 0.3;
@@ -1371,26 +1150,13 @@ function setVolume(v){ masterVolume = v/100; }
 /* ==================== TYPING BANNER ==================== */
 const typingEl = document.getElementById('typing');
 const PHRASES = [
-  'ENCRYPTION STARTED',
-  'HANDSHAKE COMPLETE',
-  'SCANNING NETWORK ...',
-  'MASKING IDENTITY ...',
-  'TUNNEL SECURED AES-256',
-  'PACKETS ENCRYPTED',
-  'DECOY SIGNAL ACTIVE',
-  'ROTATING KEYS ...',
-  'HIDING TRAFFIC ...',
-  'CONNECTION MASKED',
-  'ROUTING THROUGH TOR',
-  'KEY EXCHANGE OK',
-  'INTEGRITY VERIFIED',
-  'BLOCKCHAIN SYNCED',
-  'FIREWALL ENGAGED',
-  'QUANTUM LAYER ACTIVE',
-  'ZERO-KNOWLEDGE PROOF',
-  'SIGNATURE VERIFIED',
-  'ANOMALY DETECTED',
-  'COUNTERMEASURES READY'
+  'ENCRYPTION STARTED','HANDSHAKE COMPLETE','SCANNING NETWORK ...',
+  'MASKING IDENTITY ...','TUNNEL SECURED AES-256','PACKETS ENCRYPTED',
+  'DECOY SIGNAL ACTIVE','ROTATING KEYS ...','HIDING TRAFFIC ...',
+  'CONNECTION MASKED','ROUTING THROUGH TOR','KEY EXCHANGE OK',
+  'INTEGRITY VERIFIED','BLOCKCHAIN SYNCED','FIREWALL ENGAGED',
+  'QUANTUM LAYER ACTIVE','ZERO-KNOWLEDGE PROOF','SIGNATURE VERIFIED',
+  'ANOMALY DETECTED','COUNTERMEASURES READY'
 ];
 let phraseIdx=0, charIdx=0, deleting=false;
 function typeLoop(){
@@ -1421,7 +1187,6 @@ const MASK_IPS = ['185.***.***.12','91.***.***.208','77.***.***.04','45.***.***.
   '103.***.***.87','212.***.***.33','62.***.***.150','80.***.***.66','196.***.***.201'];
 const ipMaskEl = document.getElementById('ip-mask');
 const ipStatusEl = document.getElementById('ip-status');
-
 function maskSequence(){
   ipMaskEl.className = 'value masking';
   ipStatusEl.textContent = '> masking...';
@@ -1497,12 +1262,10 @@ function updateStats(){
   document.getElementById('s6').textContent = randInt(30,85) + '%';
   document.getElementById('s7').textContent = (randInt(100,900)) + 'KB/s';
   document.getElementById('s8').textContent = randInt(8,32);
-  document.getElementById('latency-display').textContent =
-    'LAT ' + randInt(12,90) + 'ms';
+  document.getElementById('latency-display').textContent = 'LAT ' + randInt(12,90) + 'ms';
 }
 setInterval(updateStats, 1000);
-updateStats();
-
+updateStats(); 
 /* ==================== TABS ==================== */
 document.querySelectorAll('.tabbtn').forEach(b => {
   b.onclick = () => {
@@ -1512,8 +1275,8 @@ document.querySelectorAll('.tabbtn').forEach(b => {
     document.getElementById('tab-' + b.dataset.t).classList.add('on');
     if(b.dataset.t === 'system') drawSystemCharts();
     if(b.dataset.t === 'network') resizeWave();
-    if(b.dataset.t === 'orders') fetchOrderBook();
-    if(b.dataset.t === 'market') drawCandleChart();
+    if(b.dataset.t === 'orders') { fetchOrderBook(); fetchRecentTrades(); }
+    if(b.dataset.t === 'market') { fetchCandleData().then(drawCandleChart); }
     if(b.dataset.t === 'wallet'){
       const live = document.querySelectorAll('.wallet-btn.available').length;
       document.getElementById('walletCount').textContent = live + ' live';
@@ -1528,7 +1291,6 @@ const NETWORKS = {
   '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
 };
 function shortAddr(a){ return a.slice(0,6)+'…'+a.slice(-4); }
-
 function detectWallets(){
   if(typeof window.ethereum !== 'undefined'){
     ['metamask','coinbase','trust','xverse','leather','okx','rabby','rainbow'].forEach(id => {
@@ -1543,9 +1305,9 @@ function detectWallets(){
     document.getElementById('w-phantom').classList.add('available');
   }
   const live = document.querySelectorAll('.wallet-btn.available').length;
-  document.getElementById('walletCount').textContent = live + ' live';
+  const el = document.getElementById('walletCount');
+  if(el) el.textContent = live + ' live';
 }
-
 async function connectInjected(name){
   if(typeof window.ethereum === 'undefined'){
     openModal('Wallet Not Detected',
@@ -1588,7 +1350,7 @@ function connectWalletConnect(){
   const uri = prompt('Paste WalletConnect URI:');
   if(!uri) return;
   openModal('WalletConnect',
-    '<p>URI received.</p><p>Full WalletConnect requires the @walletconnect/web3-provider library to be loaded. This is a demo placeholder.</p>');
+    '<p>URI received.</p><p>Full WalletConnect requires the @walletconnect/web3-provider library. This is a demo placeholder.</p>');
 }
 function showAccount(addr, net, bal, chain, type){
   document.getElementById('account').style.display = 'block';
@@ -1856,7 +1618,8 @@ async function fetchWatchlist(){
     j.forEach(item => {
       const el = document.getElementById('wl-' + item.symbol);
       const cel = document.getElementById('wc-' + item.symbol);
-      if(el) el.textContent = '$' + parseFloat(item.lastPrice).toLocaleString('en-US',{maximumFractionDigits: parseFloat(item.lastPrice) < 1 ? 4 : 2});
+      const price = parseFloat(item.lastPrice);
+      if(el) el.textContent = '$' + price.toLocaleString('en-US',{maximumFractionDigits: price < 1 ? 4 : 2});
       if(cel){
         const chg = parseFloat(item.priceChangePercent);
         cel.textContent = (chg>=0?'+':'') + chg.toFixed(2) + '%';
@@ -2157,9 +1920,7 @@ function convertColor(){
   const g = parseInt(m[1].slice(2,4),16);
   const b = parseInt(m[1].slice(4,6),16);
   document.getElementById('colorOut').textContent =
-    'RGB: rgb('+r+', '+g+', '+b+')\n' +
-    'HSL: computed client-side\n' +
-    'Packed: 0x'+m[1].toUpperCase();
+    'RGB: rgb('+r+', '+g+', '+b+')\nPacked: 0x'+m[1].toUpperCase();
   document.getElementById('colorOut').style.whiteSpace = 'pre-line';
 }
 function genQR(){
@@ -2170,19 +1931,341 @@ function genQR(){
   const cell = c.width / size;
   ctx.fillStyle = '#000';
   ctx.fillRect(0,0,c.width,c.height);
-  // Seed a hash from the text
   let h = 0;
   for(let i=0;i<txt.length;i++) h = (h * 31 + txt.charCodeAt(i)) | 0;
-  let seed = Math.abs(h);
+  let seed = Math.abs(h) || 1;
   function rand(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
   ctx.fillStyle = '#00ff9d';
   for(let y=0;y<size;y++){
     for(let x=0;x<size;x++){
-      // finder patterns in corners
       const isCorner = (x < 7 && y < 7) || (x > size-8 && y < 7) || (x < 7 && y > size-8);
       if(isCorner){
-        const cx = x < 7 ? 3 : x - (size-8) + 3;
-        const cy = y < 7 ? 3 : y - (size-8) + 3;
-        const dx = cx - 3, dy = cy - 3;
-        const d = Math.max(Math.abs(dx), Math.abs(dy));
-        if(d === 2 || d === 0
+        const cx = x < 7 ? x : x - (size-7);
+        const cy = y < 7 ? y : y - (size-7);
+        const d = Math.max(Math.abs(cx-3), Math.abs(cy-3));
+        if(d === 2 || d === 0) ctx.fillRect(x*cell, y*cell, cell, cell);
+      } else if(rand() > 0.5){
+        ctx.fillRect(x*cell, y*cell, cell, cell);
+      }
+    }
+  }
+}
+
+/* ==================== CONSOLE ==================== */
+const consoleOut = document.getElementById('consoleOut');
+function cLog(msg, cls){
+  const line = document.createElement('div');
+  line.className = 'c-' + (cls || 'ok');
+  line.textContent = msg;
+  consoleOut.appendChild(line);
+  while(consoleOut.children.length > 200) consoleOut.removeChild(consoleOut.firstChild);
+  consoleOut.scrollTop = consoleOut.scrollHeight;
+}
+cLog('> qcity console v11.0', 'info');
+cLog('> type "help" for commands', 'dim');
+
+async function runConsole(){
+  const inp = document.getElementById('consoleIn');
+  const raw = inp.value.trim();
+  inp.value = '';
+  if(!raw) return;
+  cLog('$ ' + raw, 'ok');
+
+  const parts = raw.split(' ');
+  const cmd = parts[0].toLowerCase();
+  const rest = parts.slice(1).join(' ');
+
+  switch(cmd){
+    case 'help':
+      cLog('commands:', 'info');
+      ['help','status','scan','trace','mask','hash <text>','price','whoami','clear',
+       'version','uptime','rand <n>','theme <name>','matrix','storm','beep','export'
+      ].forEach(c => cLog('  ' + c, 'dim'));
+      break;
+    case 'status':
+      cLog('system: ONLINE', 'ok');
+      cLog('entropy: ' + entropy + ' bits', 'dim');
+      cLog('packets: ' + packets, 'dim');
+      cLog('node: ' + randHex(4).toUpperCase(), 'info');
+      break;
+    case 'scan': triggerScan(); cLog('scan initiated', 'warn'); break;
+    case 'trace': traceSequence(); cLog('trace triggered', 'warn'); break;
+    case 'mask': maskSequence(); cLog('mask refresh', 'ok'); break;
+    case 'hash':
+      if(!rest){ cLog('usage: hash <text>', 'err'); break; }
+      cLog('sha256: ' + await sha256(rest), 'info');
+      break;
+    case 'price':
+      try{
+        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+        const j = await r.json();
+        cLog('BTC: $' + parseFloat(j.price).toLocaleString(), 'ok');
+      } catch(e){ cLog('failed', 'err'); }
+      break;
+    case 'whoami':
+      cLog('user: root@qcity', 'info');
+      cLog('session: ' + SESSION_ID, 'dim');
+      cLog('device: ' + detectDevice(navigator.userAgent), 'dim');
+      break;
+    case 'clear':
+      consoleOut.innerHTML = '';
+      cLog('console cleared', 'dim');
+      break;
+    case 'version': cLog('qcity-terminal v11.0', 'info'); break;
+    case 'uptime':
+      const s = Math.floor((Date.now()-startTime)/1000);
+      cLog('uptime: ' + s + 's', 'info');
+      break;
+    case 'rand':
+      const n = parseInt(rest) || 8;
+      cLog('random: ' + randHex(Math.min(n, 128)), 'ok');
+      break;
+    case 'theme':
+      if(!rest){ cLog('usage: theme green|blue|red|purple|amber', 'err'); break; }
+      const themes = ['green','blue','red','purple','amber'];
+      if(themes.includes(rest)){
+        document.body.className = rest === 'green' ? '' : 'theme-' + rest;
+        cLog('theme set: ' + rest, 'ok');
+      } else cLog('unknown theme', 'err');
+      break;
+    case 'matrix':
+      matrixOn = !matrixOn;
+      cLog('matrix ' + (matrixOn ? 'ON' : 'OFF'), 'ok');
+      break;
+    case 'storm': triggerStorm(); cLog('lightning triggered', 'warn'); break;
+    case 'beep':
+      if(!soundOn){ soundOn = true; initAudio(); }
+      playBeep(880, 0.15);
+      cLog('beep', 'ok');
+      break;
+    case 'export':
+      exportLog();
+      cLog('log exported', 'ok');
+      break;
+    default:
+      cLog('unknown: ' + cmd, 'err');
+      cLog('type "help"', 'dim');
+  }
+}
+document.getElementById('consoleIn').addEventListener('keydown', e => {
+  if(e.key === 'Enter') runConsole();
+});
+
+/* ==================== LOG ==================== */
+const termEl = document.getElementById('terminal');
+function log(msg, cls){
+  const line = document.createElement('div');
+  line.className = 'line ' + (cls || '');
+  line.textContent = msg;
+  termEl.appendChild(line);
+  while(termEl.children.length > 200) termEl.removeChild(termEl.firstChild);
+  termEl.scrollTop = termEl.scrollHeight;
+  bumpEvents();
+}
+function filterLog(){
+  const kw = document.getElementById('logFilter').value.toLowerCase();
+  const lines = termEl.querySelectorAll('.line');
+  lines.forEach(l => {
+    l.style.display = (!kw || l.textContent.toLowerCase().includes(kw)) ? '' : 'none';
+  });
+}
+
+const MSGS = [
+  ['> handshake with node ' + randHex(4).toUpperCase() + ' ok', 'ok'],
+  ['> entropy pool: ' + randInt(4000,9000) + ' bits', 'dim'],
+  ['> tunnel latency: ' + randInt(12,80) + ' ms', 'dim'],
+  ['> packet ' + randHex(8) + ' routed', 'info'],
+  ['> checksum verified', 'ok'],
+  ['> key rotation in ' + randInt(200,900) + ' s', 'dim'],
+  ['> scanning subnet 10.' + randInt(0,255) + '.' + randInt(0,255) + '.0/24', 'info'],
+  ['> WARN: unusual traffic on port ' + randInt(1024,65535), 'warn'],
+  ['> denied request from ' + randInt(1,255) + '.' + randInt(1,255) + '.' + randInt(1,255) + '.' + randInt(1,255), 'err'],
+  ['> hash ' + randHex(32), 'dim'],
+  ['> session ' + randHex(16), 'info'],
+  ['> crypto layer AES-256 active', 'ok'],
+  ['> integrity check passed', 'ok'],
+  ['> ECDSA signature valid', 'ok'],
+  ['> IP mask refreshed', 'info'],
+  ['> beacon: node-' + randHex(3).toUpperCase(), 'dim']
+];
+setInterval(() => {
+  const [msg, cls] = pick(MSGS);
+  log(msg, cls);
+}, 700 + Math.random()*900);
+
+const boot = [
+  ['> qcity-terminal v11.0', 'info'],
+  ['> loading kernel modules...', 'dim'],
+  ['> initializing crypto layer...', 'dim'],
+  ['> AES-256-GCM: ACTIVE', 'ok'],
+  ['> ECDSA secp256k1: ACTIVE', 'ok'],
+  ['> IP masking engine: ONLINE', 'ok'],
+  ['> secure tunnel established', 'ok'],
+  ['> system ready.', 'ok']
+];
+boot.forEach((b, i) => setTimeout(() => log(b[0], b[1]), 250 + i*300));
+
+function triggerScan(){
+  log('> ── INITIATING FULL SCAN ──', 'info');
+  let steps = 0;
+  const iv = setInterval(() => {
+    const port = randInt(20, 9999);
+    const open = Math.random() > 0.7;
+    log('> probing port ' + port + ' ... ' + (open ? 'OPEN' : 'closed'), open ? 'warn' : 'dim');
+    steps++;
+    if(steps > 14){
+      clearInterval(iv);
+      log('> scan complete · ' + randInt(2,8) + ' anomalies found', 'ok');
+    }
+  }, 180);
+}
+function triggerMask(){ log('> ── MASKING IDENTITY ──', 'info'); maskSequence(); }
+function triggerReset(){
+  termEl.innerHTML = '';
+  log('> log cleared.', 'dim');
+  log('> qcity-terminal ready.', 'ok');
+}
+
+/* ==================== NEWS TICKER ==================== */
+async function fetchNews(){
+  const fallbacks = [
+    'BTC holding above key support — traders watching for next leg',
+    'Institutional inflows continue — spot ETF volumes stable',
+    'On-chain data shows accumulation from long-term holders',
+    'Volatility compressed — expect expansion in coming sessions',
+    'Global liquidity conditions improving — risk assets bid',
+    'Mining hashrate at all-time high — network security strong',
+    'Derivatives funding rates neutral — no excessive leverage',
+    'Bitcoin dominance holding — altcoins awaiting rotation'
+  ];
+  try{
+    const r = await fetch('https://api.coingecko.com/api/v3/global');
+    const j = await r.json();
+    const dom = j.data.market_cap_percentage.btc.toFixed(1);
+    const cap = (j.data.total_market_cap.usd / 1e12).toFixed(2);
+    const items = [
+      'BTC dominance ' + dom + '% · Total crypto cap $' + cap + 'T',
+      'Active cryptocurrencies: ' + j.data.active_cryptocurrencies.toLocaleString(),
+      'Markets: ' + j.data.markets,
+      ...fallbacks
+    ];
+    document.getElementById('newsInner').innerHTML =
+      items.map(t => '<span class="item">' + t + '</span>').join('');
+  } catch(e){
+    document.getElementById('newsInner').innerHTML =
+      fallbacks.map(t => '<span class="item">' + t + '</span>').join('');
+  }
+}
+
+/* ==================== MODAL ==================== */
+function openModal(title, body){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modal').classList.add('on');
+}
+function closeModal(e){
+  if(e && e.target !== e.currentTarget && e.target.tagName !== 'BUTTON') return;
+  document.getElementById('modal').classList.remove('on');
+}
+
+/* ==================== SETTINGS ==================== */
+function setTheme(name, el){
+  document.body.className = name === 'green' ? '' : 'theme-' + name;
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('sel'));
+  if(el) el.classList.add('sel');
+  playBeep(660, 0.08);
+}
+function toggleEffect(name){
+  const map = {
+    matrix: 'matrix', neural: 'neural', particles: 'particles',
+    helix: 'helix', cube: 'cube3d', radar: 'radar', scan: 'scanline'
+  };
+  const el = document.getElementById(map[name]);
+  const tgl = document.getElementById('tgl' + name.charAt(0).toUpperCase() + name.slice(1));
+  if(el) el.style.display = tgl && tgl.checked ? '' : 'none';
+}
+
+/* ==================== EXPORT LOG ==================== */
+function exportLog(){
+  const lines = [];
+  termEl.querySelectorAll('.line').forEach(l => lines.push(l.textContent));
+  const header = 'QCity Bitcoin Terminal Session Log\n' +
+    'Session ID: ' + SESSION_ID + '\n' +
+    'Started: ' + SESSION_START.toISOString() + '\n' +
+    'Device: ' + detectDevice(navigator.userAgent) + '\n' +
+    'OS: ' + detectOS(navigator.userAgent) + '\n' +
+    'Browser: ' + detectBrowser(navigator.userAgent) + '\n' +
+    '----------------------------------------------\n\n';
+  const blob = new Blob([header + lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'qcity-log-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function clearAll(){
+  if(!confirm('Reset all data and reload?')) return;
+  location.reload();
+}
+
+/* ==================== KEYBOARD SHORTCUTS ==================== */
+document.addEventListener('keydown', e => {
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const k = e.key.toLowerCase();
+  if(k >= '1' && k <= '9'){
+    const btns = document.querySelectorAll('.tabbtn');
+    const idx = parseInt(k) - 1;
+    if(btns[idx]) btns[idx].click();
+  }
+  if(k === 'm'){ matrixOn = !matrixOn; }
+  if(k === 'l'){ triggerStorm(); }
+  if(k === 's'){ triggerScan(); }
+  if(k === 't'){ traceSequence(); }
+  if(k === '?'){
+    openModal('QCity Bitcoin — Help',
+      '<p><b>QCity Bitcoin v11.0</b></p>' +
+      '<p>Hacker-aesthetic demo terminal. All data is simulated or public market data.</p>' +
+      '<p><b>Shortcuts:</b> 1-9 switch tabs · M matrix · L lightning · S scan · T trace · ? help · Esc close</p>');
+  }
+  if(k === 'escape'){ closeModal(); }
+});
+
+/* ==================== BOOT ==================== */
+document.getElementById('sessionId').textContent = SESSION_ID;
+document.getElementById('sessionStart').textContent = SESSION_START.toLocaleString();
+document.getElementById('buildId').textContent = 'b' + randHex(8).toUpperCase();
+
+detectWallets();
+runSystemCheck();
+fetchBTC();
+fetchBC();
+fetchFG();
+fetchDom();
+fetchWatchlist();
+fetchSparkline();
+fetchNews();
+doHash();
+doHash512();
+doB64();
+doUrlEnc();
+genKey();
+genBtcAddr();
+genMnemonic();
+genUUID();
+convertTs();
+genQR();
+drawSystemCharts();
+
+setInterval(fetchBTC, 15000);
+setInterval(fetchBC, 60000);
+setInterval(fetchFG, 300000);
+setInterval(fetchDom, 300000);
+setInterval(fetchWatchlist, 10000);
+setInterval(fetchSparkline, 60000);
+setInterval(fetchNews, 120000);
+window.addEventListener('resize', runSystemCheck);
+window.addEventListener('resize', resizeWave);
+</script>
+</body>
+</html>
