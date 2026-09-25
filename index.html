@@ -8,15 +8,15 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;min-height:100%;background:#000;color:#00ff9d;
   font-family:'Courier New',monospace;font-size:14px;overflow-x:hidden}
-#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.35}
-#app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:22px 16px}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.28}
+#app{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:18px 14px 40px}
 h1{font-size:22px;margin:0 0 4px;color:#00ff9d;letter-spacing:3px;text-align:center;
   text-shadow:0 0 12px #00ff9d,0 0 4px #00ff9d;animation:flicker 4s infinite}
 @keyframes flicker{0%,97%,100%{opacity:1}98%{opacity:0.4}99%{opacity:0.9}}
-.sub{color:#00b877;font-size:11px;margin-bottom:18px;text-align:center;letter-spacing:2px}
+.sub{color:#00b877;font-size:11px;margin-bottom:16px;text-align:center;letter-spacing:2px}
 
 #terminal{background:rgba(0,20,10,0.85);border:1px solid #00ff9d;
-  border-radius:8px;padding:12px 14px;margin-bottom:16px;min-height:90px;
+  border-radius:8px;padding:12px 14px;margin-bottom:14px;min-height:80px;
   font-size:12px;line-height:1.6;color:#00ff9d;
   box-shadow:0 0 20px rgba(0,255,157,0.2) inset,0 0 12px rgba(0,255,157,0.15)}
 #terminal .line{opacity:0;animation:fadein .3s forwards}
@@ -25,13 +25,34 @@ h1{font-size:22px;margin:0 0 4px;color:#00ff9d;letter-spacing:3px;text-align:cen
 #terminal .warn{color:#ffcc00}
 #terminal .err{color:#ff3366}
 
+/* SEARCH BAR */
+#searchBox{display:flex;gap:6px;margin-bottom:14px}
+#searchInput{flex:1;background:rgba(0,20,10,0.9);border:1px solid #00b877;
+  color:#00ff9d;padding:10px 12px;border-radius:6px;font-family:inherit;
+  font-size:12px;letter-spacing:0.5px;outline:none;transition:all .2s}
+#searchInput:focus{border-color:#00ff9d;box-shadow:0 0 12px rgba(0,255,157,0.4)}
+#searchInput::placeholder{color:#00885e}
+#searchBtn{background:rgba(0,255,157,0.1);color:#00ff9d;border:1px solid #00ff9d;
+  padding:10px 16px;border-radius:6px;font-weight:700;cursor:pointer;
+  font-family:inherit;font-size:12px;letter-spacing:1px;transition:all .2s}
+#searchBtn:hover{background:#00ff9d;color:#000;box-shadow:0 0 16px #00ff9d}
+
+#searchResult{background:rgba(0,20,10,0.85);border:1px solid #00b877;
+  border-radius:8px;padding:12px;margin-bottom:14px;display:none;
+  font-size:12px;word-break:break-all}
+#searchResult.valid{border-color:#00ff9d;box-shadow:0 0 12px rgba(0,255,157,0.3)}
+#searchResult.invalid{border-color:#ff3366}
+#searchResult .label{color:#00b877;font-size:10px;letter-spacing:1px;margin-bottom:4px}
+#searchResult .value{color:#00ff9d;font-family:monospace;font-size:12px}
+#searchResult.invalid .value{color:#ff3366}
+
+/* ACCOUNT PANEL */
 #account{background:rgba(0,20,10,0.85);border:1px solid #00ff9d;
   border-radius:8px;padding:14px;margin-bottom:14px;display:none;
   box-shadow:0 0 20px rgba(0,255,157,0.2) inset}
-#account h2{font-size:11px;color:#00b877;margin:0 0 8px;letter-spacing:2px;
-  text-transform:uppercase}
+#account h2{font-size:11px;color:#00b877;margin:0 0 8px;letter-spacing:2px;text-transform:uppercase}
 #account .addr{font-family:monospace;font-size:13px;color:#00ff9d;
-  word-break:break-all;text-shadow:0 0 6px #00ff9d}
+  word-break:break-all;text-shadow:0 0 6px #00ff9d;margin-bottom:8px}
 #account .row{display:flex;justify-content:space-between;padding:5px 0;
   border-bottom:1px dashed rgba(0,255,157,0.2);font-size:12px}
 #account .row:last-child{border-bottom:none}
@@ -41,37 +62,90 @@ h1{font-size:22px;margin:0 0 4px;color:#00ff9d;letter-spacing:3px;text-align:cen
   padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;
   font-family:inherit;font-size:11px;margin-top:10px;width:100%;
   letter-spacing:1px;transition:all .2s}
-.disconnect:hover{background:#ff3366;color:#000;box-shadow:0 0 12px #ff:-3366}
+.disconnect:hover{background:#ff3366;color:#000;box-shadow:0 0 12px #ff3366}
 
-.wallet-btn{width:100%;100%;
-background:rgba(0,20,10,0.75);border:1px solid #00b877;
-  border-radius:8px;padding:13px 14px;margin-bottom:9px;cursor:pointer;
+/* WALLET BUTTONS */
+.wallet-btn{width:100%;background:rgba(0,20,10,0.75);border:1px solid #00b877;
+  border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;
   color:#00ff9d;font-family:inherit;font-size:13px;display:flex;
-  align-items:center;gap:12px;text-align:left;
-  transition:all .2s;letter-spacing:1px;position:relative;overflow:hidden}
-.wallet-btn::before{content:'';position:absolute;top:0;left  width:100%;height:100%;
+  align-items:center;gap:12px;text-align:left;transition:all .2s;
+  letter-spacing:1px;position:relative;overflow:hidden}
+.wallet-btn::before{content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
   background:linear-gradient(90deg,transparent,rgba(0,255,157,0.15),transparent);
   transition:left .5s}
 .wallet-btn:hover{border-color:#00ff9d;box-shadow:0 0 16px rgba(0,255,157,0.5)}
 .wallet-btn:hover::before{left:100%}
-.wallet-btn .icon{width:32px;height:32px;border:1px solid #00b877;
+.wallet-btn .icon{width:30px;height:30px;border:1px solid #00b877;
   border-radius:6px;display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;background:rgba(0,255,157,0.08)}
+  font-size:15px;flex-shrink:0;background:rgba(0,255,157,0.08)}
 .wallet-btn .meta{flex:1}
-.wallet-btn .name{font-weight:700;color:#00ff9d;letter-spacing:1px;font-size:13px}
+.wallet-btn .name{font-weight:700;color:#00ff9d;letter-spacing:1px;font-size:12px}
 .wallet-btn .desc{font-size:10px;color:#00b877;letter-spacing:.5px;margin-top:2px}
 .wallet-btn .status{font-size:10px;color:#00b877;letter-spacing:1px}
 .wallet-btn.available .status{color:#00ff9d;text-shadow:0 0 6px #00ff9d}
 .wallet-btn.available{border-color:#00ff9d}
 .wallet-btn.connected{border-color:#00ff9d;box-shadow:0 0 20px rgba(0,255,157,0.6) inset}
 
-.foot{color:#00b877;font-size:10px;text-align:center;margin-top:20px;
+/* SECTION HEADINGS */
+.section-title{color:#00b877;font-size:11px;letter-spacing:2px;margin:20px 0 10px;
+  text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'▸';color:#00ff9d}
+.section-title::after{content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,#00b877,transparent)}
+
+/* SYSTEM REQUIREMENTS */
+.req-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:640px){.req-grid{grid-template-columns:1fr}}
+.req-card{background:rgba(0,20,10,0.85);border:1px solid #00b877;
+  border-radius:8px;padding:12px 14px}
+.req-card.min{border-color:#ffcc00;box-shadow:0 0 10px rgba(255,204,0,0.15)}
+.req-card.rec{border-color:#00ff9d;box-shadow:0 0 12px rgba(0,255,157,0.25)}
+.req-card h3{margin:0 0 10px;font-size:12px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:700}
+.req-card.min h3{color:#ffcc00;text-shadow:0 0 8px rgba(255,204,0,0.6)}
+.req-card.rec h3{color:#00ff9d;text-shadow:0 0 8px #00ff9d}
+.req-card .row{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px dashed rgba(0,255,157,0.2);font-size:11px;line-height:1.4}
+.req-card .row:last-child{border-bottom:none}
+.req-card .row span:first-child{color:#00b877;flex-shrink:0;margin-right:8px}
+.req-card .row span:last-child{color:#00ff9d;font-weight:600;text-align:right}
+
+/* YOUR DEVICE PANEL */
+#devicePanel{background:rgba(0,20,10,0.85);border:1px solid #00b877;
+  border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:11px}
+#devicePanel .row{display:flex;justify-content:space-between;padding:4px 0;
+  border-bottom:1px dashed rgba(0,255,157,0.2)}
+#devicePanel .row:last-child{border-bottom:none}
+#devicePanel .row span:first-child{color:#00b877}
+#devicePanel .row span:last-child{color:#00ff9d;font-weight:600;text-align:right;
+  word-break:break-word;max-width:60%}
+#verdict{padding:12px;border-radius:8px;text-align:center;font-size:13px;
+  font-weight:700;letter-spacing:1px;margin-bottom:12px}
+#verdict.pass{background:rgba(0,255,157,0.12);color:#00ff9d;
+  border:1px solid rgba(0,255,157,0.4);text-shadow:0 0 8px #00ff9d}
+#verdict.warn{background:rgba(255,204,0,0.12);color:#ffcc00;
+  border:1px solid rgba(255,204,0,0.4);text-shadow:0 0 8px #ffcc00}
+#verdict.fail{background:rgba(255,51,102,0.12);color:#ff3366;
+  border:1px solid rgba(255,51,102,0.4);text-shadow:0 0 8px #ff3366}
+#verdict small{display:block;font-size:10px;font-weight:400;margin-top:6px;
+  color:#00b877;letter-spacing:0;text-shadow:none}
+
+.foot{color:#00b877;font-size:10px;text-align:center;margin-top:24px;
   line-height:1.7;letter-spacing:1px}
 .foot::before{content:'> ';color:#00ff9d}
+
+/* SCAN ANIMATION */
+#scanline{position:fixed;top:0;left:0;width:100%;height:2px;
+  background:linear-gradient(90deg,transparent,#00ff9d,transparent);
+  z-index:2;opacity:0.35;pointer-events:none;
+  animation:scan 6s linear infinite}
+@keyframes scan{0%{top:0}100%{top:100%}}
 </style>
 </head>
 <body>
 <canvas id="matrix"></canvas>
+<div id="scanline"></div>
 
 <div id="app">
   <h1>QCITY WALLET</h1>
@@ -81,14 +155,26 @@ background:rgba(0,20,10,0.75);border:1px solid #00b877;
     <div class="line">> initializing secure channel…</div>
   </div>
 
+  <!-- WALLET ADDRESS SEARCH -->
+  <div id="searchBox">
+    <input id="searchInput" placeholder="paste wallet address or code…" autocomplete="off" spellcheck="false">
+    <button id="searchBtn" onclick="lookupWallet()">SEARCH</button>
+  </div>
+  <div id="searchResult"></div>
+
+  <!-- CONNECTED ACCOUNT -->
   <div id="account">
     <h2>◉ Connected Wallet</h2>
     <div class="addr" id="acc-addr">—</div>
     <div class="row"><span>Network</span><span id="acc-net">—</span></div>
     <div class="row"><span>Balance</span><span id="acc-bal">—</span></div>
     <div class="row"><span>Chain ID</span><span id="acc-chain">—</span></div>
+    <div class="row"><span>Type</span><span id="acc-type">—</span></div>
     <button class="disconnect" onclick="disconnectWallet()">DISCONNECT</button>
   </div>
+
+  <!-- CONNECT BUTTONS -->
+  <div class="section-title">CONNECT WALLET</div>
 
   <button class="wallet-btn" id="w-metamask" onclick="connectInjected('MetaMask')">
     <div class="icon">🦊</div>
@@ -116,9 +202,50 @@ background:rgba(0,20,10,0.75);border:1px solid #00b877;
 
   <button class="wallet-btn" id="w-wc" onclick="connectWalletConnect()">
     <div class="icon">🔗</div>
-    <div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR</div></div>
+    <div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR / URI</div></div>
     <div class="status">OPEN</div>
   </button>
+
+  <!-- SYSTEM REQUIREMENTS -->
+  <div class="section-title">SYSTEM REQUIREMENTS</div>
+
+  <div id="verdict">Analyzing your device…</div>
+
+  <div class="req-grid">
+    <div class="req-card min">
+      <h3>◆ Minimum</h3>
+      <div class="row"><span>CPU</span><span>4 cores</span></div>
+      <div class="row"><span>RAM</span><span>4 GB</span></div>
+      <div class="row"><span>GPU</span><span>Any WebGL GPU</span></div>
+      <div class="row"><span>Screen</span><span>720p</span></div>
+      <div class="row"><span>Browser</span><span>Chrome / Safari (2021+)</span></div>
+      <div class="row"><span>Network</span><span>5 Mbps stable</span></div>
+      <div class="row"><span>Storage</span><span>50 MB free</span></div>
+    </div>
+
+    <div class="req-card rec">
+      <h3>◆ Recommended</h3>
+      <div class="row"><span>CPU</span><span>i5 12th Gen+ / Apple M1+</span></div>
+      <div class="row"><span>RAM</span><span>12 GB+</span></div>
+      <div class="row"><span>GPU</span><span>Dedicated GPU with latest WebGL 2 + WebGPU support</span></div>
+      <div class="row"><span>Screen</span><span>1080p+ or Retina</span></div>
+      <div class="row"><span>Browser</span><span>Latest Chrome / Edge / Safari</span></div>
+      <div class="row"><span>Network</span><span>15 Mbps+ stable</span></div>
+      <div class="row"><span>Storage</span><span>200 MB free</span></div>
+    </div>
+  </div>
+
+  <div id="devicePanel">
+    <div class="row"><span>Device</span><span id="d-device">—</span></div>
+    <div class="row"><span>OS</span><span id="d-os">—</span></div>
+    <div class="row"><span>Browser</span><span id="d-browser">—</span></div>
+    <div class="row"><span>CPU cores</span><span id="d-cores">—</span></div>
+    <div class="row"><span>RAM</span><span id="d-ram">—</span></div>
+    <div class="row"><span>GPU</span><span id="d-gpu">—</span></div>
+    <div class="row"><span>WebGL</span><span id="d-webgl">—</span></div>
+    <div class="row"><span>Screen</span><span id="d-screen">—</span></div>
+    <div class="row"><span>Network</span><span id="d-net">—</span></div>
+  </div>
 
   <div class="foot">QCity Wallet Encryption never stores your keys.<br>All signing happens inside your wallet.</div>
 </div>
@@ -132,7 +259,6 @@ background:rgba(0,20,10,0.75);border:1px solid #00b877;
   const ctx = canvas.getContext('2d');
   const chars = 'アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプ0123456789ABCDEF';
   let cols, drops, fontSize = 14;
-
   function resize(){
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -141,7 +267,6 @@ background:rgba(0,20,10,0.75);border:1px solid #00b877;
   }
   resize();
   window.addEventListener('resize', resize);
-
   function draw(){
     ctx.fillStyle = 'rgba(0,0,0,0.06)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -159,7 +284,7 @@ background:rgba(0,20,10,0.75);border:1px solid #00b877;
   setInterval(draw, 55);
 })();
 
-/* ============ TERMINAL LOG ============ */
+/* ============ TERMINAL ============ */
 const termEl = document.getElementById('terminal');
 function log(msg, cls){
   const line = document.createElement('div');
@@ -169,30 +294,76 @@ function log(msg, cls){
   termEl.scrollTop = termEl.scrollHeight;
   if(termEl.children.length > 8) termEl.removeChild(termEl.firstChild);
 }
-
 const boot = [
   ['> establishing TLS tunnel…', ''],
   ['> handshake complete', 'ok'],
   ['> scanning for wallets…', 'warn'],
-  ['> ready. select a wallet below.', 'ok']
+  ['> ready. connect a wallet or paste an address.', 'ok']
 ];
-boot.forEach((b, i) => setTimeout(() => log(b[0], b[1]), i * 450));
+boot.forEach((b, i) => setTimeout(() => log(b[0], b[1]), i * 400));
 
-/* ============ WALLET DETECTION ============ */
-function shortAddr(a){ return a.slice(0,6) + '…' + a.slice(-4); }
+/* ============ WALLET ADDRESS LOOKUP ============ */
+function isValidEthAddress(a){ return /^0x[a-fA-F0-9]{40}$/.test(a); }
+function isValidSolAddress(a){ return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a); }
+function isValidBtcAddress(a){
+  return /^(bc1[a-z0-9]{25,62}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})$/.test(a);
+}
+
+function detectChainFromAddress(a){
+  if(isValidEthAddress(a)) return { chain:'EVM (Ethereum / BNB / Polygon / Base)', type:'EVM' };
+  if(isValidBtcAddress(a)) return { chain:'Bitcoin', type:'BTC' };
+  if(isValidSolAddress(a)) return { chain:'Solana', type:'SOL' };
+  return null;
+}
+
+function lookupWallet(){
+  const raw = document.getElementById('searchInput').value.trim();
+  const el = document.getElementById('searchResult');
+  el.style.display = 'block';
+  if(!raw){
+    el.className = 'invalid';
+    el.innerHTML = '<div class="label">ERROR</div><div class="value">Empty input.</div>';
+    log('> ERROR: no address provided', 'err');
+    return;
+  }
+  const r = detectChainFromAddress(raw);
+  if(r){
+    el.className = 'valid';
+    el.innerHTML =
+      '<div class="label">✓ VALID ADDRESS</div>' +
+      '<div class="value">'+raw+'</div>' +
+      '<div class="label" style="margin-top:8px">Chain</div>' +
+      '<div class="value">'+r.chain+'</div>' +
+      '<div class="label" style="margin-top:8px">Type</div>' +
+      '<div class="value">'+r.type+'</div>';
+    log('> address valid · '+r.type, 'ok');
+  } else {
+    el.className = 'invalid';
+    el.innerHTML =
+      '<div class="label">✗ INVALID ADDRESS</div>' +
+      '<div class="value">Not a recognised ETH / BTC / SOL address.</div>';
+    log('> ERROR: invalid address format', 'err');
+  }
+}
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') lookupWallet();
+});
+
+/* ============ WALLET CONNECT ============ */
 const NETWORKS = {
   '0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum',
   '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
 };
+function shortAddr(a){ return a.slice(0,6) + '…' + a.slice(-4); }
 
 function detectWallets(){
   if(typeof window.ethereum !== 'undefined'){
-    document.getElementById('s-metamask').textContent = 'LIVE';
-    document.getElementById('w-metamask').classList.add('available');
-    document.getElementById('s-coinbase').textContent = 'LIVE';
-    document.getElementById('w-coinbase').classList.add('available');
-    document.getElementById('s-trust').textContent = 'LIVE';
-    document.getElementById('w-trust').classList.add('available');
+    ['metamask','coinbase','trust'].forEach(id => {
+      const el = document.getElementById('s-' + id);
+      const btn = document.getElementById('w-' + id);
+      if(el){ el.textContent = 'LIVE'; }
+      if(btn){ btn.classList.add('available'); }
+    });
     log('> injected wallet detected', 'ok');
   } else {
     log('> no injected wallet found', 'warn');
@@ -204,7 +375,6 @@ function detectWallets(){
   }
 }
 
-/* ============ CONNECT ============ */
 async function connectInjected(name){
   log('> requesting ' + name + ' connection…', 'warn');
   if(typeof window.ethereum === 'undefined'){
@@ -214,25 +384,19 @@ async function connectInjected(name){
   }
   try{
     const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
-    if(!accounts || !accounts.length){
-      log('> connection denied', 'err');
-      return;
-    }
+    if(!accounts || !accounts.length){ log('> connection denied','err'); return; }
     const acc = accounts[0];
     const chainHex = await window.ethereum.request({ method:'eth_chainId' });
     const balanceWei = await window.ethereum.request({
       method:'eth_getBalance', params:[acc, 'latest']
     });
     const balanceEth = (parseInt(balanceWei, 16) / 1e18).toFixed(4);
-
-    showAccount(acc, NETWORKS[chainHex] || chainHex, balanceEth + ' ETH', chainHex);
+    showAccount(acc, NETWORKS[chainHex] || chainHex, balanceEth + ' ETH', chainHex, 'EVM');
     log('> connected: ' + shortAddr(acc), 'ok');
     log('> network: ' + (NETWORKS[chainHex] || chainHex), 'ok');
-
     document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
     const btn = document.getElementById('w-' + name.toLowerCase());
     if(btn) btn.classList.add('connected');
-
     if(window.ethereum.on){
       window.ethereum.on('accountsChanged', accs => {
         if(!accs.length){ disconnectWallet(); } else { location.reload(); }
@@ -254,7 +418,7 @@ async function connectPhantom(){
   try{
     const res = await window.phantom.solana.connect();
     const pub = res.publicKey.toString();
-    showAccount(pub, 'Solana', '—', 'solana');
+    showAccount(pub, 'Solana', '—', 'solana', 'SOL');
     log('> connected: ' + shortAddr(pub), 'ok');
     document.getElementById('w-phantom').classList.add('connected');
   } catch(e){
@@ -270,21 +434,129 @@ function connectWalletConnect(){
   setTimeout(() => log('> note: full WalletConnect requires library setup', 'warn'), 1500);
 }
 
-function showAccount(addr, net, bal, chain){
+function showAccount(addr, net, bal, chain, type){
   document.getElementById('account').style.display = 'block';
   document.getElementById('acc-addr').textContent = addr;
   document.getElementById('acc-net').textContent = net;
   document.getElementById('acc-bal').textContent = bal;
   document.getElementById('acc-chain').textContent = chain;
+  document.getElementById('acc-type').textContent = type;
 }
-
 function disconnectWallet(){
   document.getElementById('account').style.display = 'none';
   document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
   log('> wallet disconnected', 'warn');
 }
 
+/* ============ SYSTEM CHECK ============ */
+function detectOS(ua){
+  if(/iPad|iPhone|iPod/.test(ua)) return 'iOS / iPadOS';
+  if(/Android/.test(ua)) return 'Android';
+  if(/Windows NT 10/.test(ua)) return 'Windows 10/11';
+  if(/Windows/.test(ua)) return 'Windows';
+  if(/Mac OS X/.test(ua)) return 'macOS';
+  if(/Linux/.test(ua)) return 'Linux';
+  return 'Unknown';
+}
+function detectBrowser(ua){
+  if(/Edg\//.test(ua)) return 'Microsoft Edge';
+  if(/OPR\//.test(ua)) return 'Opera';
+  if(/Chrome\//.test(ua) && !/Edg/.test(ua)) return 'Chrome';
+  if(/Firefox\//.test(ua)) return 'Firefox';
+  if(/Safari\//.test(ua) && !/Chrome/.test(ua)) return 'Safari';
+  return 'Unknown';
+}
+function detectDevice(ua){
+  if(/iPad/.test(ua)) return 'iPad';
+  if(/iPhone/.test(ua)) return 'iPhone';
+  if(/Android/.test(ua) && /Mobile/.test(ua)) return 'Android Phone';
+  if(/Android/.test(ua)) return 'Android Tablet';
+  if(/Macintosh/.test(ua)) return 'Mac';
+  if(/Windows/.test(ua)) return 'Windows PC';
+  if(/Linux/.test(ua)) return 'Linux PC';
+  return 'Unknown';
+}
+function detectGPU(){
+  try{
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl');
+    if(!gl) return {ok:false, renderer:'No WebGL', vendor:'—', gl2:false};
+    const isGL2 = !!(c.getContext('webgl2'));
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    if(dbg){
+      return {
+        ok:true, gl2:isGL2,
+        renderer: gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || 'Unknown',
+        vendor: gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || 'Unknown'
+      };
+    }
+    return {ok:true, gl2:isGL2, renderer: gl.getParameter(gl.RENDERER) || 'Unknown', vendor:'(hidden)'};
+  } catch(e){
+    return {ok:false, renderer:'Error', vendor:'—', gl2:false};
+  }
+}
+function detectRAM(){
+  if(navigator.deviceMemory) return navigator.deviceMemory + ' GB (approx)';
+  return 'Not exposed by browser';
+}
+function detectNet(){
+  const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if(!c) return 'Not exposed';
+  const down = c.downlink ? c.downlink + ' Mbps' : '';
+  const type = c.effectiveType ? c.effectiveType : '';
+  return [down, type].filter(Boolean).join(' · ') || 'Unknown';
+}
+
+function runSystemCheck(){
+  const ua = navigator.userAgent;
+  const os = detectOS(ua);
+  const browser = detectBrowser(ua);
+  const device = detectDevice(ua);
+  const cores = navigator.hardwareConcurrency || 0;
+  const ram = detectRAM();
+  const ramGB = navigator.deviceMemory || 0;
+  const gpu = detectGPU();
+  const screenW = window.screen.width * (window.devicePixelRatio || 1);
+  const screenH = window.screen.height * (window.devicePixelRatio || 1);
+  const net = detectNet();
+
+  document.getElementById('d-device').textContent = device;
+  document.getElementById('d-os').textContent = os;
+  document.getElementById('d-browser').textContent = browser;
+  document.getElementById('d-cores').textContent = cores ? cores + ' cores' : 'Not exposed';
+  document.getElementById('d-ram').textContent = ram;
+  document.getElementById('d-gpu').textContent = gpu.renderer;
+  document.getElementById('d-webgl').textContent = gpu.ok ? (gpu.gl2 ? 'WebGL 2' : 'WebGL 1') : 'Not supported';
+  document.getElementById('d-webgl').style.color = gpu.ok ? '#00ff9d' : '#ff3366';
+  document.getElementById('d-screen').textContent = Math.round(screenW) + '×' + Math.round(screenH);
+  document.getElementById('d-net').textContent = net;
+
+  const isMobile = /iPad|iPhone|iPod|Android/.test(ua);
+  const v = document.getElementById('verdict');
+
+  if(!gpu.ok){
+    v.className = 'fail';
+    v.innerHTML = '✗ NOT SUPPORTED<small>Your browser does not support WebGL. Try a newer Chrome, Edge, or Safari.</small>';
+  } else if(cores && cores < 4 && !isMobile){
+    v.className = 'warn';
+    v.innerHTML = '⚠ BELOW MINIMUM<small>Detected ' + cores + ' CPU cores. Minimum is 4. The app may run slowly.</small>';
+  } else if(cores >= 8 && ramGB >= 8 && gpu.gl2){
+    v.className = 'pass';
+    v.innerHTML = '✓ RECOMMENDED TIER<small>Your device meets or exceeds the recommended specs. Full performance unlocked.</small>';
+  } else if(cores >= 4 || isMobile){
+    v.className = 'pass';
+    v.innerHTML = '✓ MEETS MINIMUM<small>Your device can run the app. For best performance: 8+ cores, 12 GB RAM, WebGL 2 GPU.</small>';
+  } else {
+    v.className = 'warn';
+    v.innerHTML = '⚠ LIMITED DETECTION<small>Some specs could not be read. The app should run, but performance may vary.</small>';
+  }
+}
+
+/* ============ BOOT ============ */
 detectWallets();
+runSystemCheck();
+window.addEventListener('resize', runSystemCheck);
+window.addEventListener('load', runSystemCheck);
 </script>
 </body>
 </html>
