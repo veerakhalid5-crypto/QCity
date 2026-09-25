@@ -1,877 +1,1734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>QCity Bitcoin Terminal v13</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#000;color:#00ff41;font-family:'Courier New',monospace;font-size:13px;overflow-x:hidden;-webkit-text-size-adjust:100%}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#00a82d;border-radius:3px}
+.bg{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#shader{opacity:.28}
+#neural{opacity:.35}
+#matrix{opacity:.13}
+#scan{height:2px;background:linear-gradient(90deg,transparent,#00ff41,transparent);box-shadow:0 0 18px #00ff41;animation:scanm 4s linear infinite}
+@keyframes scanm{0%{top:-2px}100%{top:100%}}
+#vig{background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.92) 100%)}
+#app{position:relative;z-index:10;max-width:840px;margin:0 auto;padding:12px 12px 40px}
+#head{text-align:center;padding:4px 0 8px}
+#head h1{font-size:22px;color:#00ff41;letter-spacing:4px;font-weight:900;text-shadow:0 0 12px #00ff41,0 0 3px #00ff41;display:inline-block}
+#head .sub{font-size:9px;color:#00a82d;letter-spacing:3px;margin-top:4px}
+.banner{background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:11px;min-height:30px;display:flex;align-items:center;gap:6px;overflow:hidden}
+.banner .p{color:#00ff41;font-weight:700;flex-shrink:0}
+.banner .t{color:#00ff41;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.banner .c{display:inline-block;width:8px;height:12px;background:#00ff41;animation:bl 1s steps(2) infinite;flex-shrink:0}
+@keyframes bl{50%{opacity:0}}
+#ipb{background:rgba(0,20,8,.85);border:1px solid #00ff41;border-radius:6px;padding:10px 12px;margin-bottom:8px;font-size:11px;box-shadow:0 0 12px rgba(0,255,65,.15)}
+#ipb .ir{display:flex;justify-content:space-between;padding:2px 0}
+#ipb .lb{color:#00a82d;font-size:10px}
+#ipb .vl{color:#00ff41;font-weight:700}
+#ipb .vl.h{color:#ffcc00}
+#ipb .vl.t{color:#00d9ff}
+#ipb .st{color:#ffcc00;font-size:9px;margin-top:4px}
+#news{background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:6px;height:26px;margin-bottom:8px;overflow:hidden}
+#news .ni{white-space:nowrap;padding-left:100%;line-height:26px;animation:nr 50s linear infinite;font-size:10px;color:#00ff41}
+#news .it{padding-right:30px}
+@keyframes nr{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+#status{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:6px 10px;background:rgba(0,20,8,.85);border:1px solid #005f18;border-radius:6px;font-size:9px;color:#00a82d;margin-bottom:8px}
+#status .lv{color:#00ff41}
+#stats{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:10px}
+.stat{background:rgba(0,20,8,.85);border:1px solid #005f18;border-radius:5px;padding:6px 3px;text-align:center}
+.stat .l{font-size:7px;color:#00a82d;margin-bottom:2px}
+.stat .v{font-size:11px;font-weight:700;color:#00ff41}
+#tabbar{display:flex;gap:3px;margin-bottom:10px;padding:4px;background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:8px;overflow-x:auto;scrollbar-width:none}
+#tabbar::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;background:transparent;color:#00a82d;border:none;padding:7px 10px;border-radius:5px;cursor:pointer;font-family:inherit;font-size:10px;font-weight:700;white-space:nowrap;transition:all .15s}
+.tab.on{background:rgba(0,255,65,.15);color:#00ff41}
+.pane{display:none}
+.pane.on{display:block;animation:fi .25s}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+h2.sec{color:#00a82d;font-size:11px;letter-spacing:2px;margin:14px 0 8px;text-transform:uppercase;font-weight:700}
+h2.sec:first-child{margin-top:0}
+.card{background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:8px;padding:12px;margin-bottom:10px}
+.card h3{font-size:10px;color:#00a82d;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed rgba(0,255,65,.15);font-size:11px;line-height:1.5}
+.kv:last-child{border-bottom:none}
+.kv .k{color:#00a82d;flex-shrink:0;margin-right:8px}
+.kv .v{color:#00ff41;font-weight:600;text-align:right;word-break:break-all}
+.kv .v.pos{color:#00ff41}.kv .v.neg{color:#ff2b4e}.kv .v.warn{color:#ffcc00}
+input.inp,textarea.inp{width:100%;background:#000;border:1px solid #00a82d;color:#00ff41;padding:9px 11px;border-radius:5px;font-family:inherit;font-size:11px;outline:none;margin-bottom:8px}
+input.inp:focus,textarea.inp:focus{border-color:#00ff41;box-shadow:0 0 10px rgba(0,255,65,.3)}
+input.inp::placeholder,textarea.inp::placeholder{color:#005f18}
+textarea.inp{min-height:80px;resize:vertical}
+.out{background:#000;border:1px solid #00a82d;color:#00d9ff;padding:9px 11px;border-radius:5px;font-family:monospace;font-size:10px;word-break:break-all;line-height:1.6;min-height:40px;white-space:pre-wrap}
+.btn{background:rgba(0,255,65,.08);color:#00ff41;border:1px solid #00ff41;padding:7px 12px;border-radius:5px;font-family:inherit;font-weight:700;cursor:pointer;font-size:10px;margin:0 4px 6px 0;display:inline-block;transition:all .15s}
+.btn:active,.btn:hover{background:#00ff41;color:#000;box-shadow:0 0 12px #00ff41}
+.btn.red{border-color:#ff2b4e;color:#ff2b4e}
+.btn.red:active,.btn.red:hover{background:#ff2b4e;color:#000}
+.btn.blue{border-color:#00d9ff;color:#00d9ff}
+.btn.blue:active,.btn.blue:hover{background:#00d9ff;color:#000}
+.btn.yellow{border-color:#ffcc00;color:#ffcc00}
+.btn.yellow:active,.btn.yellow:hover{background:#ffcc00;color:#000}
+.btn.wide{width:100%;margin:6px 0}
+.wbtn{width:100%;background:rgba(0,20,8,.85);border:1px solid #00a82d;border-radius:7px;padding:10px 12px;margin-bottom:7px;cursor:pointer;color:#00ff41;font-family:inherit;font-size:11px;display:flex;align-items:center;gap:10px;text-align:left;transition:all .15s}
+.wbtn:hover{border-color:#00ff41;box-shadow:0 0 12px rgba(0,255,65,.4)}
+.wbtn .ic{width:28px;height:28px;border:1px solid #00a82d;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.wbtn .nm{flex:1}
+.wbtn .n{font-weight:700;color:#00ff41;font-size:11px;letter-spacing:1px;display:block}
+.wbtn .d{font-size:9px;color:#00a82d;margin-top:2px;display:block}
+.wbtn .st{font-size:9px;color:#00a82d;flex-shrink:0}
+.wbtn.live .st{color:#00ff41}
+.wbtn.live{border-color:#00ff41}
+.wbtn.connected{border-color:#00ff41;box-shadow:0 0 16px rgba(0,255,65,.5) inset}
+#acct{display:none;background:rgba(0,20,8,.85);border:1px solid #00ff41;border-radius:8px;padding:12px;margin-bottom:10px}
+#acct h4{font-size:10px;color:#00a82d;letter-spacing:2px;margin-bottom:6px;text-transform:uppercase}
+#acct .ad{font-family:monospace;font-size:11px;color:#00ff41;word-break:break-all;margin-bottom:8px}
+#term,#cout{background:#000;border:1px solid #00a82d;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.5;color:#00ff41;overflow-y:auto}
+#term{height:280px;margin-bottom:8px}
+#cout{height:220px;margin-bottom:8px}
+#term .ln,#cout>div{margin-bottom:1px;word-break:break-all}
+.ok{color:#00ff41}.er{color:#ff2b4e}.wa{color:#ffcc00}.if{color:#00d9ff}.dm{color:#005f18}.pu{color:#b26bff}
+.cinput{display:flex;gap:6px;align-items:center}
+.cinput .ps{color:#00ff41;font-weight:700;flex-shrink:0}
+.cinput input{flex:1;background:#000;border:1px solid #00a82d;color:#00ff41;padding:9px 11px;border-radius:5px;font-family:inherit;font-size:11px;outline:none}
+.cinput input:focus{border-color:#00ff41}
+.bar{height:6px;background:#005f18;border-radius:3px;overflow:hidden;margin:4px 0}
+.bar .fill{height:100%;background:#00ff41;transition:width .3s;box-shadow:0 0 8px #00ff41}
+.warn{color:#ffcc00;font-size:9px;line-height:1.5;margin-top:4px}
+.themes{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tdot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,.2);transition:transform .15s}
+.tdot:active{transform:scale(1.1)}
+.tdot.sel{border-color:#fff;box-shadow:0 0 12px currentColor}
+#modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.9);padding:20px}
+#modal.on{display:flex}
+#modal .box{background:#001005;border:1px solid #00ff41;border-radius:8px;padding:18px;max-width:520px;width:100%;box-shadow:0 0 25px rgba(0,255,65,.4)}
+#modal h3{color:#00ff41;font-size:13px;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px}
+#modal p{color:#00a82d;font-size:11px;line-height:1.6;margin:6px 0}
+#foot{text-align:center;font-size:9px;color:#005f18;letter-spacing:2px;margin-top:16px;padding:8px 0}
+body.t-amber{color:#ffb000}
+body.t-cyan{color:#00d9ff}
+body.t-red{color:#ff2b4e}
+body.t-purple{color:#b26bff}
+#crackOut{background:#000;border:1px solid #00a82d;border-radius:6px;padding:10px;font-family:monospace;font-size:11px;line-height:1.6;color:#00ff41;height:220px;overflow-y:auto;margin-bottom:8px;white-space:pre-wrap}
+#crackBar{height:14px;background:#001005;border:1px solid #00a82d;border-radius:4px;overflow:hidden;margin-bottom:8px;position:relative}
+#crackBar .fill{height:100%;background:linear-gradient(90deg,#00ff41,#00a82d);width:0%;transition:width .15s;box-shadow:0 0 10px #00ff41}
+@media(max-width:600px){#head h1{font-size:16px;letter-spacing:2px}#stats{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
 
-/* ==================== TABS ==================== */
-document.querySelectorAll('.tb').forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll('.tb').forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll('.tp').forEach(x=>x.classList.remove('on'));
-    b.classList.add('on');
-    document.getElementById('tp-'+b.dataset.t).classList.add('on');
-    if(b.dataset.t==='explorer') fetchExplorer();
-    if(b.dataset.t==='wallets'){
-      const l=document.querySelectorAll('.wbtn.av').length;
-      document.getElementById('wcnt').textContent=l+' live';
-    }
-    beep(660,.03);
-  };
-});
+<canvas id="shader" class="bg"></canvas>
+<canvas id="neural" class="bg"></canvas>
+<canvas id="matrix" class="bg"></canvas>
+<div id="scan" class="bg"></div>
+<div id="vig" class="bg"></div>
 
-/* ==================== WALLETS ==================== */
-const NETS={'0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon',
-  '0xa4b1':'Arbitrum','0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'};
-function shortAd(a){return a.slice(0,6)+'…'+a.slice(-4);}
-function detectWallets(){
-  if(typeof window.ethereum!=='undefined'){
-    ['metamask','coinbase','trust','xverse','leather','unisat','okx','rabby'].forEach(id=>{
-      const el=document.getElementById('s-'+id);
-      const btn=document.getElementById('w-'+id);
-      if(el)el.textContent='LIVE';
-      if(btn)btn.classList.add('av');
-    });
-    log('> injected wallet detected','ok');
-  } else {
-    log('> no injected wallet found','dm');
-  }
-  const l=document.querySelectorAll('.wbtn.av').length;
-  const c=document.getElementById('wcnt');
-  if(c)c.textContent=l+' live';
+<div id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="box">
+    <h3 id="mTitle">Message</h3>
+    <div id="mBody"></div>
+    <button class="btn" onclick="closeModal()" style="margin-top:12px">CLOSE</button>
+  </div>
+</div>
+
+<div id="app">
+  <div id="head">
+    <h1>QCITY BITCOIN</h1>
+    <div class="sub">[ BITCOIN SECURITY TERMINAL v13 ]</div>
+  </div>
+
+  <div class="banner">
+    <span class="p">root@qcity:~#</span>
+    <span class="t" id="typ"></span>
+    <span class="c"></span>
+  </div>
+
+  <div id="ipb">
+    <div class="ir"><span class="lb">YOUR IP</span><span class="vl" id="ipReal">203.***.***.47</span></div>
+    <div class="ir"><span class="lb">MASKED AS</span><span class="vl" id="ipMask">—</span></div>
+    <div class="st" id="ipStat">> initializing mask...</div>
+  </div>
+
+  <div id="news"><div class="ni" id="newsInner"><span class="it">Loading network data...</span></div></div>
+
+  <div id="status">
+    <span class="lv">ONLINE</span>
+    <span id="clock">--:--:--</span>
+    <span>NODE <span id="nodeId">----</span></span>
+    <span>UP <span id="uptime">0s</span></span>
+  </div>
+
+  <div id="stats">
+    <div class="stat"><div class="l">ENTROPY</div><div class="v" id="s1">—</div></div>
+    <div class="stat"><div class="l">PACKETS</div><div class="v" id="s2">—</div></div>
+    <div class="stat"><div class="l">LATENCY</div><div class="v" id="s3">—</div></div>
+    <div class="stat"><div class="l">SECURITY</div><div class="v" id="s4">—</div></div>
+    <div class="stat"><div class="l">PEERS</div><div class="v" id="s5">—</div></div>
+    <div class="stat"><div class="l">MEMPOOL</div><div class="v" id="s6">—</div></div>
+  </div>
+
+  <div id="tabbar">
+    <button class="tab on" data-t="wallets">WALLETS</button>
+    <button class="tab" data-t="address">ADDRESS</button>
+    <button class="tab" data-t="hash">HASH</button>
+    <button class="tab" data-t="encode">ENCODE</button>
+    <button class="tab" data-t="keys">KEYS</button>
+    <button class="tab" data-t="seed">SEED</button>
+    <button class="tab" data-t="encrypt">ENCRYPT</button>
+    <button class="tab" data-t="crack">CRACK</button>
+    <button class="tab" data-t="explorer">EXPLORER</button>
+    <button class="tab" data-t="scan">SCAN</button>
+    <button class="tab" data-t="console">CONSOLE</button>
+    <button class="tab" data-t="log">LOG</button>
+    <button class="tab" data-t="config">CONFIG</button>
+  </div>
+
+  <!-- WALLETS -->
+  <div class="pane on" id="p-wallets">
+    <div id="acct">
+      <h4>◉ Connected Wallet</h4>
+      <div class="ad" id="aAd">—</div>
+      <div class="kv"><span class="k">Chain</span><span class="v" id="aCh">—</span></div>
+      <div class="kv"><span class="k">Balance</span><span class="v" id="aBal">—</span></div>
+      <div class="kv"><span class="k">Type</span><span class="v" id="aType">—</span></div>
+      <button class="btn red wide" onclick="disconnectWallet()">DISCONNECT</button>
+    </div>
+
+    <h2 class="sec">Bitcoin-Native Wallets</h2>
+    <button class="wbtn" id="w-xverse" onclick="connectInjected('Xverse')">
+      <div class="ic">₿</div><div class="nm"><span class="n">XVERSE</span><span class="d">Bitcoin · Ordinals · BRC-20</span></div><div class="st" id="s-xverse">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-leather" onclick="connectInjected('Leather')">
+      <div class="ic">🟠</div><div class="nm"><span class="n">LEATHER</span><span class="d">Bitcoin · Stacks</span></div><div class="st" id="s-leather">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-unisat" onclick="connectInjected('Unisat')">
+      <div class="ic">🟣</div><div class="nm"><span class="n">UNISAT</span><span class="d">Bitcoin · Ordinals</span></div><div class="st" id="s-unisat">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-okx" onclick="connectInjected('OKX')">
+      <div class="ic">⭕</div><div class="nm"><span class="n">OKX WALLET</span><span class="d">Bitcoin · Multi-chain</span></div><div class="st" id="s-okx">SCAN</div>
+    </button>
+
+    <h2 class="sec">EVM Wallets (WBTC · Bridges)</h2>
+    <button class="wbtn" id="w-metamask" onclick="connectInjected('MetaMask')">
+      <div class="ic">🦊</div><div class="nm"><span class="n">METAMASK</span><span class="d">WBTC · Ren · tBTC</span></div><div class="st" id="s-metamask">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-coinbase" onclick="connectInjected('Coinbase')">
+      <div class="ic">🔵</div><div class="nm"><span class="n">COINBASE WALLET</span><span class="d">cbBTC · Base</span></div><div class="st" id="s-coinbase">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-trust" onclick="connectInjected('Trust')">
+      <div class="ic">🛡️</div><div class="nm"><span class="n">TRUST WALLET</span><span class="d">Multi-chain</span></div><div class="st" id="s-trust">SCAN</div>
+    </button>
+    <button class="wbtn" id="w-wc" onclick="connectWalletConnect()">
+      <div class="ic">🔗</div><div class="nm"><span class="n">WALLETCONNECT</span><span class="d">Any wallet via QR</span></div><div class="st">OPEN</div>
+    </button>
+  </div>
+
+  <!-- ADDRESS -->
+  <div class="pane" id="p-address">
+    <h2 class="sec">Bitcoin Address Analyzer</h2>
+    <input class="inp" id="aInput" placeholder="paste BTC address (1… / 3… / bc1q… / bc1p…)" autocomplete="off" spellcheck="false">
+    <button class="btn" onclick="analyzeAddress()">ANALYZE</button>
+    <button class="btn blue" onclick="checkBalance()">CHECK BALANCE</button>
+    <button class="btn yellow" onclick="lookupAddressFull()">FULL LOOKUP</button>
+    <button class="btn red" onclick="document.getElementById('aOut').textContent='—'">CLEAR</button>
+    <div class="out" id="aOut" style="margin-top:8px">Ready. Paste a Bitcoin address above.</div>
+
+    <h2 class="sec">Address Types</h2>
+    <div class="card">
+      <div class="kv"><span class="k">P2PKH (Legacy)</span><span class="v">starts 1 · ~34 chars</span></div>
+      <div class="kv"><span class="k">P2SH (SegWit compat)</span><span class="v">starts 3 · ~34 chars</span></div>
+      <div class="kv"><span class="k">P2WPKH (Native SegWit)</span><span class="v">bc1q · 42 chars</span></div>
+      <div class="kv"><span class="k">P2TR (Taproot)</span><span class="v">bc1p · 62 chars</span></div>
+      <div class="kv"><span class="k">Testnet</span><span class="v">m / n / tb1</span></div>
+    </div>
+
+    <h2 class="sec">Batch Checker</h2>
+    <textarea class="inp" id="bInput" rows="4" placeholder="paste one address per line..."></textarea>
+    <button class="btn" onclick="batchCheck()">VALIDATE ALL</button>
+    <div class="out" id="bOut" style="margin-top:8px">—</div>
+  </div>
+
+  <!-- HASH -->
+  <div class="pane" id="p-hash">
+    <h2 class="sec">Hash Functions — Real</h2>
+    <input class="inp" id="hInput" placeholder="input text..." value="QCity Bitcoin">
+    <button class="btn" onclick="doSHA256()">SHA-256</button>
+    <button class="btn" onclick="doDoubleSHA()">DOUBLE SHA-256</button>
+    <button class="btn" onclick="doSHA512()">SHA-512</button>
+    <button class="btn" onclick="doSHA1()">SHA-1</button>
+    <button class="btn yellow" onclick="doHMAC()">HMAC-SHA512</button>
+    <div class="card" style="margin-top:8px">
+      <h3>Output</h3>
+      <div class="out" id="hOut">—</div>
+    </div>
+    <div class="warn">SHA-256 · SHA-512 · SHA-1 · HMAC-SHA512 · Double SHA-256 all run via native WebCrypto.</div>
+  </div>
+
+  <!-- ENCODE -->
+  <div class="pane" id="p-encode">
+    <h2 class="sec">Base58 · Base58Check · Hex · Base64 · URL</h2>
+    <input class="inp" id="eInput" placeholder="input..." value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa">
+    <button class="btn" onclick="b58Check()">BASE58CHECK VERIFY</button>
+    <button class="btn" onclick="b58Encode()">BASE58 ENCODE</button>
+    <button class="btn" onclick="b58Decode()">BASE58 DECODE</button>
+    <button class="btn" onclick="hexEncode()">HEX ENCODE</button>
+    <button class="btn" onclick="hexDecode()">HEX DECODE</button>
+    <button class="btn blue" onclick="base64Enc()">BASE64 ENC</button>
+    <button class="btn blue" onclick="base64Dec()">BASE64 DEC</button>
+    <button class="btn blue" onclick="urlEnc()">URL ENC</button>
+    <div class="card" style="margin-top:8px">
+      <h3>Output</h3>
+      <div class="out" id="eOut">—</div>
+    </div>
+  </div>
+
+  <!-- KEYS -->
+  <div class="pane" id="p-keys">
+    <h2 class="sec">Random Private Key</h2>
+    <div class="out" id="pkOut">—</div>
+    <button class="btn" onclick="genPrivKey()">GENERATE 256-BIT</button>
+    <button class="btn blue" onclick="copyEl('pkOut')">COPY</button>
+    <div class="warn">Uses crypto.getRandomValues — cryptographically secure. Never use a browser-generated key for real funds.</div>
+
+    <h2 class="sec">WIF Encoder (Mainnet)</h2>
+    <input class="inp" id="wifIn" placeholder="64 hex chars (private key)">
+    <div class="out" id="wifOut">—</div>
+    <button class="btn" onclick="wifEncode()">ENCODE WIF</button>
+    <button class="btn blue" onclick="copyEl('wifOut')">COPY</button>
+    <div class="warn">Real Bitcoin mainnet WIF with double-SHA-256 checksum. Educational.</div>
+
+    <h2 class="sec">WIF Decoder</h2>
+    <input class="inp" id="wifDecIn" placeholder="paste WIF (starts 5, K, or L)">
+    <div class="out" id="wifDecOut">—</div>
+    <button class="btn" onclick="wifDecode()">DECODE WIF</button>
+
+    <h2 class="sec">Entropy Meter</h2>
+    <input class="inp" id="entIn" placeholder="type to test strength..." oninput="updateEntropy()">
+    <div class="bar"><div class="fill" id="entBar" style="width:0%"></div></div>
+    <div class="out" id="entOut">—</div>
+
+    <h2 class="sec">Vanity Prefix (simulated)</h2>
+    <input class="inp" id="vanIn" placeholder="prefix 1-5 chars" value="QC">
+    <div class="out" id="vanOut">—</div>
+    <button class="btn" onclick="genVanity()">GENERATE</button>
+    <div class="warn">Simulated. Real vanity mining requires billions of hashes.</div>
+  </div>
+
+  <!-- SEED -->
+  <div class="pane" id="p-seed">
+    <h2 class="sec">BIP39 Mnemonic (visual)</h2>
+    <div class="card">
+      <h3>12-word seed</h3>
+      <div class="out" id="mn12">—</div>
+      <button class="btn" onclick="genMnemonic(12)">GENERATE 12</button>
+      <button class="btn blue" onclick="copyEl('mn12')">COPY</button>
+    </div>
+    <div class="card">
+      <h3>24-word seed</h3>
+      <div class="out" id="mn24">—</div>
+      <button class="btn" onclick="genMnemonic(24)">GENERATE 24</button>
+      <button class="btn blue" onclick="copyEl('mn24')">COPY</button>
+    </div>
+    <div class="warn">Visual demonstration using a simplified word list. For real wallets use official BIP39 tools with the full 2048-word list.</div>
+  </div>
+
+  <!-- ENCRYPT -->
+  <div class="pane" id="p-encrypt">
+    <h2 class="sec">AES-GCM Encryption (real)</h2>
+    <input class="inp" id="encText" placeholder="text to encrypt..." value="Top secret Bitcoin message">
+    <input class="inp" id="encPass" placeholder="passphrase..." value="qcity-key" type="password">
+    <button class="btn" onclick="doEncrypt()">ENCRYPT</button>
+    <button class="btn blue" onclick="doDecrypt()">DECRYPT</button>
+    <div class="card" style="margin-top:8px">
+      <h3>Output</h3>
+      <div class="out" id="encOut">—</div>
+    </div>
+    <div class="warn">Uses native AES-GCM via WebCrypto with PBKDF2 key derivation. Real encryption.</div>
+
+    <h2 class="sec">XOR Cipher (educational)</h2>
+    <input class="inp" id="xorText" placeholder="text..." value="HELLO BITCOIN">
+    <input class="inp" id="xorKey" placeholder="key..." value="KEY">
+    <button class="btn" onclick="doXor()">XOR ENCRYPT</button>
+    <div class="card" style="margin-top:8px">
+      <h3>Output</h3>
+      <div class="out" id="xorOut">—</div>
+    </div>
+    <div class="warn">XOR is a teaching cipher. Never use for real security.</div>
+  </div>
+
+  <!-- CRACK (simulation) -->
+  <div class="pane" id="p-crack">
+    <h2 class="sec">Password Recovery Simulation</h2>
+    <input class="inp" id="crackHash" placeholder="paste SHA-256 hash to 'crack' (any hash)..." value="">
+    <button class="btn" onclick="document.getElementById('crackHash').value=document.getElementById('hOut').textContent;switchTab('crack')">USE LAST HASH</button>
+    <div>
+      <button class="btn" onclick="startCrack('dictionary')">DICTIONARY</button>
+      <button class="btn" onclick="startCrack('brute')">BRUTE FORCE</button>
+      <button class="btn yellow" onclick="startCrack('rainbow')">RAINBOW</button>
+      <button class="btn red" onclick="stopCrack()">STOP</button>
+    </div>
+    <div id="crackBar"><div class="fill" id="crackFill"></div></div>
+    <div id="crackOut"></div>
+    <div class="warn">⚠ THIS IS A SIMULATION. No real hash is being cracked. Nobody can use this to steal. It's a visual demo of what a cracking screen looks like.</div>
+
+    <h2 class="sec">Why real cracking is impossible here</h2>
+    <div class="card">
+      <div class="kv"><span class="k">SHA-256 keyspace</span><span class="v">2^256 combinations</span></div>
+      <div class="kv"><span class="k">Attempts per second (GPU farm)</span><span class="v">~10 trillion</span></div>
+      <div class="kv"><span class="k">Time to brute force one key</span><span class="v">longer than the universe has existed</span></div>
+      <div class="kv"><span class="k">BIP39 12-word seed space</span><span class="v">2^128 combinations</span></div>
+      <div class="kv"><span class="k">Reality</span><span class="v">Bitcoin wallet security is intact</span></div>
+    </div>
+    <div class="warn">Any website, app, or person claiming they can "crack" a modern Bitcoin wallet is lying. The math does not allow it.</div>
+  </div>
+
+  <!-- EXPLORER -->
+  <div class="pane" id="p-explorer">
+    <h2 class="sec">Live Bitcoin Network</h2>
+    <div class="card">
+      <h3>◆ Latest Block</h3>
+      <div class="kv"><span class="k">Height</span><span class="v" id="xHeight">—</span></div>
+      <div class="kv"><span class="k">Hash</span><span class="v" id="xHash">—</span></div>
+      <div class="kv"><span class="k">Time</span><span class="v" id="xTime">—</span></div>
+    </div>
+    <div class="card">
+      <h3>◆ Network Difficulty</h3>
+      <div class="kv"><span class="k">Difficulty</span><span class="v" id="xDiff">—</span></div>
+      <div class="kv"><span class="k">Hashrate (est.)</span><span class="v" id="xHashRate">—</span></div>
+    </div>
+    <div class="card">
+      <h3>◆ Live BTC / USDT</h3>
+      <div class="kv"><span class="k">Price</span><span class="v" id="xPrice">—</span></div>
+      <div class="kv"><span class="k">24h change</span><span class="v" id="xChange">—</span></div>
+      <div class="kv"><span class="k">24h volume</span><span class="v" id="xVol">—</span></div>
+      <div class="kv"><span class="k">24h high / low</span><span class="v" id="xHL">—</span></div>
+    </div>
+    <h2 class="sec">Address Lookup</h2>
+    <input class="inp" id="xAddr" placeholder="paste BTC address..." value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa">
+    <button class="btn" onclick="lookupAddress()">LOOKUP</button>
+    <button class="btn blue" onclick="lookupUTXO()">UTXOs</button>
+    <div class="out" id="xOut" style="margin-top:8px">—</div>
+  </div>
+
+  <!-- SCAN -->
+  <div class="pane" id="p-scan">
+    <h2 class="sec">Port Scan (simulation)</h2>
+    <input class="inp" id="scHost" placeholder="target host" value="127.0.0.1">
+    <input class="inp" id="scRange" placeholder="port range" value="1-1024">
+    <button class="btn" onclick="startScan()">START</button>
+    <button class="btn red" onclick="stopScan()">STOP</button>
+    <div class="out" id="scOut" style="margin-top:8px;height:220px;overflow-y:auto">Idle.</div>
+    <div class="warn">Simulation only. No real network probing is performed.</div>
+
+    <h2 class="sec">Bitcoin Node Port Probe</h2>
+    <div class="card">
+      <div class="kv"><span class="k">8333 (mainnet P2P)</span><span class="v" id="p1">—</span></div>
+      <div class="kv"><span class="k">18333 (testnet P2P)</span><span class="v" id="p2">—</span></div>
+      <div class="kv"><span class="k">8332 (RPC)</span><span class="v" id="p3">—</span></div>
+      <div class="kv"><span class="k">50001 (Electrum)</span><span class="v" id="p4">—</span></div>
+      <div class="kv"><span class="k">9735 (Lightning)</span><span class="v" id="p5">—</span></div>
+      <button class="btn" onclick="probeNodes()" style="margin-top:8px">PROBE</button>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <div class="pane" id="p-console">
+    <h2 class="sec">Interactive Shell</h2>
+    <div id="cout"></div>
+    <div class="cinput">
+      <span class="ps">#</span>
+      <input id="cInput" placeholder="type: help, btc, block, addr <x>, bal <x>, hash <x>..." autocomplete="off" spellcheck="false">
+      <button class="btn" onclick="runConsole()">RUN</button>
+    </div>
+    <div class="card" style="margin-top:8px">
+      <h3>Commands</h3>
+      <div class="kv"><span class="k">help</span><span class="v">all commands</span></div>
+      <div class="kv"><span class="k">btc</span><span class="v">live BTC price</span></div>
+      <div class="kv"><span class="k">block</span><span class="v">latest block</span></div>
+      <div class="kv"><span class="k">addr &lt;x&gt;</span><span class="v">analyze address</span></div>
+      <div class="kv"><span class="k">bal &lt;x&gt;</span><span class="v">balance lookup</span></div>
+      <div class="kv"><span class="k">hash &lt;x&gt;</span><span class="v">SHA-256</span></div>
+      <div class="kv"><span class="k">dhash &lt;x&gt;</span><span class="v">double SHA-256</span></div>
+      <div class="kv"><span class="k">wif &lt;hex&gt;</span><span class="v">encode WIF</span></div>
+      <div class="kv"><span class="k">b58 &lt;hex&gt;</span><span class="v">base58 encode</span></div>
+      <div class="kv"><span class="k">decode &lt;b58&gt;</span><span class="v">base58 decode</span></div>
+      <div class="kv"><span class="k">probe</span><span class="v">node ports</span></div>
+      <div class="kv"><span class="k">scan</span><span class="v">port scan</span></div>
+      <div class="kv"><span class="k">trace</span><span class="v">route trace</span></div>
+      <div class="kv"><span class="k">mask</span><span class="v">mask IP</span></div>
+      <div class="kv"><span class="k">clear</span><span class="v">clear console</span></div>
+      <div class="kv"><span class="k">theme &lt;n&gt;</span><span class="v">green/amber/cyan/red/purple</span></div>
+      <div class="kv"><span class="k">rand &lt;n&gt;</span><span class="v">random hex</span></div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="pane" id="p-log">
+    <h2 class="sec">Live Terminal Log</h2>
+    <div id="term"></div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+      <button class="btn" onclick="log('> port scan started','wa')">PORT SCAN</button>
+      <button class="btn yellow" onclick="triggerMask()">NEW MASK</button>
+      <button class="btn blue" onclick="lightning()">LIGHTNING</button>
+      <button class="btn red" onclick="clearLog()">RESET</button>
+    </div>
+    <h2 class="sec">Filter</h2>
+    <input class="inp" id="logFilter" placeholder="filter by keyword..." oninput="filterLog()">
+  </div>
+
+  <!-- CONFIG -->
+  <div class="pane" id="p-config">
+    <h2 class="sec">Theme</h2>
+    <div class="themes">
+      <div class="tdot sel" style="background:#00ff41;color:#00ff41" onclick="setTheme('green',this)"></div>
+      <div class="tdot" style="background:#ffb000;color:#ffb000" onclick="setTheme('amber',this)"></div>
+      <div class="tdot" style="background:#00d9ff;color:#00d9ff" onclick="setTheme('cyan',this)"></div>
+      <div class="tdot" style="background:#ff2b4e;color:#ff2b4e" onclick="setTheme('red',this)"></div>
+      <div class="tdot" style="background:#b26bff;color:#b26bff" onclick="setTheme('purple',this)"></div>
+    </div>
+
+    <h2 class="sec">Effects</h2>
+    <div class="card">
+      <div class="kv"><span class="k">Matrix Rain</span><span class="v"><input type="checkbox" id="tgl-matrix" checked onchange="toggleEffect('matrix',this)"></span></div>
+      <div class="kv"><span class="k">Neural Net</span><span class="v"><input type="checkbox" id="tgl-neural" checked onchange="toggleEffect('neural',this)"></span></div>
+      <div class="kv"><span class="k">Shader</span><span class="v"><input type="checkbox" id="tgl-shader" checked onchange="toggleEffect('shader',this)"></span></div>
+      <div class="kv"><span class="k">Scanline</span><span class="v"><input type="checkbox" id="tgl-scan" checked onchange="toggleEffect('scan',this)"></span></div>
+    </div>
+
+    <h2 class="sec">Session</h2>
+    <div class="card">
+      <div class="kv"><span class="k">Session ID</span><span class="v" id="sessId">—</span></div>
+      <div class="kv"><span class="k">Started</span><span class="v" id="sessStart">—</span></div>
+      <div class="kv"><span class="k">Events</span><span class="v" id="sessEv">0</span></div>
+      <button class="btn" onclick="exportLog()">EXPORT LOG</button>
+      <button class="btn red" onclick="location.reload()">RESET</button>
+    </div>
+
+    <h2 class="sec">About</h2>
+    <div class="card">
+      <div class="kv"><span class="k">App</span><span class="v">QCity Bitcoin Terminal</span></div>
+      <div class="kv"><span class="k">Version</span><span class="v">13.0</span></div>
+      <div class="kv"><span class="k">Mode</span><span class="v">Educational / Visual</span></div>
+    </div>
+    <div class="warn" style="font-size:10px;line-height:1.7;margin-top:10px">
+      Bitcoin-focused security terminal. Real cryptography: SHA-256, SHA-512, SHA-1, HMAC-SHA512, AES-GCM, PBKDF2, Base58Check, WIF, live blockchain data. Simulated for safety: port scan, IP masking, trace route, vanity mining, password cracking animation. This app never stores private keys and cannot break wallets.
+    </div>
+  </div>
+
+  <div id="foot">QCITY BITCOIN · v13 · EDUCATIONAL ONLY</div>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- UTILITIES ---------- */
+const HEXC = '0123456789abcdef';
+const rHex = n => { let s=''; for(let i=0;i<n;i++) s+=HEXC[Math.floor(Math.random()*16)]; return s; };
+const rInt = (a,b) => a + Math.floor(Math.random()*(b-a+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const $ = id => document.getElementById(id);
+function hexToBytes(h){
+  h = h.replace(/[^0-9a-f]/gi,'');
+  const o = new Uint8Array(h.length/2);
+  for(let i=0;i<o.length;i++) o[i] = parseInt(h.substr(i*2,2),16);
+  return o;
 }
+function bytesToHex(a){
+  return Array.from(a).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ---------- SESSION ---------- */
+const SESSION_ID = rHex(16);
+const SESSION_START = new Date();
+let EVENT_COUNT = 0;
+function bump(){
+  EVENT_COUNT++;
+  const el = $('sessEv');
+  if(el) el.textContent = EVENT_COUNT;
+}
+
+/* ---------- BACKGROUND: SHADER ---------- */
+(function(){
+  const c = $('shader');
+  if(!c) return;
+  const gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+  if(!gl){ c.style.display='none'; return; }
+  const vs = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0,1); }';
+  const fs = 'precision highp float;uniform float t;uniform vec2 r;' +
+    'void main(){vec2 uv=(gl_FragCoord.xy-0.5*r)/min(r.x,r.y);' +
+    'float a=0.0;for(int i=0;i<5;i++){float fi=float(i)+1.0;' +
+    'vec2 p=uv*fi*1.3;p+=vec2(sin(t*0.3+fi)*1.2,cos(t*0.25+fi)*1.2);' +
+    'a+=0.008/abs(sin(p.x+t*0.4)+cos(p.y+t*0.3)-0.6);}' +
+    'gl_FragColor=vec4(vec3(0.0,1.0,0.25)*a*0.5,1.0);}';
+  function mkShader(t,s){ const x=gl.createShader(t); gl.shaderSource(x,s); gl.compileShader(x); return x; }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const tL = gl.getUniformLocation(prog,'t');
+  const rL = gl.getUniformLocation(prog,'r');
+  function resize(){
+    const w=innerWidth, h=innerHeight;
+    c.width=w; c.height=h;
+    gl.viewport(0,0,w,h);
+    gl.uniform2f(rL,w,h);
+  }
+  resize();
+  addEventListener('resize', resize);
+  function loop(t){
+    gl.uniform1f(tL, t*0.001);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ---------- BACKGROUND: NEURAL ---------- */
+(function(){
+  const c = $('neural');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  let W,H,nodes=[];
+  const N = 40, MAX = 140;
+  function resize(){
+    W = c.width = innerWidth;
+    H = c.height = innerHeight;
+    nodes = [];
+    for(let i=0;i<N;i++) nodes.push({
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+      r: 1 + Math.random()*1.5
+    });
+  }
+  resize();
+  addEventListener('resize', resize);
+  setInterval(() => {
+    ctx.clearRect(0,0,W,H);
+    for(const n of nodes){
+      n.x += n.vx; n.y += n.vy;
+      if(n.x<0||n.x>W) n.vx*=-1;
+      if(n.y<0||n.y>H) n.vy*=-1;
+    }
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx = nodes[i].x-nodes[j].x;
+        const dy = nodes[i].y-nodes[j].y;
+        const d = Math.sqrt(dx*dx+dy*dy);
+        if(d < MAX){
+          ctx.strokeStyle = 'rgba(0,255,65,' + (1-d/MAX)*0.4 + ')';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      ctx.fillStyle = '#00ff41';
+      ctx.shadowColor = '#00ff41';
+      ctx.shadowBlur = 5;
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+  }, 33);
+})();
+
+/* ---------- BACKGROUND: MATRIX ---------- */
+(function(){
+  const c = $('matrix');
+  if(!c) return;
+  const ctx = c.getContext('2d');
+  const chars = '₿0123456789abcdefABCDEF';
+  const fs = 14;
+  let cols, drops;
+  function resize(){
+    c.width = innerWidth;
+    c.height = innerHeight;
+    cols = Math.floor(c.width/fs);
+    drops = new Array(cols).fill(1);
+  }
+  resize();
+  addEventListener('resize', resize);
+  setInterval(() => {
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.font = fs + 'px monospace';
+    for(let i=0;i<drops.length;i++){
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillStyle = Math.random()>0.97 ? '#b6ffd9' : '#00ff41';
+      ctx.fillText(ch, i*fs, drops[i]*fs);
+      if(drops[i]*fs > c.height && Math.random()>0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }, 55);
+})();
+
+/* ---------- TYPING BANNER ---------- */
+const PHRASES = [
+  'ENCRYPTION ENGINE READY',
+  'SHA-256 HASHING BLOCK',
+  'SCANNING BLOCKCHAIN ...',
+  'MASKING IP ...',
+  'AES-256 TUNNEL ACTIVE',
+  'BROADCASTING TX ...',
+  'ROTATING KEYS ...',
+  'PEER DISCOVERY ...',
+  'SYNCING HEADERS ...',
+  'VERIFYING SIGNATURE ...',
+  'UTXO SCAN ...',
+  'CHECKSUM VERIFIED',
+  'BIP39 ENTROPY ...',
+  'PROBING NODES ...',
+  'WBTC BRIDGE ACTIVE'
+];
+let pIdx = 0, cIdx = 0, deleting = false;
+function typeLoop(){
+  const p = PHRASES[pIdx];
+  const el = $('typ');
+  if(!el) return;
+  if(!deleting){
+    cIdx++;
+    el.textContent = p.slice(0,cIdx);
+    if(cIdx >= p.length){ deleting = true; setTimeout(typeLoop, 1400); return; }
+    setTimeout(typeLoop, 45 + Math.random()*30);
+  } else {
+    cIdx--;
+    el.textContent = p.slice(0,cIdx);
+    if(cIdx <= 0){
+      deleting = false;
+      pIdx = (pIdx+1) % PHRASES.length;
+      setTimeout(typeLoop, 250);
+      return;
+    }
+    setTimeout(typeLoop, 20);
+  }
+}
+
+/* ---------- IP MASK ---------- */
+const REGIONS = ['Amsterdam','Zurich','Reykjavik','Singapore','Tokyo','Toronto',
+  'Frankfurt','Stockholm','Seoul','Geneva','Luxembourg','Helsinki','Oslo','Vienna','Dublin'];
+const MASK_IPS = ['185.***.***.12','91.***.***.208','77.***.***.04','45.***.***.122',
+  '103.***.***.87','212.***.***.33','62.***.***.150','80.***.***.66','196.***.***.201'];
+
+function maskSequence(){
+  const ipm = $('ipMask'), ips = $('ipStat');
+  if(!ipm) return;
+  ipm.className = 'vl';
+  ips.textContent = '> masking...';
+  ipm.textContent = '███████████████';
+  setTimeout(() => {
+    const ip = pick(MASK_IPS);
+    const reg = pick(REGIONS);
+    ipm.textContent = ip + ' · ' + reg;
+    ipm.className = 'vl h';
+    ips.textContent = '> IDENTITY MASKED — ' + reg;
+    log('> IP masked → ' + ip + ' (' + reg + ')', 'ok');
+    bump();
+  }, 700);
+  setTimeout(() => {
+    ips.textContent = '> decoy signal · node ' + rHex(4).toUpperCase();
+  }, 2200);
+}
+
+function traceSequence(){
+  const ipm = $('ipMask'), ips = $('ipStat');
+  if(!ipm) return;
+  ipm.className = 'vl t';
+  ips.textContent = '> tracing route...';
+  let hops = 0;
+  const iv = setInterval(() => {
+    ipm.textContent = '→ ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase() +
+      ' → ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase() +
+      ' → ' + rHex(2).toUpperCase() + '.' + rHex(2).toUpperCase();
+    hops++;
+    if(hops > 6){
+      clearInterval(iv);
+      ipm.className = 'vl t';
+      ipm.textContent = 'TRACE BLOCKED — HONEYPOT';
+      ips.textContent = '> intruder redirected to decoy';
+      log('> trace attempt blocked', 'wa');
+      bump();
+      setTimeout(maskSequence, 1800);
+    }
+  }, 400);
+}
+
+/* ---------- CLOCK + STATS ---------- */
+const START_TIME = Date.now();
+let totalPackets = 0, entropyLevel = 8192;
+
+function updateClock(){
+  const d = new Date();
+  $('clock').textContent =
+    String(d.getUTCHours()).padStart(2,'0') + ':' +
+    String(d.getUTCMinutes()).padStart(2,'0') + ':' +
+    String(d.getUTCSeconds()).padStart(2,'0') + ' UTC';
+  $('nodeId').textContent = rHex(4).toUpperCase();
+  const s = Math.floor((Date.now()-START_TIME)/1000);
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = s%60;
+  $('uptime').textContent = (h?h+'h ':'') + (m?m+'m ':'') + sec + 's';
+}
+function updateStats(){
+  entropyLevel += rInt(-40,60);
+  if(entropyLevel < 3000) entropyLevel = 3000;
+  if(entropyLevel > 9999) entropyLevel = 9999;
+  $('s1').textContent = entropyLevel;
+  totalPackets += rInt(5,40);
+  $('s2').textContent = totalPackets.toLocaleString();
+  $('s3').textContent = rInt(12,90) + 'ms';
+  $('s4').textContent = rInt(96,100) + '%';
+  $('s5').textContent = rInt(8,32);
+  $('s6').textContent = rInt(20000,60000).toLocaleString();
+}
+
+/* ---------- TABS ---------- */
+function initTabs(){
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+      btn.classList.add('on');
+      const pane = $('p-' + btn.dataset.t);
+      if(pane) pane.classList.add('on');
+      if(btn.dataset.t === 'explorer') fetchExplorer();
+    };
+  });
+}
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(b => {
+    if(b.dataset.t === name){ b.classList.add('on'); }
+    else b.classList.remove('on');
+  });
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  const pane = $('p-' + name);
+  if(pane) pane.classList.add('on');
+}
+
+/* ---------- WALLETS ---------- */
+const CHAIN_NAMES = {
+  '0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum',
+  '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
+};
+
+function detectWallets(){
+  if(typeof window.ethereum !== 'undefined'){
+    ['metamask','coinbase','trust','xverse','leather','unisat','okx'].forEach(id => {
+      const s = $('s-'+id), b = $('w-'+id);
+      if(s) s.textContent = 'LIVE';
+      if(b) b.classList.add('live');
+    });
+    log('> injected wallet detected', 'ok');
+  } else {
+    log('> no injected wallet found', 'dm');
+  }
+}
+
 async function connectInjected(name){
-  if(typeof window.ethereum==='undefined'){
-    openModal('Wallet Not Detected',
-      '<p>'+name+' was not found in this browser.</p>'+
-      '<p>Install the '+name+' app or open this page inside the '+name+' in-app browser.</p>');
+  if(typeof window.ethereum === 'undefined'){
+    showModal(name + ' Not Detected',
+      '<p>Install the ' + name + ' app, or open this page inside the ' + name + ' in-app browser.</p>');
     return;
   }
   try{
-    const accs=await window.ethereum.request({method:'eth_requestAccounts'});
-    if(!accs||!accs.length)return;
-    const acc=accs[0];
-    const ch=await window.ethereum.request({method:'eth_chainId'});
-    const bal=await window.ethereum.request({method:'eth_getBalance',params:[acc,'latest']});
-    const balEth=(parseInt(bal,16)/1e18).toFixed(6);
-    showAccount(acc,NETS[ch]||ch,balEth+' ETH',ch,'EVM');
-    document.querySelectorAll('.wbtn').forEach(b=>b.classList.remove('cn'));
-    const btn=document.getElementById('w-'+name.toLowerCase());
-    if(btn)btn.classList.add('cn');
-    log('> wallet connected: '+name+' · '+shortAd(acc),'ok');
-    beep(880,.15);bump();
-  } catch(e){openModal('Connection Failed','<p>'+e.message+'</p>');}
-}
-function connectWalletConnect(){
-  const uri=prompt('Paste WalletConnect URI:');
-  if(!uri)return;
-  openModal('WalletConnect',
-    '<p>URI received.</p><p>Full WalletConnect requires the @walletconnect/web3-provider library. Demo placeholder.</p>');
-}
-function showAccount(addr,net,bal,chain,type){
-  document.getElementById('acct').style.display='block';
-  document.getElementById('a-ad').textContent=addr;
-  document.getElementById('a-ch').textContent=net;
-  document.getElementById('a-bl').textContent=bal;
-  document.getElementById('a-cid').textContent=chain;
-  document.getElementById('a-tp').textContent=type;
-}
-function disconnectWallet(){
-  document.getElementById('acct').style.display='none';
-  document.querySelectorAll('.wbtn').forEach(b=>b.classList.remove('cn'));
-  log('> wallet disconnected','wa');
+    const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+    if(!accounts || !accounts.length) return;
+    const acc = accounts[0];
+    const chainHex = await window.ethereum.request({method:'eth_chainId'});
+    let bal = '—';
+    try{
+      const b = await window.ethereum.request({method:'eth_getBalance', params:[acc,'latest']});
+      bal = (parseInt(b,16)/1e18).toFixed(6) + ' ETH';
+    } catch(e){}
+    showAccount(acc, CHAIN_NAMES[chainHex] || chainHex, bal, 'EVM');
+    document.querySelectorAll('.wbtn').forEach(b => b.classList.remove('connected'));
+    const btn = $('w-'+name.toLowerCase());
+    if(btn) btn.classList.add('connected');
+    log('> wallet: ' + name + ' · ' + acc.slice(0,10) + '…', 'ok');
+    bump();
+  } catch(e){
+    showModal('Connection Failed', '<p>' + e.message + '</p>');
+  }
 }
 
-/* ==================== ADDRESS ANALYZER ==================== */
-function analyzeAddress(){
-  const a=document.getElementById('adIn').value.trim();
-  const out=document.getElementById('adOut');
-  if(!a){out.textContent='Empty input.';return;}
-  const info=classifyBTC(a);
-  if(!info){out.textContent='✗ Not a valid Bitcoin address format.';beep(220,.15);return;}
-  let html='✓ VALID BITCOIN ADDRESS\n\n';
-  html+='Address:    '+a+'\n';
-  html+='Type:       '+info.type+'\n';
-  html+='Script:     '+info.script+'\n';
-  html+='Network:    '+info.net+'\n';
-  html+='Length:     '+a.length+' chars\n';
-  html+='Encoding:   '+(info.bech?'Bech32':'Base58Check')+'\n';
-  out.textContent=html;out.style.whiteSpace='pre-line';
-  beep(880,.1);bump();
+function connectWalletConnect(){
+  const uri = prompt('Paste WalletConnect URI:');
+  if(!uri) return;
+  showModal('WalletConnect',
+    '<p>URI received.</p><p>Full WalletConnect requires the @walletconnect/web3-provider library. This is a demo placeholder.</p>');
 }
+
+function showAccount(addr, chain, balance, type){
+  $('acct').style.display = 'block';
+  $('aAd').textContent = addr;
+  $('aCh').textContent = chain;
+  $('aBal').textContent = balance;
+  $('aType').textContent = type;
+}
+
+function disconnectWallet(){
+  $('acct').style.display = 'none';
+  document.querySelectorAll('.wbtn').forEach(b => b.classList.remove('connected'));
+  log('> wallet disconnected', 'wa');
+}
+
+/* ---------- ADDRESS ---------- */
 function classifyBTC(a){
-  // Mainnet P2PKH
+  if(!a) return null;
   if(/^1[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
-    return {type:'P2PKH (Legacy)',script:'pay-to-public-key-hash',net:'mainnet',bech:false};
-  // Mainnet P2SH
+    return {type:'P2PKH (Legacy)', net:'mainnet', enc:'Base58Check'};
   if(/^3[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
-    return {type:'P2SH (SegWit-compatible)',script:'pay-to-script-hash',net:'mainnet',bech:false};
-  // Bech32 P2WPKH
+    return {type:'P2SH (SegWit-compatible)', net:'mainnet', enc:'Base58Check'};
   if(/^bc1q[a-z0-9]{38,58}$/.test(a))
-    return {type:'P2WPKH (Native SegWit)',script:'witness-v0',net:'mainnet',bech:true};
-  // Bech32m P2TR
+    return {type:'P2WPKH (Native SegWit)', net:'mainnet', enc:'Bech32'};
   if(/^bc1p[a-z0-9]{58}$/.test(a))
-    return {type:'P2TR (Taproot)',script:'witness-v1',net:'mainnet',bech:true};
-  // Testnet
-  if(/^[mn][1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a)||/^2[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
-    return {type:'Testnet P2PKH/P2SH',script:'testnet',net:'testnet',bech:false};
+    return {type:'P2TR (Taproot)', net:'mainnet', enc:'Bech32m'};
+  if(/^[mn][1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2PKH (testnet)', net:'testnet', enc:'Base58Check'};
+  if(/^2[1-9A-HJ-NP-Za-km-z]{25,34}$/.test(a))
+    return {type:'P2SH (testnet)', net:'testnet', enc:'Base58Check'};
   if(/^tb1[a-z0-9]{38,58}$/.test(a))
-    return {type:'Testnet SegWit',script:'testnet',net:'testnet',bech:true};
+    return {type:'SegWit (testnet)', net:'testnet', enc:'Bech32'};
   return null;
 }
-async function checkBalance(){
-  const a=document.getElementById('adIn').value.trim();
-  const out=document.getElementById('adOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying blockchain.info...';
-  try{
-    const r=await fetch('https://blockchain.info/q/addressbalance/'+a+'?cors=true');
-    const sats=await r.text();
-    const n=parseInt(sats);
-    if(isNaN(n)){
-      out.textContent='Could not fetch balance. Address may be unused or invalid.';
-      return;
-    }
-    const btc=(n/1e8).toFixed(8);
-    let html='◉ BALANCE LOOKUP\n\n';
-    html+='Address:  '+a+'\n';
-    html+='Satoshi:  '+n.toLocaleString()+'\n';
-    html+='BTC:      '+btc+'\n';
-    html+='Source:   blockchain.info\n';
-    out.textContent=html;out.style.whiteSpace='pre-line';
-    log('> balance check: '+a.slice(0,12)+'… = '+btc+' BTC','ok');bump();
-  } catch(e){
-    out.textContent='Query failed: '+e.message;
-  }
-}
-function batchCheck(){
-  const raw=document.getElementById('batchIn').value.trim();
-  const out=document.getElementById('batchOut');
-  if(!raw){out.textContent='Empty input.';return;}
-  const lines=raw.split('\n').map(x=>x.trim()).filter(Boolean);
-  let valid=0,invalid=0;
-  let html='';
-  lines.forEach(a=>{
-    const info=classifyBTC(a);
-    if(info){valid++;html+='✓ '+a+'  →  '+info.type+'\n';}
-    else{invalid++;html+='✗ '+a+'  →  invalid\n';}
-  });
-  html='Valid: '+valid+'  |  Invalid: '+invalid+'\n\n'+html;
-  out.textContent=html;out.style.whiteSpace='pre-line';
+
+function analyzeAddress(){
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  const info = classifyBTC(a);
+  if(!info){ out.textContent = '✗ Not a valid Bitcoin address format.'; return; }
+  let txt = '✓ VALID BITCOIN ADDRESS\n\n';
+  txt += 'Address:   ' + a + '\n';
+  txt += 'Type:      ' + info.type + '\n';
+  txt += 'Network:   ' + info.net + '\n';
+  txt += 'Encoding:  ' + info.enc + '\n';
+  txt += 'Length:    ' + a.length + ' chars\n';
+  out.textContent = txt;
+  bump();
 }
 
-/* ==================== HASH FUNCTIONS ==================== */
+async function checkBalance(){
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying blockchain.info...';
+  try{
+    const r = await fetch('https://blockchain.info/q/addressbalance/' + a + '?cors=true');
+    const s = await r.text();
+    const n = parseInt(s);
+    if(isNaN(n)){ out.textContent = 'Could not fetch. Address may be unused or invalid.'; return; }
+    let txt = '◉ BALANCE LOOKUP\n\n';
+    txt += 'Address:   ' + a + '\n';
+    txt += 'Satoshis:  ' + n.toLocaleString() + '\n';
+    txt += 'BTC:       ' + (n/1e8).toFixed(8) + '\n';
+    out.textContent = txt;
+    log('> balance: ' + a.slice(0,10) + '… = ' + (n/1e8).toFixed(8) + ' BTC', 'ok');
+    bump();
+  } catch(e){
+    out.textContent = 'Query failed: ' + e.message;
+  }
+}
+
+async function lookupAddressFull(){
+  const a = $('aInput').value.trim();
+  const out = $('aOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying...';
+  try{
+    const r = await fetch('https://blockchain.info/rawaddr/' + a + '?limit=5&cors=true');
+    const j = await r.json();
+    let txt = 'ADDRESS SUMMARY\n\n';
+    txt += 'Address:        ' + j.address + '\n';
+    txt += 'Total received: ' + (j.total_received/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Total sent:     ' + (j.total_sent/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Final balance:  ' + (j.final_balance/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Transactions:   ' + j.n_tx + '\n\n';
+    txt += 'RECENT:\n';
+    (j.txs||[]).slice(0,5).forEach(t => {
+      txt += '  ' + t.hash.slice(0,16) + '…  ' + (t.result/1e8).toFixed(8) + ' BTC\n';
+    });
+    out.textContent = txt;
+    log('> address lookup: ' + a.slice(0,12) + '…', 'ok');
+    bump();
+  } catch(e){
+    out.textContent = 'Lookup failed: ' + e.message;
+  }
+}
+
+function batchCheck(){
+  const raw = $('bInput').value.trim();
+  const out = $('bOut');
+  if(!raw){ out.textContent = 'Empty input.'; return; }
+  const lines = raw.split('\n').map(x => x.trim()).filter(Boolean);
+  let valid = 0, invalid = 0, txt = '';
+  lines.forEach(a => {
+    const info = classifyBTC(a);
+    if(info){ valid++; txt += '✓ ' + a.slice(0,20) + '…  ' + info.type + '\n'; }
+    else { invalid++; txt += '✗ ' + a.slice(0,20) + '…  invalid\n'; }
+  });
+  out.textContent = 'Valid: ' + valid + '  |  Invalid: ' + invalid + '\n\n' + txt;
+}
+
+/* ---------- HASH ---------- */
 async function sha256(msg){
-  const buf=new TextEncoder().encode(msg);
-  const h=await crypto.subtle.digest('SHA-256',buf);
-  return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-async function sha512(msg){
-  const buf=new TextEncoder().encode(msg);
-  const h=await crypto.subtle.digest('SHA-512',buf);
-  return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-async function sha1Hex(msg){
-  const buf=new TextEncoder().encode(msg);
-  const h=await crypto.subtle.digest('SHA-1',buf);
-  return Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const buf = new TextEncoder().encode(msg);
+  const h = await crypto.subtle.digest('SHA-256', buf);
+  return bytesToHex(new Uint8Array(h));
 }
 async function doSHA256(){
-  const t=document.getElementById('hIn').value;
-  document.getElementById('hOut').textContent=await sha256(t);
+  $('hOut').textContent = await sha256($('hInput').value);
 }
 async function doDoubleSHA(){
-  const t=document.getElementById('hIn').value;
-  const h1=await sha256(t);
-  const h2=await sha256(hexToBytes(h1));
-  document.getElementById('hOut').textContent=h2;
+  const h1 = await sha256($('hInput').value);
+  const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+  $('hOut').textContent = bytesToHex(new Uint8Array(h2buf));
 }
 async function doSHA512(){
-  const t=document.getElementById('hIn').value;
-  document.getElementById('hOut').textContent=await sha512(t);
+  const buf = new TextEncoder().encode($('hInput').value);
+  const h = await crypto.subtle.digest('SHA-512', buf);
+  $('hOut').textContent = bytesToHex(new Uint8Array(h));
 }
-async function doRIPEMD(){
-  // RIPEMD-160 not in WebCrypto — SHA-1 fallback for visual demo
-  const t=document.getElementById('hIn').value;
-  const h=await sha1Hex(t);
-  document.getElementById('hOut').textContent='RIPEMD-160 (fallback via SHA-1):\n'+h.slice(0,40);
-}
-async function doHASH160(){
-  const t=document.getElementById('hIn').value;
-  const s=await sha256(t);
-  const r=await sha1Hex(hexToBytes(s));
-  document.getElementById('hOut').textContent='HASH160:\n'+r.slice(0,40);
+async function doSHA1(){
+  const buf = new TextEncoder().encode($('hInput').value);
+  const h = await crypto.subtle.digest('SHA-1', buf);
+  $('hOut').textContent = bytesToHex(new Uint8Array(h));
 }
 async function doHMAC(){
-  const t=document.getElementById('hIn').value;
-  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode('Bitcoin seed'),
-    {name:'HMAC',hash:'SHA-512'},false,['sign']);
-  const sig=await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(t));
-  document.getElementById('hOut').textContent=
-    Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function hexToBytes(hex){
-  const out=new Uint8Array(hex.length/2);
-  for(let i=0;i<out.length;i++)out[i]=parseInt(hex.substr(i*2,2),16);
-  return out;
-}
-function bytesToHex(arr){
-  return Array.from(arr).map(b=>b.toString(16).padStart(2,'0')).join('');
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('Bitcoin seed'),
+    {name:'HMAC', hash:'SHA-512'}, false, ['sign']);
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode($('hInput').value));
+  $('hOut').textContent = bytesToHex(new Uint8Array(sig));
 }
 
-/* ==================== BASE58 / CODEC ==================== */
-const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-function b58Encode(bytes){
-  let num=0n;
-  for(const b of bytes)num=num*256n+BigInt(b);
-  let s='';
-  while(num>0n){s=B58[Number(num%58n)]+s;num=num/58n;}
-  for(const b of bytes){if(b===0)s='1'+s;else break;}
+/* ---------- BASE58 ---------- */
+const B58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+function b58EncodeStr(bytes){
+  let num = 0n;
+  for(const b of bytes) num = num * 256n + BigInt(b);
+  let s = '';
+  while(num > 0n){ s = B58[Number(num % 58n)] + s; num = num / 58n; }
+  for(const b of bytes){ if(b === 0) s = '1' + s; else break; }
   return s;
 }
-function b58Decode(str){
-  let num=0n;
+function b58DecodeStr(str){
+  let num = 0n;
   for(const c of str){
-    const i=B58.indexOf(c);
-    if(i===-1)throw new Error('Invalid base58 char: '+c);
-    num=num*58n+BigInt(i);
+    const i = B58.indexOf(c);
+    if(i === -1) throw new Error('Invalid base58 char: ' + c);
+    num = num * 58n + BigInt(i);
   }
-  const out=[];
-  while(num>0n){out.unshift(Number(num%256n));num=num/256n;}
-  for(const c of str){if(c==='1')out.unshift(0);else break;}
+  const out = [];
+  while(num > 0n){ out.unshift(Number(num % 256n)); num = num / 256n; }
+  for(const c of str){ if(c === '1') out.unshift(0); else break; }
   return new Uint8Array(out);
 }
-function b58enc(){
-  const t=document.getElementById('cIn').value;
+
+function b58Encode(){
+  const t = $('eInput').value.trim();
   try{
-    const bytes=/^[0-9a-f]+$/i.test(t)?hexToBytes(t):new TextEncoder().encode(t);
-    document.getElementById('cOut').textContent=b58Encode(bytes);
-  }catch(e){document.getElementById('cOut').textContent='Error: '+e.message;}
+    const bytes = /^[0-9a-f]+$/i.test(t) ? hexToBytes(t) : new TextEncoder().encode(t);
+    $('eOut').textContent = b58EncodeStr(bytes);
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
-function b58dec(){
-  const t=document.getElementById('cIn').value.trim();
+function b58Decode(){
+  const t = $('eInput').value.trim();
   try{
-    const bytes=b58Decode(t);
-    document.getElementById('cOut').textContent=
-      'HEX: '+bytesToHex(bytes)+'\nUTF-8: '+new TextDecoder().decode(bytes);
-    document.getElementById('cOut').style.whiteSpace='pre-line';
-  }catch(e){document.getElementById('cOut').textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(t);
+    $('eOut').textContent = 'HEX: ' + bytesToHex(bytes) + '\nUTF-8: ' + new TextDecoder().decode(bytes);
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
-async function b58chk(){
-  const t=document.getElementById('cIn').value.trim();
+async function b58Check(){
+  const t = $('eInput').value.trim();
   try{
-    const bytes=b58Decode(t);
-    if(bytes.length<5){document.getElementById('cOut').textContent='Too short for Base58Check.';return;}
-    const payload=bytes.slice(0,-4);
-    const chk=bytes.slice(-4);
-    const h1=await sha256(bytesToHex(payload));
-    const h2=await sha256(hexToBytes(h1));
-    const expected=h2.slice(0,8);
-    const actual=bytesToHex(chk);
-    const ok=expected===actual;
-    let html='BASE58CHECK VERIFICATION\n\n';
-    html+='Payload:  '+bytesToHex(payload)+'\n';
-    html+='Checksum: '+actual+'\n';
-    html+='Expected: '+expected+'\n';
-    html+='Status:   '+(ok?'✓ VALID':'✗ INVALID')+'\n';
-    html+='Version:  0x'+bytesToHex(payload.slice(0,1))+' ('+versionName(payload[0])+')\n';
-    document.getElementById('cOut').textContent=html;
-    document.getElementById('cOut').style.whiteSpace='pre-line';
-  }catch(e){document.getElementById('cOut').textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(t);
+    if(bytes.length < 5){ $('eOut').textContent = 'Too short.'; return; }
+    const payload = bytes.slice(0, -4);
+    const chk = bytes.slice(-4);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const expected = bytesToHex(new Uint8Array(h2buf)).slice(0, 8);
+    const actual = bytesToHex(chk);
+    const ok = expected === actual;
+    const verNames = {0x00:'P2PKH mainnet', 0x05:'P2SH mainnet', 0x6F:'P2PKH testnet',
+      0xC4:'P2SH testnet', 0x80:'WIF mainnet', 0xEF:'WIF testnet'};
+    let txt = 'BASE58CHECK VERIFICATION\n\n';
+    txt += 'Payload:   ' + bytesToHex(payload).slice(0,40) + '\n';
+    txt += 'Checksum:  ' + actual + '\n';
+    txt += 'Expected:  ' + expected + '\n';
+    txt += 'Status:    ' + (ok ? '✓ VALID' : '✗ INVALID') + '\n';
+    txt += 'Version:   0x' + payload[0].toString(16).padStart(2,'0') + ' (' + (verNames[payload[0]] || 'unknown') + ')';
+    $('eOut').textContent = txt;
+  } catch(e){ $('eOut').textContent = 'Error: ' + e.message; }
 }
-function versionName(b){
-  const m={0x00:'P2PKH mainnet',0x05:'P2SH mainnet',0x6F:'P2PKH testnet',
-    0xC4:'P2SH testnet',0x80:'WIF mainnet',0xEF:'WIF testnet'};
-  return m[b]||'unknown';
+function hexEncode(){
+  $('eOut').textContent = bytesToHex(new TextEncoder().encode($('eInput').value));
 }
-function hexEnc(){
-  const t=document.getElementById('cIn').value;
-  document.getElementById('cOut').textContent=
-    Array.from(new TextEncoder().encode(t)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-function hexDec(){
-  const t=document.getElementById('cIn').value.trim();
-  try{
-    document.getElementById('cOut').textContent=
-      new TextDecoder().decode(hexToBytes(t.replace(/[^0-9a-f]/gi,'')));
-  }catch(e){document.getElementById('cOut').textContent='Invalid hex.';}
-}
-function bech32Analyze(){
-  const t=document.getElementById('cIn').value.trim().toLowerCase();
-  const out=document.getElementById('cOut');
-  const i=t.lastIndexOf('1');
-  if(i<0){out.textContent='Not a bech32 string.';return;}
-  const hrp=t.slice(0,i),data=t.slice(i+1);
-  let html='BECH32 ANALYSIS\n\n';
-  html+='HRP (human-readable): '+hrp+'\n';
-  html+='Data part length:     '+data.length+'\n';
-  html+='Charset:              '+(/^[qpzry9x8gf2tvdw0s3jn54khce6mua7l]+$/.test(data)?'valid':'invalid')+'\n';
-  if(hrp==='bc')html+='Network:              mainnet\n';
-  else if(hrp==='tb')html+='Network:              testnet\n';
-  else html+='Network:              unknown\n';
-  if(data.startsWith('q'))html+='Witness version:      0 (P2WPKH/P2WSH)\n';
-  else if(data.startsWith('p'))html+='Witness version:      1 (P2TR Taproot)\n';
-  out.textContent=html;out.style.whiteSpace='pre-line';
+function hexDecode(){
+  try{ $('eOut').textContent = new TextDecoder().decode(hexToBytes($('eInput').value)); }
+  catch(e){ $('eOut').textContent = 'Invalid hex.'; }
 }
 function base64Enc(){
-  const t=document.getElementById('cIn').value;
-  try{document.getElementById('cOut').textContent=btoa(unescape(encodeURIComponent(t)));}
-  catch(e){document.getElementById('cOut').textContent='Error.';}
+  try{ $('eOut').textContent = btoa(unescape(encodeURIComponent($('eInput').value))); }
+  catch(e){ $('eOut').textContent = 'Error.'; }
+}
+function base64Dec(){
+  try{ $('eOut').textContent = decodeURIComponent(escape(atob($('eInput').value))); }
+  catch(e){ $('eOut').textContent = 'Invalid base64.'; }
 }
 function urlEnc(){
-  const t=document.getElementById('cIn').value;
-  document.getElementById('cOut').textContent=encodeURIComponent(t);
+  $('eOut').textContent = encodeURIComponent($('eInput').value);
 }
 
-/* ==================== PRIVATE KEYS / WIF ==================== */
+/* ---------- KEYS / WIF ---------- */
 function genPrivKey(){
-  const arr=new Uint8Array(32);
+  const arr = new Uint8Array(32);
   crypto.getRandomValues(arr);
-  const hex=bytesToHex(arr);
-  document.getElementById('pkOut').textContent=hex;
-  log('> generated 256-bit private key','ok');beep(880,.1);bump();
+  $('pkOut').textContent = bytesToHex(arr);
+  log('> private key generated (real random)', 'ok');
+  bump();
 }
 async function wifEncode(){
-  const hex=document.getElementById('wifIn').value.trim().replace(/[^0-9a-f]/gi,'');
-  const out=document.getElementById('wifOut');
-  if(hex.length!==64){out.textContent='Error: private key must be 64 hex chars (32 bytes).';return;}
+  const hex = $('wifIn').value.trim().replace(/[^0-9a-f]/gi,'');
+  const out = $('wifOut');
+  if(hex.length !== 64){ out.textContent = 'Error: 64 hex chars required.'; return; }
   try{
-    const payload=new Uint8Array(33);
-    payload[0]=0x80; // mainnet WIF prefix
-    const pk=hexToBytes(hex);
-    payload.set(pk,1);
-    // 4-byte checksum = first 4 bytes of double SHA-256(payload)
-    const h1=await sha256(bytesToHex(payload));
-    const h2=await sha256(hexToBytes(h1));
-    const chk=hexToBytes(h2.slice(0,8));
-    const full=new Uint8Array(payload.length+4);
-    full.set(payload,0);full.set(chk,payload.length);
-    const wif=b58Encode(full);
-    out.textContent=
-      'WIF (uncompressed, mainnet):\n'+wif+'\n\n'+
-      'Length: '+wif.length+' chars\n'+
-      'Prefix: 0x80 (mainnet WIF)\n'+
-      'Checksum: '+bytesToHex(chk)+'\n';
-    out.style.whiteSpace='pre-line';
-    log('> WIF encoded','ok');beep(880,.1);
-  }catch(e){out.textContent='Error: '+e.message;}
+    const payload = new Uint8Array(33);
+    payload[0] = 0x80;
+    payload.set(hexToBytes(hex), 1);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const chk = new Uint8Array(h2buf).slice(0,4);
+    const full = new Uint8Array(37);
+    full.set(payload, 0);
+    full.set(chk, 33);
+    const wif = b58EncodeStr(full);
+    out.textContent = 'WIF (mainnet):\n' + wif + '\n\nLength: ' + wif.length + ' chars';
+    log('> WIF encoded', 'ok');
+  } catch(e){ out.textContent = 'Error: ' + e.message; }
 }
 async function wifDecode(){
-  const wif=document.getElementById('wifDecIn').value.trim();
-  const out=document.getElementById('wifDecOut');
-  if(!wif){out.textContent='Empty input.';return;}
+  const wif = $('wifDecIn').value.trim();
+  const out = $('wifDecOut');
+  if(!wif){ out.textContent = 'Empty input.'; return; }
   try{
-    const bytes=b58Decode(wif);
-    if(bytes.length<5){out.textContent='Too short.';return;}
-    const payload=bytes.slice(0,-4);
-    const chk=bytes.slice(-4);
-    const h1=await sha256(bytesToHex(payload));
-    const h2=await sha256(hexToBytes(h1));
-    const expected=h2.slice(0,8);
-    const valid=expected===bytesToHex(chk);
-    let html='WIF DECODE\n\n';
-    html+='WIF:      '+wif+'\n';
-    html+='Prefix:   0x'+payload[0].toString(16).padStart(2,'0')+' ('+versionName(payload[0])+')\n';
-    html+='Key hex:  '+bytesToHex(payload.slice(1))+'\n';
-    html+='Checksum: '+(valid?'✓ VALID':'✗ INVALID')+'\n';
-    out.textContent=html;out.style.whiteSpace='pre-line';
-    log('> WIF decoded','ok');beep(880,.1);
-  }catch(e){out.textContent='Error: '+e.message;}
+    const bytes = b58DecodeStr(wif);
+    if(bytes.length < 5){ out.textContent = 'Too short.'; return; }
+    const payload = bytes.slice(0, -4);
+    const chk = bytes.slice(-4);
+    const h1 = await sha256(bytesToHex(payload));
+    const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+    const expected = bytesToHex(new Uint8Array(h2buf)).slice(0,8);
+    const valid = expected === bytesToHex(chk);
+    const verNames = {0x80:'WIF mainnet', 0xEF:'WIF testnet'};
+    let txt = 'WIF DECODE\n\n';
+    txt += 'Prefix:   0x' + payload[0].toString(16).padStart(2,'0') + ' (' + (verNames[payload[0]] || 'unknown') + ')\n';
+    txt += 'Key hex:  ' + bytesToHex(payload.slice(1)) + '\n';
+    txt += 'Checksum: ' + (valid ? '✓ VALID' : '✗ INVALID');
+    out.textContent = txt;
+  } catch(e){ out.textContent = 'Error: ' + e.message; }
 }
 function updateEntropy(){
-  const t=document.getElementById('entIn').value;
-  const {bits,quality}=entropyScore(t);
-  document.getElementById('entBar').style.width=Math.min(100,bits)+'%';
-  document.getElementById('entOut').textContent=
-    'Length: '+t.length+'\n'+
-    'Estimated entropy: '+bits.toFixed(1)+' bits\n'+
-    'Quality: '+quality+'\n'+
-    'Charset: '+charsetUsed(t);
-  document.getElementById('entOut').style.whiteSpace='pre-line';
-}
-function entropyScore(t){
-  if(!t.length)return{bits:0,quality:'empty'};
-  let pool=0;
-  if(/[a-z]/.test(t))pool+=26;
-  if(/[A-Z]/.test(t))pool+=26;
-  if(/[0-9]/.test(t))pool+=10;
-  if(/[^A-Za-z0-9]/.test(t))pool+=32;
-  const bits=t.length*Math.log2(pool||1);
-  let q;
-  if(bits<30)q='very weak';
-  else if(bits<50)q='weak';
-  else if(bits<80)q='fair';
-  else if(bits<128)q='strong';
-  else q='excellent';
-  return{bits,quality:q};
-}
-function charsetUsed(t){
-  const s=[];
-  if(/[a-z]/.test(t))s.push('lowercase');
-  if(/[A-Z]/.test(t))s.push('uppercase');
-  if(/[0-9]/.test(t))s.push('digits');
-  if(/[^A-Za-z0-9]/.test(t))s.push('symbols');
-  return s.join(', ')||'none';
+  const t = $('entIn').value;
+  if(!t.length){ $('entBar').style.width = '0%'; $('entOut').textContent = '—'; return; }
+  let pool = 0;
+  if(/[a-z]/.test(t)) pool += 26;
+  if(/[A-Z]/.test(t)) pool += 26;
+  if(/[0-9]/.test(t)) pool += 10;
+  if(/[^A-Za-z0-9]/.test(t)) pool += 32;
+  const bits = t.length * Math.log2(pool || 1);
+  $('entBar').style.width = Math.min(100, bits) + '%';
+  let quality;
+  if(bits < 30) quality = 'VERY WEAK';
+  else if(bits < 50) quality = 'WEAK';
+  else if(bits < 80) quality = 'FAIR';
+  else if(bits < 128) quality = 'STRONG';
+  else quality = 'EXCELLENT';
+  $('entOut').textContent = 'Length: ' + t.length + '\nEntropy: ' + bits.toFixed(1) + ' bits\nQuality: ' + quality;
 }
 function genVanity(){
-  const pre=document.getElementById('vanityIn').value.trim()||'QC';
-  const chars='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-  let s='1'+pre;
-  while(s.length<34)s+=chars[Math.floor(Math.random()*chars.length)];
-  document.getElementById('vanityOut').textContent=s;
-  log('> vanity address generated (simulated)','wa');
+  const pre = $('vanIn').value.trim() || 'QC';
+  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let s = '1' + pre;
+  while(s.length < 34) s += chars[Math.floor(Math.random()*chars.length)];
+  $('vanOut').textContent = s;
+  log('> vanity address generated (simulated)', 'wa');
 }
 
-/* ==================== MNEMONIC ==================== */
-const W12=['abandon','ability','able','about','above','absent','absorb','abstract',
-  'absurd','abuse','access','accident','account','accuse','achieve','acid',
-  'acoustic','acquire','across','act','action','actor','actress','actual',
-  'adapt','add','addict','address','adjust','admit','adult','advance',
-  'advice','aerobic','affair','afford','afraid','again','age','agent',
-  'agree','ahead','aim','air','airport','aisle','alarm','album',
-  'alcohol','alert','alien','all','alley','allow','almost','alone',
-  'alpha','already','also','alter','always','amateur','amazing','among'];
+/* ---------- MNEMONIC ---------- */
+const WORDS = ['abandon','ability','able','about','above','absent','absorb','abstract',
+  'absurd','abuse','access','accident','account','accuse','achieve','acid','acoustic',
+  'acquire','across','act','action','actor','actress','actual','adapt','add','addict',
+  'address','adjust','admit','adult','advance','advice','aerobic','affair','afford',
+  'afraid','again','age','agent','agree','ahead','aim','air','airport','aisle','alarm',
+  'album','alcohol','alert','alien','all','alley','allow','almost','alone','alpha',
+  'already','also','alter','always','amateur','amazing','among','amount','amused'];
+
 function genMnemonic(n){
-  let picked=[];
-  while(picked.length<n){
-    const w=W12[Math.floor(Math.random()*W12.length)];
-    if(!picked.includes(w))picked.push(w);
+  const picked = [];
+  while(picked.length < n){
+    const w = WORDS[Math.floor(Math.random()*WORDS.length)];
+    if(!picked.includes(w)) picked.push(w);
   }
-  const id=n===12?'mn12':'mn24';
-  document.getElementById(id).textContent=picked.join(' ');
-  document.getElementById('mnBits').textContent=(n===12?128:256)+' bits';
-  log('> '+n+'-word mnemonic generated','ok');beep(660,.1);
+  $('mn'+n).textContent = picked.join(' ');
+  log('> ' + n + '-word mnemonic generated (visual)', 'wa');
+  bump();
 }
 
-/* ==================== EXPLORER ==================== */
+/* ---------- ENCRYPT (AES-GCM + PBKDF2) ---------- */
+async function deriveKey(pass, salt){
+  const baseKey = await crypto.subtle.importKey('raw',
+    new TextEncoder().encode(pass), {name:'PBKDF2'}, false, ['deriveKey']);
+  return crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt:salt, iterations:100000, hash:'SHA-256'},
+    baseKey, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+}
+async function doEncrypt(){
+  const text = $('encText').value;
+  const pass = $('encPass').value;
+  if(!text || !pass){ $('encOut').textContent = 'Need text and passphrase.'; return; }
+  try{
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(pass, salt);
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv:iv},
+      key, new TextEncoder().encode(text));
+    const payload = new Uint8Array(16 + 12 + ct.byteLength);
+    payload.set(salt, 0); payload.set(iv, 16); payload.set(new Uint8Array(ct), 28);
+    $('encOut').textContent = btoa(String.fromCharCode(...payload));
+  } catch(e){ $('encOut').textContent = 'Error: ' + e.message; }
+}
+async function doDecrypt(){
+  const b64 = $('encOut').textContent.trim();
+  const pass = $('encPass').value;
+  if(!b64 || b64 === '—'){ return; }
+  try{
+    const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const salt = raw.slice(0,16), iv = raw.slice(16,28), ct = raw.slice(28);
+    const key = await deriveKey(pass, salt);
+    const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:iv}, key, ct);
+    $('encOut').textContent = new TextDecoder().decode(pt);
+  } catch(e){ $('encOut').textContent = 'Decryption failed. Wrong passphrase or corrupted.'; }
+}
+function doXor(){
+  const text = $('xorText').value;
+  const key = $('xorKey').value || 'K';
+  const out = [];
+  for(let i=0;i<text.length;i++){
+    out.push((text.charCodeAt(i) ^ key.charCodeAt(i % key.length)).toString(16).padStart(2,'0'));
+  }
+  $('xorOut').textContent = out.join(' ');
+}
+
+/* ---------- CRACK SIMULATION ---------- */
+let crackInterval = null;
+const CRACK_WORDS = ['password','bitcoin','wallet','admin','123456','qwerty','letmein',
+  'master','satoshii','nakamoto','hodl','moon','blockchain','satoshi','genesis',
+  'qcity','btc','crypto','diamond','handshake','alpha','bravo','delta','omega'];
+
+function startCrack(mode){
+  const target = $('crackHash').value.trim();
+  if(!target){ $('crackOut').textContent = '> paste a SHA-256 hash above first.'; return; }
+  stopCrack();
+  const out = $('crackOut'), fill = $('crackFill');
+  out.textContent = '> crack mode: ' + mode.toUpperCase() + '\n> target: ' + target.slice(0,24) + '…\n\n';
+  let progress = 0;
+  const speeds = { dictionary: rInt(50000,150000), brute: rInt(200000,900000), rainbow: rInt(500000,2000000) };
+  const speed = speeds[mode] || 100000;
+  let tried = 0;
+  const start = Date.now();
+  crackInterval = setInterval(() => {
+    tried += speed;
+    progress = Math.min(100, progress + 0.3 + Math.random()*0.7);
+    fill.style.width = progress + '%';
+    const elapsed = ((Date.now()-start)/1000).toFixed(1);
+    const rate = (tried / Math.max(elapsed, 0.1)).toFixed(0);
+    out.textContent = '> crack mode: ' + mode.toUpperCase() + '\n' +
+      '> target: ' + target.slice(0,24) + '…\n' +
+      '> elapsed: ' + elapsed + 's\n' +
+      '> tried: ' + tried.toLocaleString() + '\n' +
+      '> rate: ' + Number(rate).toLocaleString() + ' h/s\n\n' +
+      (mode === 'dictionary' ?
+        '> trying word #' + rInt(1,9999) + ': ' + pick(CRACK_WORDS) + '\n' :
+        mode === 'brute' ?
+        '> brute: ' + rHex(12) + '\n' :
+        '> rainbow lookup: ' + rHex(8) + '\n');
+    if(progress >= 100){
+      stopCrack();
+      fill.style.width = '100%';
+      out.textContent += '\n> ⚠ SIMULATION COMPLETE — no real hash was cracked.\n' +
+        '> Real SHA-256 requires ~10^77 operations for a full keyspace.\n' +
+        '> Bitcoin wallet security is mathematically intact.\n';
+      log('> crack simulation completed', 'wa');
+    }
+  }, 120);
+  log('> crack simulation started: ' + mode, 'wa');
+  bump();
+}
+function stopCrack(){
+  if(crackInterval){ clearInterval(crackInterval); crackInterval = null; }
+}
+
+/* ---------- EXPLORER ---------- */
 async function fetchExplorer(){
   try{
-    const r=await fetch('https://blockchain.info/latestblock?cors=true');
-    const j=await r.json();
-    document.getElementById('e1').textContent=j.height.toLocaleString();
-    document.getElementById('e2').textContent=j.hash.slice(0,32)+'…';
-    document.getElementById('e3').textContent=new Date(j.time*1000).toLocaleString();
-    document.getElementById('e4').textContent=j.txIndexes?j.txIndexes.length:'—';
-  } catch(e){
-    document.getElementById('e1').textContent='unavailable';
-  }
+    const r = await fetch('https://blockchain.info/latestblock?cors=true');
+    const j = await r.json();
+    $('xHeight').textContent = j.height.toLocaleString();
+    $('xHash').textContent = j.hash.slice(0,32) + '…';
+    $('xTime').textContent = new Date(j.time*1000).toLocaleString();
+  } catch(e){ $('xHeight').textContent = 'unavailable'; }
   try{
-    const r=await fetch('https://blockchain.info/q/getdifficulty?cors=true');
-    const d=parseFloat(await r.text());
-    document.getElementById('e5').textContent=d.toExponential(4);
-    // hashrate = difficulty * 2^32 / 600
-    const hr=d*Math.pow(2,32)/600;
-    document.getElementById('e6').textContent=(hr/1e18).toFixed(2)+' EH/s';
-  } catch(e){
-    document.getElementById('e5').textContent='—';
-  }
-  // next retarget countdown (approx)
-  const now=new Date();
-  const period=14*24*60*60*1000;
-  const next=new Date(Math.ceil(now.getTime()/period)*period);
-  const days=Math.floor((next-now)/(1000*60*60*24));
-  const hours=Math.floor(((next-now)/(1000*60*60))%24);
-  document.getElementById('e7').textContent=days+'d '+hours+'h';
-}
-async function lookupAddress(){
-  const a=document.getElementById('expAddr').value.trim();
-  const out=document.getElementById('expOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying blockchain.info...';
+    const r = await fetch('https://blockchain.info/q/getdifficulty?cors=true');
+    const d = parseFloat(await r.text());
+    $('xDiff').textContent = d.toExponential(4);
+    const hr = d * Math.pow(2,32) / 600;
+    $('xHashRate').textContent = (hr/1e18).toFixed(2) + ' EH/s';
+  } catch(e){}
   try{
-    const r=await fetch('https://blockchain.info/rawaddr/'+a+'?limit=5&cors=true');
-    const j=await r.json();
-    let html='ADDRESS SUMMARY\n\n';
-    html+='Address:      '+j.address+'\n';
-    html+='Total received: '+(j.total_received/1e8).toFixed(8)+' BTC\n';
-    html+='Total sent:     '+(j.total_sent/1e8).toFixed(8)+' BTC\n';
-    html+='Final balance:  '+(j.final_balance/1e8).toFixed(8)+' BTC\n';
-    html+='Transactions:   '+j.n_tx+'\n';
-    html+='\nRECENT TX:\n';
-    (j.txs||[]).slice(0,5).forEach(t=>{
-      html+='  '+t.hash.slice(0,16)+'…  '+(t.result/1e8).toFixed(8)+' BTC\n';
-    });
-    out.textContent=html;out.style.whiteSpace='pre-line';
-    log('> address lookup: '+a.slice(0,12)+'…','ok');bump();
-  } catch(e){
-    out.textContent='Lookup failed: '+e.message;
-  }
-}
-async function lookupUTXO(){
-  const a=document.getElementById('expAddr').value.trim();
-  const out=document.getElementById('expOut');
-  if(!a){out.textContent='Empty input.';return;}
-  out.textContent='Querying UTXOs...';
-  try{
-    const r=await fetch('https://blockchain.info/unspent?active='+a+'&cors=true');
-    const j=await r.json();
-    const outs=j.unspent_outputs||[];
-    let html='UTXOs for '+a+'\n\n';
-    html+='Count: '+outs.length+'\n\n';
-    let total=0;
-    outs.slice(0,10).forEach(u=>{
-      const v=u.value/1e8;
-      total+=v;
-      html+='  '+u.tx_hash_big_endian.slice(0,16)+'…  #'+u.tx_output_n+'  '+v.toFixed(8)+' BTC\n';
-    });
-    html+='\nTotal unspent: '+total.toFixed(8)+' BTC\n';
-    out.textContent=html;out.style.whiteSpace='pre-line';
-  } catch(e){
-    out.textContent='No UTXOs found or query failed.';
-  }
-}
-async function fetchPrice(){
-  try{
-    const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-    const j=await r.json();
-    const p=parseFloat(j.lastPrice);
-    document.getElementById('e-p').textContent='$'+p.toLocaleString('en-US',{maximumFractionDigits:2});
-    const chg=parseFloat(j.priceChangePercent);
-    const cEl=document.getElementById('e-c');
-    cEl.textContent=(chg>=0?'+':'')+chg.toFixed(2)+'%';
-    cEl.style.color=chg>=0?'var(--m)':'var(--er)';
-    document.getElementById('e-v').textContent=parseFloat(j.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0})+' USDT';
-    document.getElementById('e-hl').textContent=
-      '$'+parseFloat(j.highPrice).toLocaleString('en-US',{maximumFractionDigits:0})+' / '+
-      '$'+parseFloat(j.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    const j = await r.json();
+    $('xPrice').textContent = '$' + parseFloat(j.lastPrice).toLocaleString('en-US',{maximumFractionDigits:2});
+    const chg = parseFloat(j.priceChangePercent);
+    const cEl = $('xChange');
+    cEl.textContent = (chg>=0?'+':'') + chg.toFixed(2) + '%';
+    cEl.className = 'v ' + (chg>=0 ? 'pos' : 'neg');
+    $('xVol').textContent = parseFloat(j.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0}) + ' USDT';
+    $('xHL').textContent = '$' + parseFloat(j.highPrice).toLocaleString('en-US',{maximumFractionDigits:0})
+      + ' / $' + parseFloat(j.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
   } catch(e){}
 }
 
-/* ==================== SCAN SIMULATION ==================== */
-let scanIv=null;
+async function lookupAddress(){
+  const a = $('xAddr').value.trim();
+  const out = $('xOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying blockchain.info...';
+  try{
+    const r = await fetch('https://blockchain.info/rawaddr/' + a + '?limit=5&cors=true');
+    const j = await r.json();
+    let txt = 'ADDRESS SUMMARY\n\n';
+    txt += 'Address:        ' + j.address + '\n';
+    txt += 'Total received: ' + (j.total_received/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Total sent:     ' + (j.total_sent/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Final balance:  ' + (j.final_balance/1e8).toFixed(8) + ' BTC\n';
+    txt += 'Transactions:   ' + j.n_tx + '\n\nRECENT:\n';
+    (j.txs||[]).slice(0,5).forEach(t => {
+      txt += '  ' + t.hash.slice(0,16) + '…  ' + (t.result/1e8).toFixed(8) + ' BTC\n';
+    });
+    out.textContent = txt;
+    log('> address lookup complete', 'ok');
+    bump();
+  } catch(e){ out.textContent = 'Lookup failed: ' + e.message; }
+}
+
+async function lookupUTXO(){
+  const a = $('xAddr').value.trim();
+  const out = $('xOut');
+  if(!a){ out.textContent = 'Empty input.'; return; }
+  out.textContent = 'Querying UTXOs...';
+  try{
+    const r = await fetch('https://blockchain.info/unspent?active=' + a + '&cors=true');
+    const j = await r.json();
+    const outs = j.unspent_outputs || [];
+    let txt = 'UTXOs for ' + a.slice(0,20) + '…\n\nCount: ' + outs.length + '\n\n';
+    let total = 0;
+    outs.slice(0,10).forEach(u => {
+      const v = u.value/1e8;
+      total += v;
+      txt += '  ' + u.tx_hash_big_endian.slice(0,16) + '…  #' + u.tx_output_n + '  ' + v.toFixed(8) + ' BTC\n';
+    });
+    txt += '\nTotal: ' + total.toFixed(8) + ' BTC';
+    out.textContent = txt;
+  } catch(e){ out.textContent = 'No UTXOs found or query failed.'; }
+}
+
+/* ---------- SCAN ---------- */
+let scanInterval = null;
+const SERVICES = {21:'FTP',22:'SSH',23:'Telnet',25:'SMTP',53:'DNS',80:'HTTP',
+  110:'POP3',143:'IMAP',443:'HTTPS',445:'SMB',3306:'MySQL',3389:'RDP',
+  5432:'PostgreSQL',5900:'VNC',6379:'Redis',8080:'HTTP-Alt',8333:'Bitcoin P2P',
+  8332:'Bitcoin RPC',18333:'Bitcoin Testnet',50001:'Electrum',9735:'Lightning'};
+
 function startScan(){
-  const host=document.getElementById('scanHost').value.trim()||'127.0.0.1';
-  const range=document.getElementById('scanRange').value.trim()||'1-1024';
-  const [a,b]=range.split('-').map(x=>parseInt(x)||1);
-  const out=document.getElementById('scanOut');
-  out.textContent='> scanning '+host+' ports '+a+'-'+b+'\n';
-  let cur=a;
-  scanIv=setInterval(()=>{
+  const host = $('scHost').value.trim() || '127.0.0.1';
+  const range = $('scRange').value.trim() || '1-1024';
+  const parts = range.split('-').map(x => parseInt(x) || 1);
+  const a = parts[0], b = parts[1] || a + 1000;
+  const out = $('scOut');
+  out.textContent = '> scanning ' + host + ' ports ' + a + '-' + b + '\n';
+  let cur = a;
+  stopScan();
+  scanInterval = setInterval(() => {
     for(let i=0;i<5;i++){
-      const port=cur++;
-      if(port>b){clearInterval(scanIv);scanIv=null;
-        out.textContent+='\n> scan complete.\n';
-        return;}
-      const open=Math.random()>0.92;
-      out.textContent+='> port '+port+' '+(open?'OPEN':'closed')+'\n';
-      if(open)out.textContent+='   ⚠ service: '+serviceFor(port)+'\n';
+      const port = cur++;
+      if(port > b){ stopScan(); out.textContent += '\n> complete.\n'; return; }
+      const open = Math.random() > 0.92;
+      out.textContent += '> port ' + port + ' ' + (open ? 'OPEN' : 'closed') + '\n';
+      if(open) out.textContent += '   ⚠ ' + (SERVICES[port] || 'unknown') + '\n';
     }
-    out.scrollTop=out.scrollHeight;
-  },120);
-  log('> port scan started on '+host,'wa');bump();
+    out.scrollTop = out.scrollHeight;
+  }, 120);
+  log('> port scan started on ' + host, 'wa');
 }
 function stopScan(){
-  if(scanIv){clearInterval(scanIv);scanIv=null;
-    document.getElementById('scanOut').textContent+='\n> scan aborted.\n';}
-}
-function serviceFor(p){
-  const m={21:'FTP',22:'SSH',23:'Telnet',25:'SMTP',53:'DNS',80:'HTTP',110:'POP3',
-    143:'IMAP',443:'HTTPS',445:'SMB',3306:'MySQL',3389:'RDP',5432:'PostgreSQL',
-    5900:'VNC',6379:'Redis',8080:'HTTP-Alt',8333:'Bitcoin P2P',8332:'Bitcoin RPC',
-    18333:'Bitcoin Testnet',50001:'Electrum',9735:'Lightning'};
-  return m[p]||'unknown';
+  if(scanInterval){ clearInterval(scanInterval); scanInterval = null; }
 }
 function probeNodes(){
-  const ports=[8333,18333,8332,50001,9735];
-  ports.forEach((p,i)=>{
-    const el=document.getElementById('pr'+(i+1));
-    el.textContent='probing...';
-    setTimeout(()=>{
-      const up=Math.random()>0.3;
-      el.textContent=up?'● OPEN ('+serviceFor(p)+')':'○ closed';
-      el.style.color=up?'var(--m)':'var(--md)';
-    },200+i*150);
+  const ports = [8333, 18333, 8332, 50001, 9735];
+  ports.forEach((p, i) => {
+    const el = $('p' + (i+1));
+    if(!el) return;
+    el.textContent = 'probing...';
+    el.className = 'v';
+    setTimeout(() => {
+      const up = Math.random() > 0.3;
+      el.textContent = up ? '● OPEN (' + SERVICES[p] + ')' : '○ closed';
+      el.className = 'v ' + (up ? 'pos' : 'neg');
+    }, 200 + i*150);
   });
-  log('> probing bitcoin node ports','if');bump();
+  log('> probing node ports', 'if');
 }
 
-/* ==================== CONSOLE ==================== */
-const cout=document.getElementById('cout');
-function cLog(msg,cls){
-  const d=document.createElement('div');
-  d.className=cls||'ok';d.textContent=msg;
-  cout.appendChild(d);
-  while(cout.children.length>200)cout.removeChild(cout.firstChild);
-  cout.scrollTop=cout.scrollHeight;
+/* ---------- CONSOLE ---------- */
+function cLog(msg, cls){
+  const d = document.createElement('div');
+  d.className = cls || 'ok';
+  d.textContent = msg;
+  $('cout').appendChild(d);
+  while($('cout').children.length > 200) $('cout').removeChild($('cout').firstChild);
+  $('cout').scrollTop = $('cout').scrollHeight;
 }
-cLog('> qcity-pentest console v12','if');
-cLog('> type "help" for commands','dm');
 
 async function runConsole(){
-  const inp=document.getElementById('cin');
-  const raw=inp.value.trim();
-  inp.value='';
-  if(!raw)return;
-  cLog('# '+raw,'ok');
-  const parts=raw.split(/\s+/);
-  const cmd=parts[0].toLowerCase();
-  const rest=parts.slice(1).join(' ');
+  const inp = $('cInput');
+  const raw = inp.value.trim();
+  inp.value = '';
+  if(!raw) return;
+  cLog('# ' + raw, 'ok');
+  const parts = raw.split(/\s+/);
+  const cmd = parts[0].toLowerCase();
+  const rest = parts.slice(1).join(' ');
 
   switch(cmd){
     case 'help':
-      cLog('commands:','if');
-      ['help','btc','block','addr <address>','bal <address>','hash <text>',
-       'dhash <text>','wif <hex>','b58 <hex>','decode <base58>',
-       'probe','scan','trace','mask','clear','theme <n>','rand <n>','version'
-      ].forEach(c=>cLog('  '+c,'dm'));
+      cLog('commands:', 'if');
+      ['help','btc','block','addr <x>','bal <x>','hash <x>','dhash <x>',
+       'wif <hex>','b58 <hex>','decode <b58>','probe','scan','trace','mask',
+       'clear','theme <n>','rand <n>','version','whoami'].forEach(c => cLog('  ' + c, 'dm'));
       break;
     case 'btc':
       try{
-        const r=await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-        const j=await r.json();
-        cLog('BTC: $'+parseFloat(j.price).toLocaleString('en-US',{maximumFractionDigits:2}),'ok');
-      }catch(e){cLog('failed','er');}
+        const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+        const j = await r.json();
+        cLog('BTC: $' + parseFloat(j.price).toLocaleString(), 'ok');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'block':
       try{
-        const r=await fetch('https://blockchain.info/latestblock?cors=true');
-        const j=await r.json();
-        cLog('height: '+j.height,'ok');
-        cLog('hash:   '+j.hash,'dm');
-        cLog('time:   '+new Date(j.time*1000).toLocaleString(),'dm');
-      }catch(e){cLog('failed','er');}
+        const r = await fetch('https://blockchain.info/latestblock?cors=true');
+        const j = await r.json();
+        cLog('height: ' + j.height, 'ok');
+        cLog('hash:   ' + j.hash, 'dm');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'addr':
-      if(!rest){cLog('usage: addr <btc-address>','er');break;}
+      if(!rest){ cLog('usage: addr <btc-address>', 'er'); break; }
       {
-        const info=classifyBTC(rest);
-        if(info){
-          cLog('✓ valid · '+info.type+' · '+info.net,'ok');
-        } else cLog('✗ invalid address','er');
+        const info = classifyBTC(rest);
+        if(info) cLog('✓ valid · ' + info.type + ' · ' + info.net, 'ok');
+        else cLog('✗ invalid', 'er');
       }
       break;
     case 'bal':
-      if(!rest){cLog('usage: bal <btc-address>','er');break;}
+      if(!rest){ cLog('usage: bal <address>', 'er'); break; }
       try{
-        const r=await fetch('https://blockchain.info/q/addressbalance/'+rest+'?cors=true');
-        const s=await r.text();
-        const n=parseInt(s);
-        if(isNaN(n))cLog('no data','er');
-        else cLog('balance: '+(n/1e8).toFixed(8)+' BTC','ok');
-      }catch(e){cLog('failed','er');}
+        const r = await fetch('https://blockchain.info/q/addressbalance/' + rest + '?cors=true');
+        const s = await r.text();
+        const n = parseInt(s);
+        if(isNaN(n)) cLog('no data', 'er');
+        else cLog('balance: ' + (n/1e8).toFixed(8) + ' BTC', 'ok');
+      } catch(e){ cLog('failed', 'er'); }
       break;
     case 'hash':
-      if(!rest){cLog('usage: hash <text>','er');break;}
-      cLog('sha256: '+await sha256(rest),'if');
+      if(!rest){ cLog('usage: hash <text>', 'er'); break; }
+      cLog('sha256: ' + await sha256(rest), 'if');
       break;
     case 'dhash':
-      if(!rest){cLog('usage: dhash <text>','er');break;}
+      if(!rest){ cLog('usage: dhash <text>', 'er'); break; }
       {
-        const h1=await sha256(rest);
-        const h2=await sha256(hexToBytes(h1));
-        cLog('double-sha256: '+h2,'if');
+        const h1 = await sha256(rest);
+        const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+        cLog('dsha256: ' + bytesToHex(new Uint8Array(h2buf)), 'if');
       }
       break;
     case 'wif':
-      if(!rest||rest.length!==64){cLog('usage: wif <64-hex-chars>','er');break;}
+      if(!rest || rest.length !== 64){ cLog('usage: wif <64 hex chars>', 'er'); break; }
       try{
-        const payload=new Uint8Array(33);
-        payload[0]=0x80;
-        payload.set(hexToBytes(rest),1);
-        const h1=await sha256(bytesToHex(payload));
-        const h2=await sha256(hexToBytes(h1));
-        const full=new Uint8Array(37);
-        full.set(payload,0);full.set(hexToBytes(h2.slice(0,8)),33);
-        cLog('wif: '+b58Encode(full),'ok');
-      }catch(e){cLog('error','er');}
+        const payload = new Uint8Array(33);
+        payload[0] = 0x80;
+        payload.set(hexToBytes(rest), 1);
+        const h1 = await sha256(bytesToHex(payload));
+        const h2buf = await crypto.subtle.digest('SHA-256', hexToBytes(h1));
+        const full = new Uint8Array(37);
+        full.set(payload, 0);
+        full.set(new Uint8Array(h2buf).slice(0,4), 33);
+        cLog('wif: ' + b58EncodeStr(full), 'ok');
+      } catch(e){ cLog('error', 'er'); }
       break;
     case 'b58':
-      if(!rest){cLog('usage: b58 <hex>','er');break;}
-      try{cLog('base58: '+b58Encode(hexToBytes(rest)),'ok');}
-      catch(e){cLog('error: '+e.message,'er');}
+      if(!rest){ cLog('usage: b58 <hex>', 'er'); break; }
+      try{ cLog('b58: ' + b58EncodeStr(hexToBytes(rest)), 'ok'); }
+      catch(e){ cLog('error: ' + e.message, 'er'); }
       break;
     case 'decode':
-      if(!rest){cLog('usage: decode <base58>','er');break;}
-      try{cLog('hex: '+bytesToHex(b58Decode(rest)),'ok');}
-      catch(e){cLog('error: '+e.message,'er');}
+      if(!rest){ cLog('usage: decode <base58>', 'er'); break; }
+      try{ cLog('hex: ' + bytesToHex(b58DecodeStr(rest)), 'ok'); }
+      catch(e){ cLog('error: ' + e.message, 'er'); }
       break;
-    case 'probe': probeNodes(); cLog('probing node ports…','wa'); break;
-    case 'scan': triggerScan(); cLog('port scan triggered','wa'); break;
-    case 'trace': traceSeq(); cLog('trace triggered','wa'); break;
-    case 'mask': maskSeq(); cLog('mask refresh','ok'); break;
+    case 'probe': probeNodes(); cLog('probing ports...', 'wa'); break;
+    case 'scan': startScan(); cLog('scan started', 'wa'); break;
+    case 'trace': traceSequence(); cLog('trace triggered', 'wa'); break;
+    case 'mask': maskSequence(); cLog('mask refresh', 'ok'); break;
     case 'clear':
-      cout.innerHTML='';
-      cLog('console cleared','dm');
+      $('cout').innerHTML = '';
+      cLog('cleared', 'dm');
       break;
     case 'theme':
       if(['green','amber','cyan','red','purple'].includes(rest)){
-        document.body.className=rest==='green'?'':'t-'+rest;
-        cLog('theme: '+rest,'ok');
-      } else cLog('unknown theme','er');
+        document.body.className = rest === 'green' ? '' : 't-' + rest;
+        cLog('theme: ' + rest, 'ok');
+      } else cLog('unknown theme', 'er');
       break;
     case 'rand':
-      cLog('random: '+rHex(Math.min(parseInt(rest)||8,128)),'ok');
+      cLog('random: ' + rHex(Math.min(parseInt(rest) || 8, 128)), 'ok');
       break;
-    case 'version': cLog('qcity-pentest v12','if'); break;
+    case 'version': cLog('qcity-terminal v13', 'if'); break;
+    case 'whoami':
+      cLog('root@qcity', 'if');
+      cLog('session: ' + SESSION_ID, 'dm');
+      break;
     default:
-      cLog('unknown command: '+cmd,'er');
-      cLog('type "help"','dm');
+      cLog('unknown: ' + cmd, 'er');
+      cLog('type "help"', 'dm');
   }
 }
-document.getElementById('cin').addEventListener('keydown',e=>{
-  if(e.key==='Enter')runConsole();
-});
 
-/* ==================== LOG ==================== */
-const termEl=document.getElementById('term');
-function log(msg,cls){
-  const d=document.createElement('div');
-  d.className='ln '+(cls||'ok');d.textContent=msg;
-  termEl.appendChild(d);
-  while(termEl.children.length>200)termEl.removeChild(termEl.firstChild);
-  termEl.scrollTop=termEl.scrollHeight;
+/* ---------- LOG ---------- */
+function log(msg, cls){
+  const el = $('term');
+  if(!el) return;
+  const d = document.createElement('div');
+  d.className = 'ln ' + (cls || 'ok');
+  d.textContent = msg;
+  el.appendChild(d);
+  while(el.children.length > 200) el.removeChild(el.firstChild);
+  el.scrollTop = el.scrollHeight;
   bump();
 }
+
 function filterLog(){
-  const kw=document.getElementById('logFilter').value.toLowerCase();
-  termEl.querySelectorAll('.ln').forEach(l=>{
-    l.style.display=(!kw||l.textContent.toLowerCase().includes(kw))?'':'none';
+  const kw = $('logFilter').value.toLowerCase();
+  $('term').querySelectorAll('.ln').forEach(l => {
+    l.style.display = (!kw || l.textContent.toLowerCase().includes(kw)) ? '' : 'none';
   });
 }
-const MSGS=[
-  ['> peer handshake ok','ok'],
-  ['> block height synced','dm'],
-  ['> mempool: '+rInt(20000,50000)+' tx','if'],
-  ['> difficulty '+((Math.random()*30+70).toFixed(2)+'T'),'dm'],
-  ['> new block '+rHex(16),'if'],
-  ['> fee rate: '+rInt(5,80)+' sat/vB','dm'],
-  ['> UTXO scan complete','ok'],
-  ['> WARN: unconfirmed tx '+rHex(12),'wa'],
-  ['> rejected: invalid signature','er'],
-  ['> broadcasting to '+rInt(3,12)+' peers','if'],
-  ['> nonce: '+rHex(8),'dm'],
-  ['> merkle root verified','ok'],
-  ['> SECP256K1 signature OK','ok'],
-  ['> key rotation in '+rInt(200,900)+'s','dm'],
-  ['> connection from '+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255)+'.'+rInt(1,255),'if'],
-  ['> b58check verify: PASS','ok']
+
+const LOG_MSGS = [
+  ['> peer handshake ok', 'ok'],
+  ['> block height synced', 'dm'],
+  ['> mempool: ' + rInt(20000,50000) + ' tx', 'if'],
+  ['> new block ' + rHex(16), 'if'],
+  ['> fee rate: ' + rInt(5,80) + ' sat/vB', 'dm'],
+  ['> UTXO scan complete', 'ok'],
+  ['> WARN: unconfirmed tx ' + rHex(12), 'wa'],
+  ['> rejected: invalid signature', 'er'],
+  ['> broadcasting to ' + rInt(3,12) + ' peers', 'if'],
+  ['> nonce: ' + rHex(8), 'dm'],
+  ['> merkle root verified', 'ok'],
+  ['> SECP256K1 signature OK', 'ok'],
+  ['> key rotation in ' + rInt(200,900) + 's', 'dm'],
+  ['> peer from ' + rInt(1,255) + '.' + rInt(1,255) + '.' + rInt(1,255) + '.' + rInt(1,255), 'if'],
+  ['> b58check verify: PASS', 'ok'],
+  ['> AES-256 tunnel rekeyed', 'ok'],
+  ['> entropy pool refreshed', 'dm'],
+  ['> mempool cleared', 'if']
 ];
-setInterval(()=>{const [m,c]=pick(MSGS);log(m,c);},700+Math.random()*900);
 
-const boot=[
-  ['> qcity-pentest v12','if'],
-  ['> loading crypto modules…','dm'],
-  ['> SHA-256: ACTIVE','ok'],
-  ['> SHA-512: ACTIVE','ok'],
-  ['> HMAC-SHA512: ACTIVE','ok'],
-  ['> Base58Check: ACTIVE','ok'],
-  ['> SECP256K1: READY','ok'],
-  ['> Bitcoin RPC: STANDBY','ok'],
-  ['> system ready.','ok']
-];
-boot.forEach((b,i)=>setTimeout(()=>log(b[0],b[1]),250+i*250));
+function triggerMask(){ log('> masking identity...', 'if'); maskSequence(); }
+function clearLog(){
+  $('term').innerHTML = '';
+  log('> log cleared', 'dm');
+  log('> ready', 'ok');
+}
+function lightning(){
+  const c = document.createElement('canvas');
+  c.style.cssText = 'position:fixed;inset:0;z-index:99;pointer-events:none';
+  c.width = innerWidth; c.height = innerHeight;
+  document.body.appendChild(c);
+  const ctx = c.getContext('2d');
+  ctx.strokeStyle = '#00ff41';
+  ctx.lineWidth = 2;
+  ctx.shadowColor = '#00ff41';
+  ctx.shadowBlur = 20;
+  function bolt(){
+    let x = Math.random() * c.width, y = 0;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    while(y < c.height){
+      x += (Math.random() - 0.5) * 60;
+      y += 20 + Math.random() * 40;
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+  bolt();
+  if(Math.random() > 0.5) bolt();
+  setTimeout(() => c.remove(), 350);
+  log('> ⚡ lightning', 'wa');
+}
 
-function triggerScan(){log('> port scan: 127.0.0.1:1-1024','wa');bump();}
-function triggerMask(){log('> masking identity…','if');maskSeq();}
-function clearLog(){termEl.innerHTML='';log('> log cleared','dm');log('> ready','ok');}
-
-/* ==================== NEWS ==================== */
+/* ---------- NEWS ---------- */
 async function fetchNews(){
-  const fb=[
+  const fallback = [
     'Bitcoin network hashrate at all-time high',
-    'Long-term holders accumulating — on-chain data',
+    'Long-term holders accumulating on-chain',
     'Lightning network capacity growing',
-    'ETF inflows steady this week',
+    'Spot ETF inflows steady this week',
     'Miners selling less — supply squeeze',
-    'Addresses with 1+ BTC at record number',
-    'Difficulty adjustment expected',
-    'Spot volumes rising across major exchanges'
+    'Addresses with 1+ BTC at record',
+    'Difficulty adjustment expected soon'
   ];
   try{
-    const r=await fetch('https://api.coingecko.com/api/v3/global');
-    const j=await r.json();
-    const dom=j.data.market_cap_percentage.btc.toFixed(1);
-    const cap=(j.data.total_market_cap.usd/1e12).toFixed(2);
-    const items=[
-      'BTC dominance '+dom+'% · Total cap $'+cap+'T',
-      'Active coins: '+j.data.active_cryptocurrencies.toLocaleString(),
-      ...fb
-    ];
-    document.getElementById('nti').innerHTML=
-      items.map(t=>'<span class="it">'+t+'</span>').join('');
+    const r = await fetch('https://api.coingecko.com/api/v3/global');
+    const j = await r.json();
+    const dom = j.data.market_cap_percentage.btc.toFixed(1);
+    const cap = (j.data.total_market_cap.usd/1e12).toFixed(2);
+    const items = [
+      'BTC dominance ' + dom + '% · Total cap $' + cap + 'T',
+      'Active coins: ' + j.data.active_cryptocurrencies.toLocaleString()
+    ].concat(fallback);
+    $('newsInner').innerHTML = items.map(t => '<span class="it">' + t + '</span>').join('');
   } catch(e){
-    document.getElementById('nti').innerHTML=
-      fb.map(t=>'<span class="it">'+t+'</span>').join('');
+    $('newsInner').innerHTML = fallback.map(t => '<span class="it">' + t + '</span>').join('');
   }
 }
 
-/* ==================== MODAL ==================== */
-function openModal(t,b){
-  document.getElementById('mdT').textContent=t;
-  document.getElementById('mdB').innerHTML=b;
-  document.getElementById('md').classList.add('on');
+/* ---------- THEME + EFFECTS + MODAL ---------- */
+function setTheme(name, el){
+  document.body.className = name === 'green' ? '' : 't-' + name;
+  document.querySelectorAll('.tdot').forEach(d => d.classList.remove('sel'));
+  if(el) el.classList.add('sel');
 }
-function closeModal(e){
-  if(e&&e.target!==e.currentTarget&&e.target.tagName!=='BUTTON')return;
-  document.getElementById('md').classList.remove('on');
+function toggleEffect(id, checkbox){
+  const el = $(id);
+  if(el) el.style.display = checkbox.checked ? '' : 'none';
 }
-
-/* ==================== SETTINGS ==================== */
-function setTheme(n,el){
-  document.body.className=n==='green'?'':'t-'+n;
-  document.querySelectorAll('.td').forEach(d=>d.classList.remove('sel'));
-  if(el)el.classList.add('sel');
-  beep(660,.08);
+function copyEl(id){
+  const t = $(id).textContent;
+  try{
+    navigator.clipboard.writeText(t);
+    log('> copied to clipboard', 'ok');
+  } catch(e){}
 }
-function tglFx(id,chk){
-  const el=document.getElementById(id);
-  const c=document.getElementById(chk);
-  if(el)el.style.display=c&&c.checked?'':'none';
+function showModal(title, body){
+  $('mTitle').textContent = title;
+  $('mBody').innerHTML = body;
+  $('modal').classList.add('on');
 }
-function copyTo(id){
-  const t=document.getElementById(id).textContent;
-  try{navigator.clipboard.writeText(t);beep(880,.1);}catch(e){}
+function closeModal(){
+  $('modal').classList.remove('on');
 }
 function exportLog(){
-  const lines=[];
-  termEl.querySelectorAll('.ln').forEach(l=>lines.push(l.textContent));
-  const hdr='QCity Bitcoin Pentest — Session Log\n'+
-    'Session ID: '+SID+'\n'+
-    'Started: '+SSTART.toISOString()+'\n'+
-    '----------------------------------\n\n';
-  const blob=new Blob([hdr+lines.join('\n')],{type:'text/plain'});
-  const u=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=u;a.download='qcity-log-'+Date.now()+'.txt';a.click();
-  URL.revokeObjectURL(u);
+  const lines = [];
+  $('term').querySelectorAll('.ln').forEach(l => lines.push(l.textContent));
+  const hdr = 'QCity Bitcoin Terminal — Session Log\n' +
+    'Session ID: ' + SESSION_ID + '\n' +
+    'Started: ' + SESSION_START.toISOString() + '\n' +
+    '-------------------------------------\n\n';
+  const blob = new Blob([hdr + lines.join('\n')], {type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'qcity-log-' + Date.now() + '.txt';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
-/* ==================== KEYBOARD ==================== */
-document.addEventListener('keydown',e=>{
-  if(['INPUT','TEXTAREA'].includes(e.target.tagName))return;
-  const k=e.key.toLowerCase();
-  if(k>='1'&&k<='9'){
-    const btns=document.querySelectorAll('.tb');
-    const i=parseInt(k)-1;
-    if(btns[i])btns[i].click();
-  }
-  if(k==='m'){MxOn=!MxOn;}
-  if(k==='l'){triggerStorm();}
-  if(k==='t'){traceSeq();}
-  if(k==='?'){
-    openModal('QCity Bitcoin — Help',
-      '<p><b>QCity Bitcoin Pentest v12</b></p>'+
-      '<p>Bitcoin-focused hacker terminal. Real tools: SHA-256, SHA-512, HMAC-SHA512, Base58Check, WIF, live blockchain lookups. Simulated: port scan, IP masking, trace route, vanity mining.</p>'+
-      '<p><b>Shortcuts:</b> 1-9 tabs · M matrix · L lightning · T trace · ? help · Esc close</p>');
-  }
-  if(k==='escape'){closeModal();}
-});
+/* ---------- BOOT ---------- */
+function boot(){
+  initTabs();
+  detectWallets();
+  typeLoop();
+  updateClock();
+  updateStats();
+  fetchExplorer();
+  fetchNews();
+  genPrivKey();
+  genMnemonic(12);
+  genMnemonic(24);
 
-/* ==================== BOOT ==================== */
-document.getElementById('sid').textContent=SID;
-document.getElementById('sst').textContent=SSTART.toLocaleString();
+  $('sessId').textContent = SESSION_ID;
+  $('sessStart').textContent = SESSION_START.toLocaleString();
 
-detectWallets();
-fetchExplorer();
-fetchPrice();
-fetchNews();
-genPrivKey();
-genMnemonic(12);
-genMnemonic(24);
-analyzeAddress();
-bech32Analyze();
-updateEntropy();
-probeNodes();
+  const bootMsgs = [
+    ['> qcity-terminal v13', 'if'],
+    ['> loading crypto modules...', 'dm'],
+    ['> SHA-256: ACTIVE', 'ok'],
+    ['> SHA-512: ACTIVE', 'ok'],
+    ['> SHA-1: ACTIVE', 'ok'],
+    ['> HMAC-SHA512: ACTIVE', 'ok'],
+    ['> AES-GCM + PBKDF2: ACTIVE', 'ok'],
+    ['> Base58Check: ACTIVE', 'ok'],
+    ['> SECP256K1: READY', 'ok'],
+    ['> Bitcoin RPC: STANDBY', 'ok'],
+    ['> system ready.', 'ok']
+  ];
+  bootMsgs.forEach((b, i) => setTimeout(() => log(b[0], b[1]), 250 + i*250));
 
-setInterval(fetchExplorer,60000);
-setInterval(fetchPrice,15000);
-setInterval(fetchNews,120000);
-window.addEventListener('resize',()=>{});
+  setInterval(updateClock, 1000);
+  setInterval(updateStats, 1000);
+  setInterval(() => {
+    const [m, c] = pick(LOG_MSGS);
+    log(m, c);
+  }, 700 + Math.random()*900);
+  setInterval(maskSequence, 12000);
+  setInterval(() => { if(Math.random() > 0.6) traceSequence(); }, 18000);
+  setInterval(fetchExplorer, 60000);
+  setInterval(fetchNews, 120000);
+
+  document.addEventListener('keydown', e => {
+    if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+    if(e.key === 'Escape') closeModal();
+  });
+
+  $('cInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') runConsole();
+  });
+  $('aInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') analyzeAddress();
+  });
+  $('xAddr').addEventListener('keydown', e => {
+    if(e.key === 'Enter') lookupAddress();
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', boot);
+} else {
+  boot();
+}
 </script>
 </body>
 </html>
