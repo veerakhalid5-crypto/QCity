@@ -1,1 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>QCity Wallet Encryption</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;min-height:100%;background:#000;color:#00ff9d;
+  font-family:'Courier New',monospace;font-size:14px;overflow-x:hidden}
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;opacity:0.35}
+#app{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:22px 16px}
+h1{font-size:22px;margin:0 0 4px;color:#00ff9d;letter-spacing:3px;text-align:center;
+  text-shadow:0 0 12px #00ff9d,0 0 4px #00ff9d;animation:flicker 4s infinite}
+@keyframes flicker{0%,97%,100%{opacity:1}98%{opacity:0.4}99%{opacity:0.9}}
+.sub{color:#00b877;font-size:11px;margin-bottom:18px;text-align:center;letter-spacing:2px}
 
+#terminal{background:rgba(0,20,10,0.85);border:1px solid #00ff9d;
+  border-radius:8px;padding:12px 14px;margin-bottom:16px;min-height:90px;
+  font-size:12px;line-height:1.6;color:#00ff9d;
+  box-shadow:0 0 20px rgba(0,255,157,0.2) inset,0 0 12px rgba(0,255,157,0.15)}
+#terminal .line{opacity:0;animation:fadein .3s forwards}
+@keyframes fadein{to{opacity:1}}
+#terminal .ok{color:#00ff9d}
+#terminal .warn{color:#ffcc00}
+#terminal .err{color:#ff3366}
+
+#account{background:rgba(0,20,10,0.85);border:1px solid #00ff9d;
+  border-radius:8px;padding:14px;margin-bottom:14px;display:none;
+  box-shadow:0 0 20px rgba(0,255,157,0.2) inset}
+#account h2{font-size:11px;color:#00b877;margin:0 0 8px;letter-spacing:2px;
+  text-transform:uppercase}
+#account .addr{font-family:monospace;font-size:13px;color:#00ff9d;
+  word-break:break-all;text-shadow:0 0 6px #00ff9d}
+#account .row{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px dashed rgba(0,255,157,0.2);font-size:12px}
+#account .row:last-child{border-bottom:none}
+#account .row span:first-child{color:#00b877}
+#account .row span:last-child{color:#00ff9d;font-weight:600}
+.disconnect{background:transparent;color:#ff3366;border:1px solid #ff3366;
+  padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;
+  font-family:inherit;font-size:11px;margin-top:10px;width:100%;
+  letter-spacing:1px;transition:all .2s}
+.disconnect:hover{background:#ff3366;color:#000;box-shadow:0 0 12px #ff:-3366}
+
+.wallet-btn{width:100%;100%;
+background:rgba(0,20,10,0.75);border:1px solid #00b877;
+  border-radius:8px;padding:13px 14px;margin-bottom:9px;cursor:pointer;
+  color:#00ff9d;font-family:inherit;font-size:13px;display:flex;
+  align-items:center;gap:12px;text-align:left;
+  transition:all .2s;letter-spacing:1px;position:relative;overflow:hidden}
+.wallet-btn::before{content:'';position:absolute;top:0;left  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,255,157,0.15),transparent);
+  transition:left .5s}
+.wallet-btn:hover{border-color:#00ff9d;box-shadow:0 0 16px rgba(0,255,157,0.5)}
+.wallet-btn:hover::before{left:100%}
+.wallet-btn .icon{width:32px;height:32px;border:1px solid #00b877;
+  border-radius:6px;display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;background:rgba(0,255,157,0.08)}
+.wallet-btn .meta{flex:1}
+.wallet-btn .name{font-weight:700;color:#00ff9d;letter-spacing:1px;font-size:13px}
+.wallet-btn .desc{font-size:10px;color:#00b877;letter-spacing:.5px;margin-top:2px}
+.wallet-btn .status{font-size:10px;color:#00b877;letter-spacing:1px}
+.wallet-btn.available .status{color:#00ff9d;text-shadow:0 0 6px #00ff9d}
+.wallet-btn.available{border-color:#00ff9d}
+.wallet-btn.connected{border-color:#00ff9d;box-shadow:0 0 20px rgba(0,255,157,0.6) inset}
+
+.foot{color:#00b877;font-size:10px;text-align:center;margin-top:20px;
+  line-height:1.7;letter-spacing:1px}
+.foot::before{content:'> ';color:#00ff9d}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<div id="app">
+  <h1>QCITY WALLET</h1>
+  <div class="sub">// ENCRYPTION //</div>
+
+  <div id="terminal">
+    <div class="line">> initializing secure channel…</div>
+  </div>
+
+  <div id="account">
+    <h2>◉ Connected Wallet</h2>
+    <div class="addr" id="acc-addr">—</div>
+    <div class="row"><span>Network</span><span id="acc-net">—</span></div>
+    <div class="row"><span>Balance</span><span id="acc-bal">—</span></div>
+    <div class="row"><span>Chain ID</span><span id="acc-chain">—</span></div>
+    <button class="disconnect" onclick="disconnectWallet()">DISCONNECT</button>
+  </div>
+
+  <button class="wallet-btn" id="w-metamask" onclick="connectInjected('MetaMask')">
+    <div class="icon">🦊</div>
+    <div class="meta"><div class="name">METAMASK</div><div class="desc">Ethereum / EVM chains</div></div>
+    <div class="status" id="s-metamask">SCAN</div>
+  </button>
+
+  <button class="wallet-btn" id="w-coinbase" onclick="connectInjected('Coinbase')">
+    <div class="icon">🔵</div>
+    <div class="meta"><div class="name">COINBASE WALLET</div><div class="desc">Ethereum / Base</div></div>
+    <div class="status" id="s-coinbase">SCAN</div>
+  </button>
+
+  <button class="wallet-btn" id="w-trust" onclick="connectInjected('Trust')">
+    <div class="icon">🛡️</div>
+    <div class="meta"><div class="name">TRUST WALLET</div><div class="desc">Multi-chain</div></div>
+    <div class="status" id="s-trust">SCAN</div>
+  </button>
+
+  <button class="wallet-btn" id="w-phantom" onclick="connectPhantom()">
+    <div class="icon">👻</div>
+    <div class="meta"><div class="name">PHANTOM</div><div class="desc">Solana</div></div>
+    <div class="status" id="s-phantom">SCAN</div>
+  </button>
+
+  <button class="wallet-btn" id="w-wc" onclick="connectWalletConnect()">
+    <div class="icon">🔗</div>
+    <div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR</div></div>
+    <div class="status">OPEN</div>
+  </button>
+
+  <div class="foot">QCity Wallet Encryption never stores your keys.<br>All signing happens inside your wallet.</div>
+</div>
+
+<script>
+"use strict";
+
+/* ============ MATRIX CODE RAIN ============ */
+(function(){
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  const chars = 'アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプ0123456789ABCDEF';
+  let cols, drops, fontSize = 14;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / fontSize);
+    drops = new Array(cols).fill(1);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff9d';
+    ctx.font = fontSize + 'px monospace';
+    for(let i = 0; i < drops.length; i++){
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      const x = i * fontSize;
+      const y = drops[i] * fontSize;
+      ctx.fillText(ch, x, y);
+      if(y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw, 55);
+})();
+
+/* ============ TERMINAL LOG ============ */
+const termEl = document.getElementById('terminal');
+function log(msg, cls){
+  const line = document.createElement('div');
+  line.className = 'line' + (cls ? ' ' + cls : '');
+  line.textContent = msg;
+  termEl.appendChild(line);
+  termEl.scrollTop = termEl.scrollHeight;
+  if(termEl.children.length > 8) termEl.removeChild(termEl.firstChild);
+}
+
+const boot = [
+  ['> establishing TLS tunnel…', ''],
+  ['> handshake complete', 'ok'],
+  ['> scanning for wallets…', 'warn'],
+  ['> ready. select a wallet below.', 'ok']
+];
+boot.forEach((b, i) => setTimeout(() => log(b[0], b[1]), i * 450));
+
+/* ============ WALLET DETECTION ============ */
+function shortAddr(a){ return a.slice(0,6) + '…' + a.slice(-4); }
+const NETWORKS = {
+  '0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum',
+  '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
+};
+
+function detectWallets(){
+  if(typeof window.ethereum !== 'undefined'){
+    document.getElementById('s-metamask').textContent = 'LIVE';
+    document.getElementById('w-metamask').classList.add('available');
+    document.getElementById('s-coinbase').textContent = 'LIVE';
+    document.getElementById('w-coinbase').classList.add('available');
+    document.getElementById('s-trust').textContent = 'LIVE';
+    document.getElementById('w-trust').classList.add('available');
+    log('> injected wallet detected', 'ok');
+  } else {
+    log('> no injected wallet found', 'warn');
+  }
+  if(window.phantom && window.phantom.solana){
+    document.getElementById('s-phantom').textContent = 'LIVE';
+    document.getElementById('w-phantom').classList.add('available');
+    log('> phantom (solana) detected', 'ok');
+  }
+}
+
+/* ============ CONNECT ============ */
+async function connectInjected(name){
+  log('> requesting ' + name + ' connection…', 'warn');
+  if(typeof window.ethereum === 'undefined'){
+    log('> ERROR: ' + name + ' not installed', 'err');
+    alert(name + ' was not detected. Install the ' + name + ' app/extension, or open this page inside the ' + name + ' in-app browser.');
+    return;
+  }
+  try{
+    const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
+    if(!accounts || !accounts.length){
+      log('> connection denied', 'err');
+      return;
+    }
+    const acc = accounts[0];
+    const chainHex = await window.ethereum.request({ method:'eth_chainId' });
+    const balanceWei = await window.ethereum.request({
+      method:'eth_getBalance', params:[acc, 'latest']
+    });
+    const balanceEth = (parseInt(balanceWei, 16) / 1e18).toFixed(4);
+
+    showAccount(acc, NETWORKS[chainHex] || chainHex, balanceEth + ' ETH', chainHex);
+    log('> connected: ' + shortAddr(acc), 'ok');
+    log('> network: ' + (NETWORKS[chainHex] || chainHex), 'ok');
+
+    document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
+    const btn = document.getElementById('w-' + name.toLowerCase());
+    if(btn) btn.classList.add('connected');
+
+    if(window.ethereum.on){
+      window.ethereum.on('accountsChanged', accs => {
+        if(!accs.length){ disconnectWallet(); } else { location.reload(); }
+      });
+      window.ethereum.on('chainChanged', () => location.reload());
+    }
+  } catch(e){
+    log('> ERROR: ' + (e.message || 'connection failed'), 'err');
+  }
+}
+
+async function connectPhantom(){
+  log('> requesting Phantom connection…', 'warn');
+  if(!window.phantom || !window.phantom.solana){
+    log('> ERROR: Phantom not installed', 'err');
+    alert('Phantom was not detected. Install Phantom, or open this page inside the Phantom in-app browser.');
+    return;
+  }
+  try{
+    const res = await window.phantom.solana.connect();
+    const pub = res.publicKey.toString();
+    showAccount(pub, 'Solana', '—', 'solana');
+    log('> connected: ' + shortAddr(pub), 'ok');
+    document.getElementById('w-phantom').classList.add('connected');
+  } catch(e){
+    log('> ERROR: ' + (e.message || 'connection failed'), 'err');
+  }
+}
+
+function connectWalletConnect(){
+  log('> WalletConnect: paste a WC URI to connect', 'warn');
+  const uri = prompt('Paste WalletConnect URI (from your wallet app):');
+  if(!uri) return;
+  log('> URI received, awaiting approval in wallet…', 'warn');
+  setTimeout(() => log('> note: full WalletConnect requires library setup', 'warn'), 1500);
+}
+
+function showAccount(addr, net, bal, chain){
+  document.getElementById('account').style.display = 'block';
+  document.getElementById('acc-addr').textContent = addr;
+  document.getElementById('acc-net').textContent = net;
+  document.getElementById('acc-bal').textContent = bal;
+  document.getElementById('acc-chain').textContent = chain;
+}
+
+function disconnectWallet(){
+  document.getElementById('account').style.display = 'none';
+  document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
+  log('> wallet disconnected', 'warn');
+}
+
+detectWallets();
+</script>
+</body>
+</html>
