@@ -3,30 +3,30 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>QCity Protocol</title>
+<title>QCity Bitcoin Wallet</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;background:#000;color:#00ff9d;
-  font-family:'Courier New',monospace;font-size:14px;overflow:hidden}
+  font-family:'Courier New',monospace;font-size:14px;overflow-x:hidden}
 
-/* ==== BACKGROUND LAYERS ==== */
-#shader{position:fixed;inset:0;z-index:0;opacity:0.45}
-#neural{position:fixed;inset:0;z-index:1;opacity:0.6}
-#matrix{position:fixed;inset:0;z-index:2;opacity:0.22}
-#hexgrid{position:fixed;inset:0;z-index:3;opacity:0.06;pointer-events:none;
+/* ==== BACKGROUND ==== */
+#shader{position:fixed;inset:0;z-index:0;opacity:0.4}
+#neural{position:fixed;inset:0;z-index:1;opacity:0.55}
+#matrix{position:fixed;inset:0;z-index:2;opacity:0.2}
+#hexgrid{position:fixed;inset:0;z-index:3;opacity:0.05;pointer-events:none;
   background-image:linear-gradient(rgba(0,255,157,0.6) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,255,157,0.6) 1px,transparent 1px);
   background-size:44px 44px;animation:hexScroll 22s linear infinite}
 @keyframes hexScroll{0%{background-position:0 0}100%{background-position:44px 44px}}
 #radar{position:fixed;top:50%;left:50%;width:1000px;height:1000px;margin:-500px 0 0 -500px;
-  border-radius:50%;z-index:4;pointer-events:none;opacity:0.1;
+  border-radius:50%;z-index:4;pointer-events:none;opacity:0.08;
   background:conic-gradient(from 0deg,transparent 0deg,rgba(0,255,157,1) 35deg,transparent 35deg);
   animation:radarSpin 5s linear infinite}
 @keyframes radarSpin{to{transform:rotate(360deg)}}
 #scanline{position:fixed;left:0;width:100%;height:3px;z-index:5;
   background:linear-gradient(90deg,transparent,#00ff9d,transparent);
-  opacity:0.7;pointer-events:none;animation:scan 3.5s linear infinite;
-  box-shadow:0 0 24px #00ff9d,0 0 10px #00ff9d}
+  opacity:0.6;pointer-events:none;animation:scan 3.5s linear infinite;
+  box-shadow:0 0 24px #00ff9d}
 @keyframes scan{0%{top:-5px}100%{top:100%}}
 #vignette{position:fixed;inset:0;z-index:6;pointer-events:none;
   background:radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,0.92) 100%)}
@@ -35,8 +35,8 @@ html,body{margin:0;padding:0;height:100%;background:#000;color:#00ff9d;
 @keyframes flick{0%,100%{opacity:0.2}50%{opacity:0.55}}
 
 /* ==== APP ==== */
-#app{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;
-  padding:14px 14px 8px;max-width:780px;margin:0 auto}
+#app{position:relative;z-index:10;min-height:100%;max-width:780px;margin:0 auto;
+  padding:14px 14px 30px;display:flex;flex-direction:column}
 
 #title{text-align:center;margin-bottom:4px;flex-shrink:0}
 h1{font-size:24px;margin:0;color:#00ff9d;letter-spacing:5px;font-weight:900;
@@ -55,22 +55,23 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 @keyframes glitch2{0%,91%,100%{transform:translate(0)}
   92%{transform:translate(4px,2px)}94%{transform:translate(-3px,-1px)}
   96%{transform:translate(2px,-2px)}}
+.sub{color:#00b877;font-size:10px;letter-spacing:3px;margin-top:2px;text-align:center}
+.sub::before{content:'[ ';color:#00ff9d}
+.sub::after{content:' ]';color:#00ff9d}
 
-/* ==== TYPE BANNER ==== */
+/* ==== BANNERS ==== */
 #typebanner{flex-shrink:0;background:rgba(0,20,10,0.85);
   border:1px solid #00b877;border-radius:6px;padding:7px 12px;
-  margin-bottom:8px;font-size:11px;color:#00ff9d;letter-spacing:1px;
+  margin:8px 0;font-size:11px;color:#00ff9d;letter-spacing:1px;
   min-height:26px;display:flex;align-items:center;gap:6px}
 #typebanner .prompt{color:#00ff9d;font-weight:700}
 #typebanner .text{color:#00ff9d;text-shadow:0 0 6px #00ff9d}
 #typebanner .cursor{display:inline-block;width:8px;height:12px;background:#00ff9d;
-  animation:blink 1s steps(2) infinite;margin-left:2px;
-  box-shadow:0 0 8px #00ff9d}
+  animation:blink 1s steps(2) infinite;margin-left:2px;box-shadow:0 0 8px #00ff9d}
 @keyframes blink{50%{opacity:0}}
 
-/* ==== IP MASK BANNER ==== */
 #ipbanner{flex-shrink:0;background:rgba(0,20,10,0.9);
-  border:1px solid #00ff9d;border-radius:8px;padding:8px 12px;margin-bottom:8px;
+  border:1px solid #00ff9d;border-radius:8px;padding:8px 12px;margin-bottom:10px;
   box-shadow:0 0 16px rgba(0,255,157,0.3),0 0 8px rgba(0,255,157,0.4) inset;
   font-size:11px;line-height:1.6;position:relative;overflow:hidden}
 #ipbanner::before{content:'';position:absolute;inset:0;
@@ -89,63 +90,157 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
   animation:pulse 1.4s infinite;margin-top:2px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.35}}
 
-/* ==== STATUS BAR ==== */
-#statusbar{display:flex;justify-content:space-between;font-size:10px;
-  color:#00b877;letter-spacing:1px;padding:6px 10px;
-  background:rgba(0,20,10,0.72);border:1px solid #007a55;border-radius:6px;
-  margin-bottom:10px;flex-shrink:0}
-#statusbar .live{color:#00ff9d}
-#statusbar .live::before{content:'● ';animation:pulse 1.2s infinite}
+/* ==== TABS ==== */
+#tabbar{display:flex;gap:3px;margin-bottom:12px;background:rgba(0,20,10,0.9);
+  border:1px solid #00b877;border-radius:8px;padding:4px;overflow-x:auto;
+  box-shadow:0 0 20px rgba(0,255,157,0.15);flex-shrink:0}
+.tabbtn{flex:1;min-width:72px;background:transparent;color:#00b877;border:none;
+  padding:9px 5px;border-radius:6px;cursor:pointer;font-family:inherit;
+  font-size:10px;letter-spacing:1px;font-weight:700;transition:all .2s;
+  white-space:nowrap;position:relative}
+.tabbtn:hover{color:#00ff9d;background:rgba(0,255,157,0.05)}
+.tabbtn.on{background:rgba(0,255,157,0.15);color:#00ff9d;
+  box-shadow:0 0 14px rgba(0,255,157,0.5) inset,0 0 8px rgba(0,255,157,0.3);
+  text-shadow:0 0 8px #00ff9d}
+.tabbtn.on::after{content:'';position:absolute;bottom:2px;left:20%;right:20%;
+  height:1px;background:#00ff9d;box-shadow:0 0 6px #00ff9d}
 
-/* ==== STATS ==== */
-#stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;flex-shrink:0}
-.stat{background:rgba(0,20,10,0.85);border:1px solid #007a55;border-radius:6px;
-  padding:8px 6px;text-align:center;position:relative;overflow:hidden}
-.stat::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;
-  background:linear-gradient(90deg,transparent,#00ff9d,transparent);
-  animation:statline 2.4s linear infinite}
-@keyframes statline{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.stat .label{font-size:8px;color:#00b877;letter-spacing:1px;margin-bottom:3px}
-.stat .value{font-size:14px;font-weight:700;color:#00ff9d;
-  text-shadow:0 0 8px #00ff9d;font-variant-numeric:tabular-nums}
+.tabpane{display:none;animation:fadein .35s;flex:1}
+.tabpane.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ==== TERMINAL ==== */
-#terminal{flex:1;min-height:0;background:rgba(0,20,10,0.9);
-  border:1px solid #00ff9d;border-radius:8px;padding:12px 14px;
-  font-size:12px;line-height:1.55;color:#00ff9d;overflow-y:auto;
-  box-shadow:0 0 22px rgba(0,255,157,0.25) inset,0 0 16px rgba(0,255,157,0.2);
-  margin-bottom:10px;scrollbar-width:thin;scrollbar-color:#00b877 transparent}
-#terminal::-webkit-scrollbar{width:6px}
-#terminal::-webkit-scrollbar-thumb{background:#00b877;border-radius:3px}
-#terminal .line{margin-bottom:2px;word-break:break-all;opacity:0;animation:fadein .3s forwards}
-@keyframes fadein{to{opacity:1}}
-#terminal .ok{color:#00ff9d}
-#terminal .warn{color:#ffcc00}
-#terminal .err{color:#ff3366}
-#terminal .info{color:#00bfff}
-#terminal .dim{color:#007a55}
+/* ==== SHARED CARDS ==== */
+.section-title{color:#00b877;font-size:11px;letter-spacing:2px;margin:14px 0 8px;
+  text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'▸';color:#00ff9d}
+.section-title::after{content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,#00b877,transparent)}
 
-/* ==== BUTTONS ==== */
-#btns{display:flex;gap:8px;flex-shrink:0;margin-bottom:8px;flex-wrap:wrap}
-.btn{flex:1;min-width:110px;background:rgba(0,255,157,0.08);color:#00ff9d;
-  border:1px solid #00ff9d;padding:10px 8px;border-radius:6px;
-  font-family:inherit;font-weight:700;cursor:pointer;font-size:10px;
-  letter-spacing:2px;transition:all .2s;position:relative;overflow:hidden}
-.btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
-  background:linear-gradient(90deg,transparent,rgba(0,255,157,0.3),transparent);
-  transition:left .6s}
-.btn:hover{background:#00ff9d;color:#000;box-shadow:0 0 20px #00ff9d}
-.btn:hover::before{left:100%}
-.btn:active{transform:scale(0.97)}
+.card{background:rgba(0,20,10,0.85);border:1px solid #00b877;border-radius:8px;
+  padding:12px 14px;margin-bottom:10px}
+.card h4{margin:0 0 8px;font-size:10px;color:#00b877;letter-spacing:2px;
+  text-transform:uppercase;font-weight:700}
+
+.row{display:flex;justify-content:space-between;padding:5px 0;
+  border-bottom:1px dashed rgba(0,255,157,0.2);font-size:11px;line-height:1.4}
+.row:last-child{border-bottom:none}
+.row span:first-child{color:#00b877;flex-shrink:0;margin-right:8px}
+.row span:last-child{color:#00ff9d;font-weight:600;text-align:right;
+  word-break:break-word}
+
+/* ==== WALLETS ==== */
+.wallet-btn{width:100%;background:rgba(0,20,10,0.75);border:1px solid #00b877;
+  border-radius:8px;padding:11px 13px;margin-bottom:8px;cursor:pointer;
+  color:#00ff9d;font-family:inherit;font-size:12px;display:flex;
+  align-items:center;gap:10px;text-align:left;transition:all .2s;
+  letter-spacing:1px;position:relative;overflow:hidden}
+.wallet-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(0,255,157,0.15),transparent);
+  transition:left .5s}
+.wallet-btn:hover{border-color:#00ff9d;box-shadow:0 0 16px rgba(0,255,157,0.5)}
+.wallet-btn:hover::before{left:100%}
+.wallet-btn .icon{width:28px;height:28px;border:1px solid #00b877;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  flex-shrink:0;background:rgba(0,255,157,0.08)}
+.wallet-btn .meta{flex:1}
+.wallet-btn .name{font-weight:700;color:#00ff9d;letter-spacing:1px;font-size:11px}
+.wallet-btn .desc{font-size:9px;color:#00b877;letter-spacing:.5px;margin-top:2px}
+.wallet-btn .status{font-size:9px;color:#00b877;letter-spacing:1px}
+.wallet-btn.available .status{color:#00ff9d;text-shadow:0 0 6px #00ff9d}
+.wallet-btn.available{border-color:#00ff9d}
+.wallet-btn.connected{border-color:#00ff9d;box-shadow:0 0 20px rgba(0,255,157,0.6) inset}
+
+#account{background:rgba(0,20,10,0.85);border:1px solid #00ff9d;
+  border-radius:8px;padding:14px;margin-bottom:12px;display:none;
+  box-shadow:0 0 20px rgba(0,255,157,0.2) inset}
+#account h2{font-size:10px;color:#00b877;margin:0 0 8px;letter-spacing:2px;
+  text-transform:uppercase}
+#account .addr{font-family:monospace;font-size:12px;color:#00ff9d;
+  word-break:break-all;text-shadow:0 0 6px #00ff9d;margin-bottom:8px}
+.disconnect{background:transparent;color:#ff3366;border:1px solid #ff3366;
+  padding:8px 14px;border-radius:6px;font-weight:600;cursor:pointer;
+  font-family:inherit;font-size:11px;margin-top:10px;width:100%;
+  letter-spacing:1px;transition:all .2s}
+.disconnect:hover{background:#ff3366;color:#000}
+
+/* ==== SEARCH ==== */
+#searchBox{display:flex;gap:6px;margin-bottom:12px}
+#searchInput{flex:1;background:rgba(0,20,10,0.9);border:1px solid #00b877;
+  color:#00ff9d;padding:10px 12px;border-radius:6px;font-family:inherit;
+  font-size:11px;outline:none;transition:all .2s;width:100%}
+#searchInput:focus{border-color:#00ff9d;box-shadow:0 0 14px rgba(0,255,157,0.5)}
+#searchInput::placeholder{color:#00885e}
+#searchBtn{background:rgba(0,255,157,0.1);color:#00ff9d;border:1px solid #00ff9d;
+  padding:10px 14px;border-radius:6px;font-weight:700;cursor:pointer;
+  font-family:inherit;font-size:10px;letter-spacing:1px;transition:all .2s}
+#searchBtn:hover{background:#00ff9d;color:#000;box-shadow:0 0 18px #00ff9d}
+
+#searchResult{background:rgba(0,20,10,0.88);border:1px solid #00b877;
+  border-radius:8px;padding:12px;margin-bottom:12px;display:none;
+  font-size:11px;word-break:break-all}
+#searchResult.valid{border-color:#00ff9d;box-shadow:0 0 14px rgba(0,255,157,0.35)}
+#searchResult.invalid{border-color:#ff3366;box-shadow:0 0 14px rgba(255,51,102,0.3)}
+#searchResult .label{color:#00b877;font-size:9px;letter-spacing:1px;margin:6px 0 3px}
+#searchResult .label:first-child{margin-top:0}
+#searchResult .value{color:#00ff9d;font-family:monospace;font-size:10px;
+  word-break:break-all}
+#searchResult.invalid .value{color:#ff3366}
+
+/* ==== REQUIREMENTS ==== */
+.req-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media(max-width:640px){.req-grid{grid-template-columns:1fr}}
+.req-card{background:rgba(0,20,10,0.85);border:1px solid #00b877;
+  border-radius:8px;padding:12px 14px}
+.req-card.min{border-color:#ffcc00;box-shadow:0 0 10px rgba(255,204,0,0.15)}
+.req-card.rec{border-color:#00ff9d;box-shadow:0 0 12px rgba(0,255,157,0.25)}
+.req-card h3{margin:0 0 10px;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:700}
+.req-card.min h3{color:#ffcc00;text-shadow:0 0 8px rgba(255,204,0,0.6)}
+.req-card.rec h3{color:#00ff9d;text-shadow:0 0 8px #00ff9d}
+.req-card .row{font-size:10px}
+
+#verdict{padding:12px;border-radius:8px;text-align:center;font-size:12px;
+  font-weight:700;letter-spacing:1px;margin-bottom:12px}
+#verdict.pass{background:rgba(0,255,157,0.12);color:#00ff9d;
+  border:1px solid rgba(0,255,157,0.4);text-shadow:0 0 8px #00ff9d}
+#verdict.warn{background:rgba(255,204,0,0.12);color:#ffcc00;
+  border:1px solid rgba(255,204,0,0.4);text-shadow:0 0 8px #ffcc00}
+#verdict.fail{background:rgba(255,51,102,0.12);color:#ff3366;
+  border:1px solid rgba(255,51,102,0.4);text-shadow:0 0 8px #ff3366}
+#verdict small{display:block;font-size:10px;font-weight:400;margin-top:6px;
+  color:#00b877;letter-spacing:0;text-shadow:none}
+
+/* ==== NETWORK ==== */
+.net-card{background:rgba(0,20,10,0.85);border:1px solid #00b877;
+  border-radius:8px;padding:12px 14px;margin-bottom:10px}
+.net-card h4{margin:0 0 10px;font-size:10px;color:#00b877;letter-spacing:2px;
+  text-transform:uppercase}
+.net-card .big{font-size:20px;color:#00ff9d;text-align:center;
+  text-shadow:0 0 10px #00ff9d;padding:6px 0;font-weight:700;
+  font-variant-numeric:tabular-nums}
+.pulse{display:inline-block;width:8px;height:8px;background:#00ff9d;
+  border-radius:50%;margin-right:6px;animation:pulse 1.5s infinite}
+
+/* ==== TOOLS ==== */
+.enc-input{width:100%;background:#000;border:1px solid #00b877;color:#00ff9d;
+  padding:8px 10px;border-radius:4px;font-family:inherit;font-size:11px;
+  outline:none;margin-bottom:6px}
+.enc-input:focus{border-color:#00ff9d;box-shadow:0 0 10px rgba(0,255,157,0.3)}
+.enc-output{background:#000;border:1px solid #00b877;color:#00bfff;
+  padding:8px 10px;border-radius:4px;font-family:monospace;font-size:10px;
+  word-break:break-all;min-height:36px;line-height:1.5;
+  font-variant-numeric:tabular-nums}
+.enc-btn{background:rgba(0,255,157,0.1);color:#00ff9d;border:1px solid #00ff9d;
+  padding:6px 12px;border-radius:4px;font-family:inherit;font-weight:700;
+  cursor:pointer;font-size:10px;letter-spacing:1px;margin-top:6px;transition:all .2s}
+.enc-btn:hover{background:#00ff9d;color:#000;box-shadow:0 0 14px #00ff9d}
 
 #foot{text-align:center;font-size:9px;color:#007a55;letter-spacing:2px;
-  flex-shrink:0;padding:4px}
+  flex-shrink:0;padding:10px 0 4px}
 
 @media(max-width:600px){
-  h1{font-size:19px;letter-spacing:3px}
-  #stats{grid-template-columns:repeat(2,1fr)}
-  .btn{min-width:80px;font-size:9px;padding:9px 5px}
-  #ipbanner{font-size:10px}
+  h1{font-size:18px;letter-spacing:2px}
+  .tabbtn{min-width:56px;font-size:9px;padding:8px 3px}
 }
 </style>
 </head>
@@ -162,7 +257,8 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
 
 <div id="app">
   <div id="title">
-    <h1 data-text="QCITY PROTOCOL">QCITY PROTOCOL</h1>
+    <h1 data-text="QCITY BITCOIN">QCITY BITCOIN</h1>
+    <div class="sub">WALLET ENCRYPTION v9.1</div>
   </div>
 
   <div id="typebanner">
@@ -183,30 +279,191 @@ h1::after{color:#00bfff;animation:glitch2 3.1s infinite;
     <div class="status" id="ip-status">> initializing mask…</div>
   </div>
 
-  <div id="statusbar">
-    <span class="live">SYSTEM ONLINE</span>
-    <span id="clock">--:--:--</span>
-    <span>NODE <span id="node">----</span></span>
+  <div id="tabbar">
+    <button class="tabbtn on" data-t="wallet">WALLETS</button>
+    <button class="tabbtn" data-t="search">SEARCH</button>
+    <button class="tabbtn" data-t="system">SYSTEM</button>
+    <button class="tabbtn" data-t="network">NETWORK</button>
+    <button class="tabbtn" data-t="tools">TOOLS</button>
   </div>
 
-  <div id="stats">
-    <div class="stat"><div class="label">ENTROPY</div><div class="value" id="s1">—</div></div>
-    <div class="stat"><div class="label">PACKETS</div><div class="value" id="s2">—</div></div>
-    <div class="stat"><div class="label">LATENCY</div><div class="value" id="s3">—</div></div>
-    <div class="stat"><div class="label">SECURITY</div><div class="value" id="s4">—</div></div>
+  <!-- WALLETS TAB -->
+  <div class="tabpane on" id="tab-wallet">
+    <div id="account">
+      <h2>◉ Connected</h2>
+      <div class="addr" id="acc-addr">—</div>
+      <div class="row"><span>Network</span><span id="acc-net">—</span></div>
+      <div class="row"><span>Balance</span><span id="acc-bal">—</span></div>
+      <div class="row"><span>Chain ID</span><span id="acc-chain">—</span></div>
+      <div class="row"><span>Type</span><span id="acc-type">—</span></div>
+      <button class="disconnect" onclick="disconnectWallet()">DISCONNECT</button>
+    </div>
+
+    <div class="section-title">Bitcoin / EVM Wallets</div>
+
+    <button class="wallet-btn" id="w-metamask" onclick="connectInjected('MetaMask')">
+      <div class="icon">🦊</div>
+      <div class="meta"><div class="name">METAMASK</div><div class="desc">Ethereum / EVM / BTC Snaps</div></div>
+      <div class="status" id="s-metamask">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-coinbase" onclick="connectInjected('Coinbase')">
+      <div class="icon">🔵</div>
+      <div class="meta"><div class="name">COINBASE WALLET</div><div class="desc">Ethereum / Base / Bitcoin</div></div>
+      <div class="status" id="s-coinbase">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-trust" onclick="connectInjected('Trust')">
+      <div class="icon">🛡️</div>
+      <div class="meta"><div class="name">TRUST WALLET</div><div class="desc">BTC / ETH / Multi-chain</div></div>
+      <div class="status" id="s-trust">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-phantom" onclick="connectPhantom()">
+      <div class="icon">👻</div>
+      <div class="meta"><div class="name">PHANTOM</div><div class="desc">Solana / Bitcoin</div></div>
+      <div class="status" id="s-phantom">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-xverse" onclick="connectInjected('Xverse')">
+      <div class="icon">₿</div>
+      <div class="meta"><div class="name">XVERSE</div><div class="desc">Bitcoin / Ordinals</div></div>
+      <div class="status" id="s-xverse">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-leather" onclick="connectInjected('Leather')">
+      <div class="icon">🟠</div>
+      <div class="meta"><div class="name">LEATHER</div><div class="desc">Bitcoin / Stacks</div></div>
+      <div class="status" id="s-leather">SCAN</div>
+    </button>
+    <button class="wallet-btn" id="w-wc" onclick="connectWalletConnect()">
+      <div class="icon">🔗</div>
+      <div class="meta"><div class="name">WALLETCONNECT</div><div class="desc">Any wallet via QR / URI</div></div>
+      <div class="status">OPEN</div>
+    </button>
   </div>
 
-  <div id="terminal">
-    <div class="line info">> qcity-terminal v9.1 booting...</div>
+  <!-- SEARCH TAB -->
+  <div class="tabpane" id="tab-search">
+    <div class="section-title">Address Lookup</div>
+    <div id="searchBox">
+      <input id="searchInput" placeholder="paste BTC / ETH / SOL address…" autocomplete="off" spellcheck="false">
+      <button id="searchBtn" onclick="lookupWallet()">SEARCH</button>
+    </div>
+    <div id="searchResult"></div>
+
+    <div class="section-title">Recent Checks</div>
+    <div id="recentList" class="card" style="font-size:10px;color:#00b877">No recent lookups.</div>
   </div>
 
-  <div id="btns">
-    <button class="btn" onclick="triggerScan()">RUN SCAN</button>
-    <button class="btn" onclick="triggerMask()">NEW MASK</button>
-    <button class="btn" onclick="triggerReset()">RESET LOG</button>
+  <!-- SYSTEM TAB -->
+  <div class="tabpane" id="tab-system">
+    <div class="section-title">Device Report</div>
+    <div id="verdict">Analyzing…</div>
+
+    <div class="req-grid">
+      <div class="req-card min">
+        <h3>◆ Minimum</h3>
+        <div class="row"><span>CPU</span><span>4 cores</span></div>
+        <div class="row"><span>RAM</span><span>4 GB</span></div>
+        <div class="row"><span>GPU</span><span>Any WebGL GPU</span></div>
+        <div class="row"><span>Screen</span><span>720p</span></div>
+        <div class="row"><span>Browser</span><span>Chrome / Safari (2021+)</span></div>
+        <div class="row"><span>Network</span><span>5 Mbps</span></div>
+        <div class="row"><span>Storage</span><span>50 MB</span></div>
+      </div>
+      <div class="req-card rec">
+        <h3>◆ Recommended</h3>
+        <div class="row"><span>CPU</span><span>i5 12th Gen+ / M1+</span></div>
+        <div class="row"><span>RAM</span><span>12 GB+</span></div>
+        <div class="row"><span>GPU</span><span>WebGL 2 + WebGPU</span></div>
+        <div class="row"><span>Screen</span><span>1080p+ / Retina</span></div>
+        <div class="row"><span>Browser</span><span>Latest Chrome / Safari</span></div>
+        <div class="row"><span>Network</span><span>15 Mbps+</span></div>
+        <div class="row"><span>Storage</span><span>200 MB</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row"><span>Device</span><span id="d-device">—</span></div>
+      <div class="row"><span>OS</span><span id="d-os">—</span></div>
+      <div class="row"><span>Browser</span><span id="d-browser">—</span></div>
+      <div class="row"><span>CPU cores</span><span id="d-cores">—</span></div>
+      <div class="row"><span>RAM</span><span id="d-ram">—</span></div>
+      <div class="row"><span>GPU</span><span id="d-gpu">—</span></div>
+      <div class="row"><span>WebGL</span><span id="d-webgl">—</span></div>
+      <div class="row"><span>Screen</span><span id="d-screen">—</span></div>
+      <div class="row"><span>Network</span><span id="d-net">—</span></div>
+    </div>
   </div>
 
-  <div id="foot">QCITY PROTOCOL · SIMULATION · NO REAL SYSTEMS</div>
+  <!-- NETWORK TAB -->
+  <div class="tabpane" id="tab-network">
+    <div class="section-title"><span class="pulse"></span>Live Bitcoin</div>
+    <div class="net-card">
+      <h4>BTC / USDT</h4>
+      <div class="big" id="btc-price">—</div>
+      <div class="row"><span>24h change</span><span id="btc-change">—</span></div>
+      <div class="row"><span>24h high</span><span id="btc-high">—</span></div>
+      <div class="row"><span>24h low</span><span id="btc-low">—</span></div>
+      <div class="row"><span>24h volume</span><span id="btc-vol">—</span></div>
+    </div>
+    <div class="net-card">
+      <h4>Blockchain</h4>
+      <div class="row"><span>Block height</span><span id="bc-height">—</span></div>
+      <div class="row"><span>Latest hash</span><span id="bc-hash">—</span></div>
+      <div class="row"><span>Time</span><span id="bc-time">—</span></div>
+    </div>
+    <div class="net-card">
+      <h4>Market Pulse</h4>
+      <div class="row"><span>Fear / Greed</span><span id="fear-greed">—</span></div>
+      <div class="row"><span>Dominance BTC</span><span id="btc-dom">—</span></div>
+    </div>
+  </div>
+
+  <!-- TOOLS TAB -->
+  <div class="tabpane" id="tab-tools">
+    <div class="section-title">Encryption Tools</div>
+
+    <div class="card">
+      <h4>◆ SHA-256 Hash</h4>
+      <input class="enc-input" id="hashInput" placeholder="type anything…" value="QCity Wallet">
+      <div class="enc-output" id="hashOutput">—</div>
+      <button class="enc-btn" onclick="doHash()">HASH</button>
+    </div>
+
+    <div class="card">
+      <h4>◆ Base64 Encode</h4>
+      <input class="enc-input" id="b64Input" placeholder="type anything…" value="Bitcoin">
+      <div class="enc-output" id="b64Output">—</div>
+      <button class="enc-btn" onclick="doB64()">ENCODE</button>
+    </div>
+
+    <div class="card">
+      <h4>◆ Random Private Key (32 bytes)</h4>
+      <div class="enc-output" id="keyOutput">—</div>
+      <button class="enc-btn" onclick="genKey()">GENERATE</button>
+      <div style="color:#ffcc00;font-size:9px;margin-top:6px;line-height:1.5">
+        ⚠ Educational only. Never use a browser-generated key to store real funds.
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>◆ Random BTC Address (visual)</h4>
+      <div class="enc-output" id="btcAddrOutput">—</div>
+      <button class="enc-btn" onclick="genBtcAddr()">GENERATE</button>
+      <div style="color:#ffcc00;font-size:9px;margin-top:6px;line-height:1.5">
+        ⚠ Simulated. Not a real spendable address.
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>◆ Password Strength</h4>
+      <input class="enc-input" id="pwdInput" placeholder="type a password…" type="password" oninput="checkPwd()">
+      <div class="enc-output" id="pwdOutput">—</div>
+    </div>
+
+    <div style="color:#00b877;font-size:9px;line-height:1.6;text-align:center;margin-top:10px">
+      All operations run locally. Nothing leaves your device.
+    </div>
+  </div>
+
+  <div id="foot">QCITY BITCOIN · SIMULATION · NEVER STORES KEYS</div>
 </div>
 
 <script>
@@ -218,12 +475,11 @@ function randHex(n){ let s=''; for(let i=0;i<n;i++) s+=HEX[Math.floor(Math.rando
 function randInt(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-/* ==================== SHADER BACKGROUND ==================== */
+/* ==================== SHADER BG ==================== */
 (function(){
   const canvas = document.getElementById('shader');
   const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  if(!gl){ canvas.style.display = 'none'; return; }
-
+  if(!gl){ canvas.style.display='none'; return; }
   const vs = `attribute vec2 p; void main(){ gl_Position = vec4(p,0,1); }`;
   const fs = `
     precision highp float;
@@ -242,22 +498,17 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
       gl_FragColor = vec4(col, 1.0);
     }
   `;
-  function compile(type, src){
-    const s = gl.createShader(type);
-    gl.shaderSource(s, src); gl.compileShader(s); return s;
-  }
+  function compile(t,s){ const sh=gl.createShader(t); gl.shaderSource(sh,s); gl.compileShader(sh); return sh; }
   const prog = gl.createProgram();
   gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
   gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
   gl.linkProgram(prog); gl.useProgram(prog);
-
   const buf = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
   const loc = gl.getAttribLocation(prog, 'p');
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
   const tLoc = gl.getUniformLocation(prog, 't');
   const rLoc = gl.getUniformLocation(prog, 'r');
   function resize(){
@@ -271,7 +522,7 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   requestAnimationFrame(draw);
 })();
 
-/* ==================== NEURAL NETWORK ==================== */
+/* ==================== NEURAL ==================== */
 (function(){
   const canvas = document.getElementById('neural');
   const ctx = canvas.getContext('2d');
@@ -320,11 +571,11 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   setInterval(draw, 33);
 })();
 
-/* ==================== MATRIX RAIN ==================== */
+/* ==================== MATRIX ==================== */
 (function(){
   const canvas = document.getElementById('matrix');
   const ctx = canvas.getContext('2d');
-  const chars = 'アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプ0123456789ABCDEF';
+  const chars = 'アカサタナハマヤラワガザダバパイキシチニヒミリギジヂビピウクスツヌフムユルグズヅブプ0123456789ABCDEF₿';
   let cols, drops, fontSize = 15;
   function resize(){
     canvas.width = window.innerWidth;
@@ -351,45 +602,27 @@ function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   setInterval(draw, 55);
 })();
 
-/* ==================== TERMINAL LOG ==================== */
-const termEl = document.getElementById('terminal');
-function log(msg, cls){
-  const line = document.createElement('div');
-  line.className = 'line' + (cls ? ' ' + cls : '');
-  line.textContent = msg;
-  termEl.appendChild(line);
-  while(termEl.children.length > 200) termEl.removeChild(termEl.firstChild);
-  termEl.scrollTop = termEl.scrollHeight;
-}
-
 /* ==================== TYPING BANNER ==================== */
 const typingEl = document.getElementById('typing');
 const PHRASES = [
   'ENCRYPTION STARTED',
   'HANDSHAKE COMPLETE',
   'SCANNING NETWORK ...',
-  'ROUTING THROUGH NODE ' + randHex(4).toUpperCase(),
   'MASKING IDENTITY ...',
   'TUNNEL SECURED AES-256',
   'PACKETS ENCRYPTED',
-  'TRACING REQUEST ...',
   'DECOY SIGNAL ACTIVE',
   'ROTATING KEYS ...',
   'HIDING TRAFFIC ...',
   'CONNECTION MASKED'
 ];
 let phraseIdx = 0, charIdx = 0, deleting = false;
-
 function typeLoop(){
   const p = PHRASES[phraseIdx];
   if(!deleting){
     charIdx++;
     typingEl.textContent = p.slice(0, charIdx);
-    if(charIdx >= p.length){
-      deleting = true;
-      setTimeout(typeLoop, 1400);
-      return;
-    }
+    if(charIdx >= p.length){ deleting = true; setTimeout(typeLoop, 1400); return; }
     setTimeout(typeLoop, 55 + Math.random()*40);
   } else {
     charIdx--;
@@ -405,7 +638,7 @@ function typeLoop(){
 }
 typeLoop();
 
-/* ==================== IP MASK BANNER ==================== */
+/* ==================== IP MASK ==================== */
 const REGIONS = ['Amsterdam','Zurich','Reykjavik','Singapore','Tokyo','Toronto',
   'Frankfurt','Stockholm','Seoul','Geneva','Luxembourg','Helsinki','Oslo','Vienna','Dublin'];
 const MASK_IPS = ['185.***.***.12','91.***.***.208','77.***.***.04','45.***.***.122',
@@ -424,13 +657,11 @@ function maskSequence(){
     ipMaskEl.textContent = ip + '  ·  ' + region;
     ipMaskEl.className = 'value hidden';
     ipStatusEl.textContent = '> IDENTITY MASKED — location: ' + region;
-    log('> IP masked → ' + ip + ' (' + region + ')', 'ok');
   }, 700);
   setTimeout(() => {
     ipStatusEl.textContent = '> decoy signal active · node ' + randHex(4).toUpperCase();
   }, 2200);
 }
-
 function traceSequence(){
   ipMaskEl.className = 'value tracing';
   ipStatusEl.textContent = '> tracing route...';
@@ -445,100 +676,324 @@ function traceSequence(){
       ipMaskEl.className = 'value traced';
       ipMaskEl.textContent = 'TRACE BLOCKED — HONEYPOT';
       ipStatusEl.textContent = '> intruder redirected to decoy';
-      log('> trace attempt from external node — blocked', 'warn');
       setTimeout(maskSequence, 1800);
     }
   }, 400);
 }
-
 setTimeout(maskSequence, 1500);
 setInterval(() => {
   if(Math.random() > 0.65) traceSequence();
   else maskSequence();
 }, 9000);
 
-/* ==================== LIVE STATS ==================== */
-let packets = 0, entropy = 8192;
-function updateStats(){
-  const d = new Date();
-  document.getElementById('clock').textContent =
-    String(d.getUTCHours()).padStart(2,'0') + ':' +
-    String(d.getUTCMinutes()).padStart(2,'0') + ':' +
-    String(d.getUTCSeconds()).padStart(2,'0') + ' UTC';
-  document.getElementById('node').textContent = randHex(4).toUpperCase();
-  entropy += randInt(-40, 60);
-  if(entropy < 3000) entropy = 3000;
-  if(entropy > 9999) entropy = 9999;
-  document.getElementById('s1').textContent = entropy;
-  packets += randInt(5, 40);
-  document.getElementById('s2').textContent = packets.toLocaleString();
-  document.getElementById('s3').textContent = randInt(12, 90) + 'ms';
-  document.getElementById('s4').textContent = randInt(96, 100) + '%';
-}
-setInterval(updateStats, 1000);
-updateStats();
+/* ==================== TABS ==================== */
+document.querySelectorAll('.tabbtn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.tabbtn').forEach(x => x.classList.remove('on'));
+    document.querySelectorAll('.tabpane').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    document.getElementById('tab-' + b.dataset.t).classList.add('on');
+  };
+});
 
-/* ==================== FAKE LOG STREAM ==================== */
-const MSGS = [
-  ['> handshake with node ' + randHex(4).toUpperCase() + ' ok', 'ok'],
-  ['> entropy pool: ' + randInt(4000,9000) + ' bits', 'dim'],
-  ['> tunnel latency: ' + randInt(12,80) + ' ms', 'dim'],
-  ['> packet ' + randHex(8) + ' routed', 'info'],
-  ['> checksum verified', 'ok'],
-  ['> key rotation in ' + randInt(200,900) + ' s', 'dim'],
-  ['> scanning subnet 10.' + randInt(0,255) + '.' + randInt(0,255) + '.0/24', 'info'],
-  ['> WARN: unusual traffic on port ' + randInt(1024,65535), 'warn'],
-  ['> denied request from ' + randInt(1,255) + '.' + randInt(1,255) + '.' + randInt(1,255) + '.' + randInt(1,255), 'err'],
-  ['> hash ' + randHex(32), 'dim'],
-  ['> session ' + randHex(16), 'info'],
-  ['> crypto layer AES-256 active', 'ok'],
-  ['> integrity check passed', 'ok'],
-  ['> ECDSA signature valid', 'ok'],
-  ['> IP mask refreshed', 'info'],
-  ['> beacon: node-' + randHex(3).toUpperCase(), 'dim']
-];
-setInterval(() => {
-  const [msg, cls] = pick(MSGS);
-  log(msg, cls);
-}, 700 + Math.random()*900);
+/* ==================== WALLETS ==================== */
+const NETWORKS = {
+  '0x1':'Ethereum','0x38':'BNB Chain','0x89':'Polygon','0xa4b1':'Arbitrum',
+  '0xa':'Optimism','0x2105':'Base','0xaa36a7':'Sepolia'
+};
+function shortAddr(a){ return a.slice(0,6) + '…' + a.slice(-4); }
 
-/* Boot */
-const boot = [
-  ['> qcity-terminal v9.1', 'info'],
-  ['> loading kernel modules...', 'dim'],
-  ['> initializing crypto layer...', 'dim'],
-  ['> AES-256-GCM: ACTIVE', 'ok'],
-  ['> ECDSA secp256k1: ACTIVE', 'ok'],
-  ['> IP masking engine: ONLINE', 'ok'],
-  ['> secure tunnel established', 'ok'],
-  ['> system ready.', 'ok']
-];
-boot.forEach((b, i) => setTimeout(() => log(b[0], b[1]), 250 + i * 300));
+function detectWallets(){
+  if(typeof window.ethereum !== 'undefined'){
+    ['metamask','coinbase','trust','xverse','leather'].forEach(id => {
+      const el = document.getElementById('s-' + id);
+      const btn = document.getElementById('w-' + id);
+      if(el) el.textContent = 'LIVE';
+      if(btn) btn.classList.add('available');
+    });
+  }
+  if(window.phantom && window.phantom.solana){
+    document.getElementById('s-phantom').textContent = 'LIVE';
+    document.getElementById('w-phantom').classList.add('available');
+  }
+}
 
-/* ==================== BUTTONS ==================== */
-function triggerScan(){
-  log('> ── INITIATING FULL SCAN ──', 'info');
-  let steps = 0;
-  const iv = setInterval(() => {
-    const port = randInt(20, 9999);
-    const open = Math.random() > 0.7;
-    log('> probing port ' + port + ' ... ' + (open ? 'OPEN' : 'closed'), open ? 'warn' : 'dim');
-    steps++;
-    if(steps > 14){
-      clearInterval(iv);
-      log('> scan complete · ' + randInt(2, 8) + ' anomalies found', 'ok');
-    }
-  }, 180);
+async function connectInjected(name){
+  if(typeof window.ethereum === 'undefined'){
+    alert(name + ' not detected. Install the ' + name + ' app or open this page inside its in-app browser.');
+    return;
+  }
+  try{
+    const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
+    if(!accounts || !accounts.length) return;
+    const acc = accounts[0];
+    const chainHex = await window.ethereum.request({ method:'eth_chainId' });
+    const bal = await window.ethereum.request({ method:'eth_getBalance', params:[acc,'latest'] });
+    const balEth = (parseInt(bal,16)/1e18).toFixed(4);
+    showAccount(acc, NETWORKS[chainHex] || chainHex, balEth + ' ETH', chainHex, 'EVM');
+    document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
+    const btn = document.getElementById('w-' + name.toLowerCase());
+    if(btn) btn.classList.add('connected');
+  } catch(e){ alert('Connection failed: ' + e.message); }
 }
-function triggerMask(){
-  log('> ── MASKING IDENTITY ──', 'info');
-  maskSequence();
+
+async function connectPhantom(){
+  if(!window.phantom || !window.phantom.solana){
+    alert('Phantom not detected. Install Phantom or open this page inside the Phantom in-app browser.');
+    return;
+  }
+  try{
+    const res = await window.phantom.solana.connect();
+    const pub = res.publicKey.toString();
+    showAccount(pub, 'Solana', '—', 'solana', 'SOL');
+    document.getElementById('w-phantom').classList.add('connected');
+  } catch(e){ alert('Connection failed: ' + e.message); }
 }
-function triggerReset(){
-  termEl.innerHTML = '';
-  log('> log cleared.', 'dim');
-  log('> qcity-terminal ready.', 'ok');
+
+function connectWalletConnect(){
+  const uri = prompt('Paste WalletConnect URI (from your wallet app):');
+  if(!uri) return;
+  alert('WalletConnect requires library setup — this is a demo placeholder.');
 }
+
+function showAccount(addr, net, bal, chain, type){
+  document.getElementById('account').style.display = 'block';
+  document.getElementById('acc-addr').textContent = addr;
+  document.getElementById('acc-net').textContent = net;
+  document.getElementById('acc-bal').textContent = bal;
+  document.getElementById('acc-chain').textContent = chain;
+  document.getElementById('acc-type').textContent = type;
+}
+function disconnectWallet(){
+  document.getElementById('account').style.display = 'none';
+  document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('connected'));
+}
+
+/* ==================== SEARCH ==================== */
+function isValidEth(a){ return /^0x[a-fA-F0-9]{40}$/.test(a); }
+function isValidSol(a){ return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(a); }
+function isValidBtc(a){ return /^(bc1[a-z0-9]{25,62}|[13][a-km-zA-HJ-NP-Z1-9]{25,34})$/.test(a); }
+function detectChain(a){
+  if(isValidEth(a)) return { chain:'EVM (ETH / BNB / Polygon / Base)', type:'EVM' };
+  if(isValidBtc(a)) return { chain:'Bitcoin', type:'BTC' };
+  if(isValidSol(a)) return { chain:'Solana', type:'SOL' };
+  return null;
+}
+const recent = [];
+function lookupWallet(){
+  const raw = document.getElementById('searchInput').value.trim();
+  const el = document.getElementById('searchResult');
+  el.style.display = 'block';
+  if(!raw){
+    el.className = 'invalid';
+    el.innerHTML = '<div class="label">ERROR</div><div class="value">Empty input.</div>';
+    return;
+  }
+  const r = detectChain(raw);
+  if(r){
+    el.className = 'valid';
+    el.innerHTML =
+      '<div class="label">✓ VALID ADDRESS</div>' +
+      '<div class="value">'+raw+'</div>' +
+      '<div class="label">Chain</div><div class="value">'+r.chain+'</div>' +
+      '<div class="label">Type</div><div class="value">'+r.type+'</div>';
+    recent.unshift({addr:raw, type:r.type, chain:r.chain});
+    if(recent.length > 5) recent.pop();
+    renderRecent();
+  } else {
+    el.className = 'invalid';
+    el.innerHTML = '<div class="label">✗ INVALID ADDRESS</div>' +
+      '<div class="value">Not a recognised BTC / ETH / SOL address.</div>';
+  }
+}
+function renderRecent(){
+  const el = document.getElementById('recentList');
+  if(!recent.length){ el.innerHTML = 'No recent lookups.'; return; }
+  el.innerHTML = recent.map(r =>
+    '<div style="padding:5px 0;border-bottom:1px dashed rgba(0,255,157,0.15)">' +
+    '<div style="color:#00ff9d;font-size:10px">'+r.addr.slice(0,24)+'…</div>' +
+    '<div style="color:#00b877;font-size:9px">'+r.type+' · '+r.chain+'</div></div>'
+  ).join('');
+}
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') lookupWallet();
+});
+
+/* ==================== SYSTEM ==================== */
+function detectOS(ua){
+  if(/iPad|iPhone|iPod/.test(ua)) return 'iOS / iPadOS';
+  if(/Android/.test(ua)) return 'Android';
+  if(/Windows NT 10/.test(ua)) return 'Windows 10/11';
+  if(/Mac OS X/.test(ua)) return 'macOS';
+  if(/Linux/.test(ua)) return 'Linux';
+  return 'Unknown';
+}
+function detectBrowser(ua){
+  if(/Edg\//.test(ua)) return 'Edge';
+  if(/OPR\//.test(ua)) return 'Opera';
+  if(/Chrome\//.test(ua)) return 'Chrome';
+  if(/Firefox\//.test(ua)) return 'Firefox';
+  if(/Safari\//.test(ua)) return 'Safari';
+  return 'Unknown';
+}
+function detectDevice(ua){
+  if(/iPad/.test(ua)) return 'iPad';
+  if(/iPhone/.test(ua)) return 'iPhone';
+  if(/Android/.test(ua) && /Mobile/.test(ua)) return 'Android Phone';
+  if(/Android/.test(ua)) return 'Android Tablet';
+  if(/Macintosh/.test(ua)) return 'Mac';
+  if(/Windows/.test(ua)) return 'Windows PC';
+  if(/Linux/.test(ua)) return 'Linux PC';
+  return 'Unknown';
+}
+function detectGPU(){
+  try{
+    const c = document.createElement('canvas');
+    const gl2 = c.getContext('webgl2');
+    const gl = gl2 || c.getContext('webgl');
+    if(!gl) return {ok:false, renderer:'No WebGL', gl2:false};
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    return {
+      ok:true, gl2:!!gl2,
+      renderer: dbg ? (gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || 'Unknown') : (gl.getParameter(gl.RENDERER) || 'Unknown')
+    };
+  } catch(e){ return {ok:false, renderer:'Error', gl2:false}; }
+}
+function runSystemCheck(){
+  const ua = navigator.userAgent;
+  const cores = navigator.hardwareConcurrency || 0;
+  const ramGB = navigator.deviceMemory || 0;
+  const gpu = detectGPU();
+  const screenW = window.screen.width * (window.devicePixelRatio || 1);
+  const screenH = window.screen.height * (window.devicePixelRatio || 1);
+
+  document.getElementById('d-device').textContent = detectDevice(ua);
+  document.getElementById('d-os').textContent = detectOS(ua);
+  document.getElementById('d-browser').textContent = detectBrowser(ua);
+  document.getElementById('d-cores').textContent = cores ? cores + ' cores' : 'Not exposed';
+  document.getElementById('d-ram').textContent = ramGB ? ramGB + ' GB' : 'Not exposed';
+  document.getElementById('d-gpu').textContent = gpu.renderer;
+  document.getElementById('d-webgl').textContent = gpu.ok ? (gpu.gl2 ? 'WebGL 2' : 'WebGL 1') : 'Not supported';
+  document.getElementById('d-webgl').style.color = gpu.ok ? '#00ff9d' : '#ff3366';
+  document.getElementById('d-screen').textContent = Math.round(screenW) + '×' + Math.round(screenH);
+  const nc = navigator.connection;
+  document.getElementById('d-net').textContent = nc && nc.downlink ? nc.downlink + ' Mbps' : 'Not exposed';
+
+  const isMobile = /iPad|iPhone|iPod|Android/.test(ua);
+  const v = document.getElementById('verdict');
+  if(!gpu.ok){
+    v.className = 'fail';
+    v.innerHTML = '✗ NOT SUPPORTED<small>WebGL missing. Try a newer browser.</small>';
+  } else if(cores && cores < 4 && !isMobile){
+    v.className = 'warn';
+    v.innerHTML = '⚠ BELOW MINIMUM<small>Detected ' + cores + ' cores. Minimum is 4.</small>';
+  } else if(cores >= 8 && ramGB >= 8 && gpu.gl2){
+    v.className = 'pass';
+    v.innerHTML = '✓ RECOMMENDED TIER<small>Meets or exceeds recommended specs.</small>';
+  } else {
+    v.className = 'pass';
+    v.innerHTML = '✓ MEETS MINIMUM<small>Runs. For best: 8+ cores, 12 GB RAM, WebGL 2.</small>';
+  }
+}
+
+/* ==================== NETWORK ==================== */
+async function fetchBTC(){
+  try{
+    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    const j = await r.json();
+    document.getElementById('btc-price').textContent = '$' + parseFloat(j.lastPrice).toLocaleString('en-US',{maximumFractionDigits:2});
+    const chg = parseFloat(j.priceChangePercent);
+    const chgEl = document.getElementById('btc-change');
+    chgEl.textContent = (chg>=0?'+':'') + chg.toFixed(2) + '%';
+    chgEl.style.color = chg >= 0 ? '#00ff9d' : '#ff3366';
+    document.getElementById('btc-high').textContent = '$' + parseFloat(j.highPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc-low').textContent = '$' + parseFloat(j.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc-vol').textContent = parseFloat(j.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0}) + ' USDT';
+  } catch(e){}
+}
+async function fetchBC(){
+  try{
+    const r = await fetch('https://blockchain.info/latestblock?cors=true');
+    const j = await r.json();
+    document.getElementById('bc-height').textContent = j.height.toLocaleString();
+    document.getElementById('bc-hash').textContent = j.hash.slice(0,20) + '…';
+    document.getElementById('bc-time').textContent = new Date(j.time*1000).toLocaleTimeString();
+  } catch(e){ document.getElementById('bc-height').textContent = 'unavailable'; }
+}
+async function fetchFG(){
+  try{
+    const r = await fetch('https://api.alternative.me/fng/?limit=1');
+    const j = await r.json();
+    document.getElementById('fear-greed').textContent = j.data[0].value + ' (' + j.data[0].value_classification + ')';
+  } catch(e){}
+}
+async function fetchDom(){
+  try{
+    const r = await fetch('https://api.coingecko.com/api/v3/global');
+    const j = await r.json();
+    document.getElementById('btc-dom').textContent = j.data.market_cap_percentage.btc.toFixed(1) + '%';
+  } catch(e){}
+}
+
+/* ==================== TOOLS ==================== */
+async function doHash(){
+  const txt = document.getElementById('hashInput').value;
+  const buf = new TextEncoder().encode(txt);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  const hex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,'0')).join('');
+  document.getElementById('hashOutput').textContent = hex;
+}
+function doB64(){
+  const txt = document.getElementById('b64Input').value;
+  try{
+    document.getElementById('b64Output').textContent = btoa(unescape(encodeURIComponent(txt)));
+  }catch(e){ document.getElementById('b64Output').textContent = 'Error'; }
+}
+function genKey(){
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  const hex = Array.from(arr).map(b => b.toString(16).padStart(2,'0')).join('');
+  document.getElementById('keyOutput').textContent = hex;
+}
+function genBtcAddr(){
+  // Visual simulation — random base58-ish string starting with '1'
+  const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+  let s = '1';
+  for(let i=0;i<33;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('btcAddrOutput').textContent = s;
+}
+function checkPwd(){
+  const p = document.getElementById('pwdInput').value;
+  let score = 0;
+  if(p.length >= 8) score++;
+  if(p.length >= 12) score++;
+  if(/[a-z]/.test(p) && /[A-Z]/.test(p)) score++;
+  if(/\d/.test(p)) score++;
+  if(/[^A-Za-z0-9]/.test(p)) score++;
+  const labels = ['Very Weak','Weak','Fair','Strong','Very Strong','Excellent'];
+  const colors = ['#ff3366','#ff3366','#ffcc00','#ffcc00','#00ff9d','#00ff9d'];
+  const el = document.getElementById('pwdOutput');
+  if(!p){ el.textContent = '—'; el.style.color = '#00bfff'; return; }
+  el.textContent = labels[score] + ' (score ' + score + '/5)';
+  el.style.color = colors[score];
+}
+
+/* ==================== BOOT ==================== */
+detectWallets();
+runSystemCheck();
+fetchBTC();
+fetchBC();
+fetchFG();
+fetchDom();
+doHash();
+doB64();
+genKey();
+
+window.addEventListener('resize', runSystemCheck);
+setInterval(fetchBTC, 15000);
+setInterval(fetchBC, 60000);
+setInterval(fetchFG, 300000);
+setInterval(fetchDom, 300000);
 </script>
 </body>
 </html>
